@@ -30,7 +30,7 @@ pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
 | `edge` | `skater_summary`, `skater_shot_locations`, `skater_zone_time`, `skater_top_speeds`, `skater_hardest_shots`, `skater_distance`, `goalie_summary`, `goalie_shot_locations`, `goalie_save_pct_last10`, `team_summary`, `team_zone_time`, `team_top_speeds`, `raw` |
 | `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
-| `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries` |
+| `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries`, `add_nhl_ids`, `player_ids`, `game_ids`, `team_ids` |
 
 \* `full_play_by_play` wraps Patrick Bacon's TopDownHockey `full_scrape` (play-by-play with every on-ice player) and needs the `tdh` extra.
 
@@ -39,9 +39,22 @@ pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
 
 `edge.raw(endpoint, id, season)` returns the untouched JSON for any Edge endpoint not wrapped here.
 
-ESPN uses its own player, team and game IDs (not the NHL's): get them from `espn.teams()`,
-`espn.roster()`, `espn.player_stats()` or `espn.schedule()`. ESPN's `roster` is current-season only,
-and `injuries` is today's injury report.
+ESPN uses its own player, team and game IDs, not the NHL's. `espn.add_nhl_ids` adds the NHL ones
+next to them, so ESPN data joins onto everything from `nhl`, `edge` and `moneypuck`:
+
+```python
+box = ps.espn.add_nhl_ids(ps.espn.boxscore(401688578), 2024)   # + nhl_game_id, nhl_player_id, nhl_team_id
+pbp = ps.espn.add_nhl_ids(ps.espn.play_by_play(401688578), 2024)  # + nhl_player1_id, nhl_player2_id, ...
+```
+
+ESPN publishes no NHL IDs, so they're matched: teams by abbreviation, games by matchup and start
+time, players by name, team and games played. For 2024-25 and 2022-23 every game and all but one
+player matched. Postponed games have no NHL ID, because the NHL keeps only the replayed game.
+The crosswalks themselves are `espn.player_ids(season)`, `espn.game_ids(season)` and
+`espn.team_ids()`. The first call for a season makes about 60 requests (the game schedules);
+after that the crosswalks are cached for the session.
+
+ESPN's `roster` is current-season only, and `injuries` is today's injury report.
 
 ## Being polite
 
@@ -58,15 +71,6 @@ To see progress:
 import logging
 logging.basicConfig(level=logging.INFO)
 ```
-
-## Credits and terms
-
-- Elite Prospects scraping is adapted from Patrick Bacon's
-  [TopDownHockey_Scraper](https://github.com/TopDownHockey/TopDownHockey_Scraper) (MIT),
-  updated for EP's 2025 redesign. It's for personal use: commercial use should go through the EP API.
-- MoneyPuck data is from [MoneyPuck.com](https://moneypuck.com). Credit them if you publish with it.
-- ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
-  unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
 
 ## Tests
 

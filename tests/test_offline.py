@@ -190,3 +190,31 @@ def test_espn_roster_and_injuries():
     assert roster and all(r["team"] == "DET" and r["player_id"] for r in roster)
     injuries = espn.parse_injuries(espn_fixture("injuries"))
     assert injuries and all(r["player_id"] and r["status"] for r in injuries)
+
+
+def test_espn_nhl_abbrev():
+    assert [espn.nhl_abbrev(a) for a in ("NJ", "TB", "UTAH", "TOR", None)] == ["NJD", "TBL", "UTA", "TOR", None]
+
+
+def test_espn_match_players():
+    import pandas as pd
+
+    espn_players = pd.DataFrame([
+        {"player_id": 1, "player": "Sebastian Aho", "position": "C", "team": "CAR", "games": 80},
+        {"player_id": 2, "player": "Sebastian Aho", "position": "D", "team": "NYI", "games": 70},
+        {"player_id": 3, "player": "Mitch Marner", "position": "RW", "team": "TOR", "games": 81},
+        {"player_id": 4, "player": "Tim Stützle", "position": "C", "team": "OTT", "games": 82},
+        {"player_id": 5, "player": "Matt Benning", "position": "D", "team": "TOR", "games": 7},  # traded
+        {"player_id": 6, "player": "Nobody Here", "position": "G", "team": "SJ", "games": 1},
+    ])
+    nhl_players = pd.DataFrame([
+        {"player_id": 10, "player": "Sebastian Aho", "team_abbrevs": "NYI", "games_played": 70, "goalie": False},
+        {"player_id": 11, "player": "Sebastian Aho", "team_abbrevs": "CAR", "games_played": 80, "goalie": False},
+        {"player_id": 12, "player": "Mitchell Marner", "team_abbrevs": "TOR", "games_played": 81, "goalie": False},
+        {"player_id": 13, "player": "Tim Stutzle", "team_abbrevs": "OTT", "games_played": 82, "goalie": False},
+        {"player_id": 14, "player": "Matthew Benning", "team_abbrevs": "SJS", "games_played": 7, "goalie": False},
+    ])
+    out = espn.match_players(espn_players, nhl_players).set_index("espn_player_id")
+    assert out["nhl_player_id"].dropna().to_dict() == {1: 11, 2: 10, 3: 12, 4: 13, 5: 14}
+    assert pd.isna(out.loc[6, "nhl_player_id"])
+    assert out.loc[1, "match"] == "name+team" and out.loc[3, "match"] == "last name"

@@ -40,3 +40,9 @@ def test_espn_standings():
 def test_espn_boxscore():
     df = ps.espn.boxscore(401688578)
     assert len(df) > 30 and df["goals"].sum() == 7
+
+
+def test_espn_add_nhl_ids():
+    df = ps.espn.add_nhl_ids(ps.espn.boxscore(401688578), 2024)
+    assert (df["nhl_game_id"] == 2024020979).all()
+    assert df["nhl_player_id"].notna().all() and set(df["nhl_team_id"]) == {1, 25}

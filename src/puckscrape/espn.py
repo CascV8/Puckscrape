@@ -5,7 +5,8 @@ These are the undocumented JSON endpoints that espn.com's own pages load
 (site.api.espn.com), so no HTML is parsed. ESPN doesn't publish or support
 them, which means they can change without notice.
 
-ESPN identifies players, teams and games with its own IDs, not the NHL's.
+ESPN identifies players, teams and games with its own IDs, not the NHL's;
+:func:`add_nhl_ids` adds the matching NHL IDs to any frame from this module.
 ESPN labels a season by the year it *ends*; every function here takes the
 usual puckscrape spelling (2024 or "2024-25" means 2024-25) and converts.
 """
@@ -13,8 +14,10 @@ usual puckscrape spelling (2024 or "2024-25" means 2024-25) and converts.
 from __future__ import annotations
 
 import datetime as dt
+import functools
 import logging
 import re
+import unicodedata
 
 import pandas as pd
 
@@ -384,7 +387,8 @@ def player_stats(season, *, playoffs: bool = False) -> pd.DataFrame:
     """Season totals for every player, skaters and goalies together.
 
     Goalie stats (saves, GAA...) are 0 for skaters. ``time_on_ice`` and
-    ``time_on_ice_per_game`` are in seconds.
+    ``time_on_ice_per_game`` are in seconds. ``team`` is the last team the
+    player was on that season, so a traded player shows only the new team.
     """
     rows, page = [], 1
     while True:
@@ -473,4 +477,228 @@ def injuries() -> pd.DataFrame:
     df = pd.DataFrame(parse_injuries(_http.get_json(f"{SITE}/injuries")))
     if "player_id" in df:
         df["player_id"] = df["player_id"].astype("Int64")
+    return df
+
+
+# --------------------------------------------------------------------------
+# Matching ESPN IDs to NHL IDs
+# --------------------------------------------------------------------------
+# ESPN publishes no NHL IDs, so these crosswalks are built by matching:
+# teams by abbreviation, games by teams + start time, players by name, team
+# and games played. Each crosswalk is cached for the session.
+
+# ESPN abbreviations that differ from NHL tri-codes.
+NHL_ABBREV = {"LA": "LAK", "NJ": "NJD", "SJ": "SJS", "TB": "TBL", "UTAH": "UTA"}
+
+# NHL tri-codes shared by two franchise IDs: {tri_code: [(last start year, id), ...]}.
+# Utah Hockey Club (59) became Utah Mammoth (68) in 2025-26.
+_NHL_TEAM_ID_BY_SEASON = {"UTA": [(2024, 59)]}
+
+
+def nhl_abbrev(espn_abbrev: str | None) -> str | None:
+    """ESPN team abbreviation -> NHL tri-code ("NJ" -> "NJD")."""
+    if espn_abbrev is None or pd.isna(espn_abbrev):
+        return None
+    return NHL_ABBREV.get(espn_abbrev, espn_abbrev)
+
+
+@functools.lru_cache(maxsize=None)
+def _team_ids(season: int | None) -> pd.DataFrame:
+    from . import nhl
+
+    nhl_teams = nhl.teams()
+    # Later franchises reuse tri-codes (UTA); the highest ID is the current one.
+    latest = nhl_teams.sort_values("id").drop_duplicates("tri_code", keep="last")
+    nhl_id = dict(zip(latest["tri_code"], latest["id"]))
+    if season is not None:
+        for code, spans in _NHL_TEAM_ID_BY_SEASON.items():
+            for last_year, team_id in spans:
+                if season <= last_year:
+                    nhl_id[code] = team_id
+                    break
+
+    df = teams()[["team_id", "abbreviation", "team"]].rename(
+        columns={"team_id": "espn_team_id", "abbreviation": "espn_abbrev"})
+    df["nhl_abbrev"] = df["espn_abbrev"].map(nhl_abbrev)
+    df["nhl_team_id"] = df["nhl_abbrev"].map(nhl_id).astype("Int64")
+    return df
+
+
+def team_ids(season=None) -> pd.DataFrame:
+    """ESPN team ID/abbreviation -> NHL team ID/tri-code for the current franchises.
+
+    ``season`` only matters for reused tri-codes (UTA was team 59 in 2024-25, 68 after).
+    """
+    return _team_ids(start_year(season) if season is not None else None).copy()
+
+
+@functools.lru_cache(maxsize=None)
+def _game_ids(season: int, playoffs: bool) -> pd.DataFrame:
+    from . import nhl
+
+    espn_games = schedule(season, playoffs=playoffs)
+    if espn_games.empty:
+        return pd.DataFrame(columns=["espn_game_id", "nhl_game_id", "date", "away_team", "home_team", "status"])
+    espn_games = espn_games.assign(
+        start=pd.to_datetime(espn_games["date"], utc=True),
+        away=espn_games["away_team"].map(nhl_abbrev),
+        home=espn_games["home_team"].map(nhl_abbrev),
+    )
+    first, last = espn_games["start"].min().date(), espn_games["start"].max().date()
+    nhl_games = nhl.schedule(first - dt.timedelta(days=1), last + dt.timedelta(days=1))
+    nhl_games = nhl_games[nhl_games["game_type"] == (PLAYOFFS if playoffs else REGULAR)]
+    nhl_games = nhl_games.assign(start=pd.to_datetime(nhl_games["start_time_utc"], utc=True)).rename(
+        columns={"away_team": "away", "home_team": "home", "game_id": "nhl_game_id"})
+
+    # Same matchup starting within 12 hours. Postponed originals find no partner.
+    merged = pd.merge_asof(
+        espn_games.sort_values("start"),
+        nhl_games[["start", "away", "home", "nhl_game_id"]].sort_values("start"),
+        on="start", by=["away", "home"], tolerance=pd.Timedelta(hours=12), direction="nearest",
+    )
+    out = merged.rename(columns={"game_id": "espn_game_id"})[
+        ["espn_game_id", "nhl_game_id", "date", "away_team", "home_team", "status"]]
+    out["nhl_game_id"] = out["nhl_game_id"].astype("Int64")
+    if unmatched := out["nhl_game_id"].isna().sum():
+        log.info("%d ESPN games had no NHL match (usually postponed originals)", unmatched)
+    return out.sort_values(["date", "espn_game_id"]).reset_index(drop=True)
+
+
+def game_ids(season, *, playoffs: bool = False) -> pd.DataFrame:
+    """ESPN game ID -> NHL game ID for a season (about 60 requests the first time)."""
+    return _game_ids(start_year(season), playoffs).copy()
+
+
+def _name_key(name) -> str:
+    if not isinstance(name, str):
+        return ""
+    name = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    words = re.sub(r"[^a-z ]", "", name.lower().replace("-", " ")).split()
+    return " ".join(w for w in words if w not in ("jr", "sr", "ii", "iii"))
+
+
+def _nhl_players(season: int, playoffs: bool) -> pd.DataFrame:
+    from . import nhl
+
+    game_type = PLAYOFFS if playoffs else REGULAR
+    frames = [
+        nhl.skater_stats(season, game_type=game_type).rename(columns={"skater_full_name": "player"}).assign(goalie=False),
+        nhl.goalie_stats(season, game_type=game_type).rename(columns={"goalie_full_name": "player"}).assign(goalie=True),
+    ]
+    cols = ["player_id", "player", "team_abbrevs", "games_played", "goalie"]
+    return pd.concat([f[cols] for f in frames if not f.empty], ignore_index=True)
+
+
+def match_players(espn_players: pd.DataFrame, nhl_players: pd.DataFrame) -> pd.DataFrame:
+    """Match ESPN players to NHL players one-to-one.
+
+    ``espn_players`` needs player_id, player, position, team, games (as from
+    :func:`player_stats`); ``nhl_players`` needs player_id, player, team_abbrevs,
+    games_played, goalie. Full names are tried first, with ties broken by team and
+    games played, then last name plus two of team, games played and first initial
+    (for "Mitch" vs "Mitchell").
+    ``match`` says which rule matched; unmatched players get no NHL ID.
+    """
+    by_key: dict[tuple, list[dict]] = {}
+    by_last: dict[tuple, list[dict]] = {}
+    for r in nhl_players.itertuples(index=False):
+        key = _name_key(r.player)
+        n = {"id": int(r.player_id), "key": key, "teams": set(str(r.team_abbrevs or "").split(",")),
+             "gp": r.games_played, "goalie": bool(r.goalie)}
+        by_key.setdefault((key, n["goalie"]), []).append(n)
+        by_last.setdefault((key.split(" ")[-1], n["goalie"]), []).append(n)
+
+    used: set[int] = set()
+    out, pending = [], []
+    for r in espn_players.itertuples(index=False):
+        e = {"espn_player_id": int(r.player_id), "player": r.player, "team": r.team,
+             "key": _name_key(r.player), "goalie": r.position == "G",
+             "nhl_team": nhl_abbrev(r.team), "gp": r.games}
+        cands = [n for n in by_key.get((e["key"], e["goalie"]), []) if n["id"] not in used]
+        how = "name"
+        if len(cands) > 1:
+            cands, how = [n for n in cands if e["nhl_team"] in n["teams"]] or cands, "name+team"
+        if len(cands) > 1:
+            cands, how = [n for n in cands if n["gp"] == e["gp"]] or cands, "name+games"
+        if len(cands) == 1:
+            used.add(cands[0]["id"])
+            out.append(e | {"nhl_player_id": cands[0]["id"], "match": how})
+        else:
+            pending.append(e)
+
+    # Second pass for nicknames and spelling differences: same last name, and two of
+    # same team / same games played / same first initial, with one candidate left.
+    # (ESPN gives only a traded player's last team, so team alone can disagree.)
+    def agreements(e: dict, n: dict) -> int:
+        # bool() each check: numpy bools add like OR (True + True is True).
+        return sum(map(bool, (e["nhl_team"] in n["teams"], n["gp"] == e["gp"], n["key"][:1] == e["key"][:1])))
+
+    for e in pending:
+        cands = [n for n in by_last.get((e["key"].split(" ")[-1], e["goalie"]), [])
+                 if n["id"] not in used and agreements(e, n) >= 2]
+        if len(cands) == 1:
+            used.add(cands[0]["id"])
+            out.append(e | {"nhl_player_id": cands[0]["id"], "match": "last name"})
+        else:
+            out.append(e | {"nhl_player_id": None, "match": None})
+
+    df = pd.DataFrame(out, columns=["espn_player_id", "nhl_player_id", "player", "team", "match"])
+    df["nhl_player_id"] = df["nhl_player_id"].astype("Int64")
+    return df
+
+
+@functools.lru_cache(maxsize=None)
+def _player_ids(season: int, playoffs: bool) -> pd.DataFrame:
+    df = match_players(player_stats(season, playoffs=playoffs), _nhl_players(season, playoffs))
+    missing = df["nhl_player_id"].isna()
+    if missing.any():
+        log.warning("%d of %d ESPN players had no confident NHL match: %s", missing.sum(), len(df),
+                    ", ".join(df.loc[missing, "player"].head(10)))
+    return df
+
+
+def player_ids(season, *, playoffs: bool = False) -> pd.DataFrame:
+    """ESPN player ID -> NHL player ID for everyone who played that season.
+
+    Matched on name, team and games played; ``match`` says how. A player whose
+    name differs too much between the sites is left without an NHL ID.
+    """
+    return _player_ids(start_year(season), playoffs).copy()
+
+
+def add_nhl_ids(df: pd.DataFrame, season, *, playoffs: bool = False) -> pd.DataFrame:
+    """Add NHL ID columns next to the ESPN ID columns of any frame from this module.
+
+    >>> add_nhl_ids(boxscore(401688578), 2024)
+
+    ``game_id`` gets ``nhl_game_id``; ``player_id``, ``player1_id``... get
+    ``nhl_player_id``, ``nhl_player1_id``...; ``team_id``, ``home_team_id`` and
+    ``away_team_id`` get ``nhl_`` versions. ``season`` is the season the data is
+    from; pass ``playoffs=True`` for playoff games.
+    """
+    df = df.copy()
+    year = start_year(season)
+
+    def insert_after(col: str, mapping: dict):
+        df.insert(df.columns.get_loc(col) + 1, f"nhl_{col}", df[col].map(mapping).astype("Int64"))
+
+    if "game_id" in df:
+        games = _game_ids(year, playoffs)
+        insert_after("game_id", dict(zip(games["espn_game_id"], games["nhl_game_id"])))
+
+    player_cols = [c for c in df.columns if re.fullmatch(r"player\d*_id", c)]
+    if player_cols:
+        players = _player_ids(year, False)
+        if playoffs:
+            players = pd.concat([players, _player_ids(year, True)]).drop_duplicates("espn_player_id")
+        mapping = dict(zip(players["espn_player_id"], players["nhl_player_id"]))
+        for col in player_cols:
+            insert_after(col, mapping)
+
+    team_cols = [c for c in df.columns if c in ("team_id", "home_team_id", "away_team_id")]
+    if team_cols:
+        t = _team_ids(year)
+        mapping = dict(zip(t["espn_team_id"], t["nhl_team_id"]))
+        for col in team_cols:
+            insert_after(col, mapping)
     return df
