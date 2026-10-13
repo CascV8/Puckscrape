@@ -19,7 +19,7 @@ A bare year is the season that **starts** that year, so `2024` means 2024-25.
 
 ```
 uv add ../puckscrape            # or: pip install -e ../puckscrape
-pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
+pip install -e "../puckscrape[tdh]"   # adds nhl.full_play_by_play
 ```
 
 ## What's in it
@@ -32,7 +32,7 @@ pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
 | `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries`, `add_nhl_ids`, `player_ids`, `game_ids`, `team_ids` |
 
-\* `full_play_by_play` wraps Patrick Bacon's TopDownHockey `full_scrape` (play-by-play with every on-ice player) and needs the `tdh` extra.
+\* `full_play_by_play` (play-by-play with every on-ice player) needs the `tdh` extra.
 
 `nhl.skater_stats` / `goalie_stats` / `team_stats` take any stats.nhl.com report name:
 `ps.nhl.skater_stats(2024, report="realtime")`, `report="timeonice"`, `report="bios"`, ...
@@ -71,6 +71,14 @@ To see progress:
 import logging
 logging.basicConfig(level=logging.INFO)
 ```
+
+## Credits and terms
+
+- Elite Prospects scraping is for personal use: commercial use should go through the EP API.
+- MoneyPuck data is from [MoneyPuck.com](https://moneypuck.com). Credit them if you publish with it.
+- ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
+  unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
+- Licenses for code adapted from other projects are in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
 
 ## Tests
 

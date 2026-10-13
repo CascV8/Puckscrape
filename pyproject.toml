@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# Full HTML play-by-play with on-ice players, via Patrick Bacon's TopDownHockey scraper.
+# Full HTML play-by-play with on-ice players (nhl.full_play_by_play).
 tdh = ["TopDownHockey_Scraper>=6.1"]
 
 [dependency-groups]

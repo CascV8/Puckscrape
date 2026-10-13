@@ -151,7 +151,7 @@ def shifts(game_id: int) -> pd.DataFrame:
 
 
 def full_play_by_play(game_ids, **kwargs) -> pd.DataFrame:
-    """Full play-by-play with on-ice players, via TopDownHockey's ``full_scrape``.
+    """Full play-by-play with on-ice players.
 
     Needs the optional extra: ``pip install puckscrape[tdh]``. ``kwargs`` pass
     straight through (e.g. ``live=False``, ``verbose=True``).
@@ -159,7 +159,7 @@ def full_play_by_play(game_ids, **kwargs) -> pd.DataFrame:
     try:
         from TopDownHockey_Scraper.TopDownHockey_NHL_Scraper import full_scrape
     except ImportError as e:
-        raise ImportError("full_play_by_play needs TopDownHockey_Scraper: pip install puckscrape[tdh]") from e
+        raise ImportError("full_play_by_play needs the tdh extra: pip install puckscrape[tdh]") from e
     return full_scrape([int(g) for g in as_list(game_ids)], **kwargs)
 
 

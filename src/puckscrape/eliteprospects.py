@@ -1,8 +1,7 @@
 """Elite Prospects league stats and player bios.
 
-Built on Patrick Bacon's TopDownHockey EP scraper (with the 2025-redesign
-fixes): stats come from the Next.js ``__NEXT_DATA__`` JSON embedded in each
-page, with the header-matched HTML table as a fallback.
+Stats come from the Next.js ``__NEXT_DATA__`` JSON embedded in each page,
+with the header-matched HTML table as a fallback.
 
 For personal use only. For commercial or professional use, look into the
 Elite Prospects API.
