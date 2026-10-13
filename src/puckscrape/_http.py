@@ -27,6 +27,8 @@ RATE_LIMITS: dict[str, float] = {
     "www.eliteprospects.com": 1.5,
     "moneypuck.com": 1.0,
     "peter-tanner.com": 1.0,
+    "site.api.espn.com": 0.25,
+    "site.web.api.espn.com": 0.25,
 }
 DEFAULT_RATE_LIMIT = 0.1
 

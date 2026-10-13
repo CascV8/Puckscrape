@@ -1,6 +1,6 @@
 # puckscrape
 
-Hockey stats from the NHL API, NHL Edge, Elite Prospects and MoneyPuck, as pandas DataFrames.
+Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck and ESPN, as pandas DataFrames.
 
 ```python
 import puckscrape as ps
@@ -9,6 +9,7 @@ ps.nhl.skater_stats("2024-25")                          # every NHL skater, stat
 ps.edge.skater_summary([8478402, 8479318], 2024)        # Edge tracking: speed, shot speed, zone time
 ps.eliteprospects.skaters(["ahl", "ohl"], "2024-25")    # any EP league
 ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
+ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
 ```
 
 Seasons can be written any way: `2024`, `"2024-25"`, `"2024-2025"` or `"20242025"`.
@@ -29,6 +30,7 @@ pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
 | `edge` | `skater_summary`, `skater_shot_locations`, `skater_zone_time`, `skater_top_speeds`, `skater_hardest_shots`, `skater_distance`, `goalie_summary`, `goalie_shot_locations`, `goalie_save_pct_last10`, `team_summary`, `team_zone_time`, `team_top_speeds`, `raw` |
 | `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
+| `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries` |
 
 \* `full_play_by_play` wraps Patrick Bacon's TopDownHockey `full_scrape` (play-by-play with every on-ice player) and needs the `tdh` extra.
 
@@ -37,10 +39,14 @@ pip install -e "../puckscrape[tdh]"   # adds full play-by-play via TopDownHockey
 
 `edge.raw(endpoint, id, season)` returns the untouched JSON for any Edge endpoint not wrapped here.
 
+ESPN uses its own player, team and game IDs (not the NHL's): get them from `espn.teams()`,
+`espn.roster()`, `espn.player_stats()` or `espn.schedule()`. ESPN's `roster` is current-season only,
+and `injuries` is today's injury report.
+
 ## Being polite
 
 Every request goes through one throttled session (`puckscrape/_http.py`): 1.5 s between
-Elite Prospects requests, 1 s for MoneyPuck, 0.1 s for the NHL. 403/429/5xx are retried
+Elite Prospects requests, 1 s for MoneyPuck, 0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.
 
@@ -59,6 +65,8 @@ logging.basicConfig(level=logging.INFO)
   [TopDownHockey_Scraper](https://github.com/TopDownHockey/TopDownHockey_Scraper) (MIT),
   updated for EP's 2025 redesign. It's for personal use: commercial use should go through the EP API.
 - MoneyPuck data is from [MoneyPuck.com](https://moneypuck.com). Credit them if you publish with it.
+- ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
+  unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
 
 ## Tests
 

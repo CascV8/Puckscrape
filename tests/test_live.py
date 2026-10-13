@@ -30,3 +30,13 @@ def test_moneypuck_skaters():
 def test_eliteprospects_goalies():
     df = ps.eliteprospects.goalies("ahl", "2024-25")
     assert len(df) > 50 and df["gp"].gt(0).all()
+
+
+def test_espn_standings():
+    df = ps.espn.standings(2024)
+    assert len(df) == 32 and df["points"].max() > 100
+
+
+def test_espn_boxscore():
+    df = ps.espn.boxscore(401688578)
+    assert len(df) > 30 and df["goals"].sum() == 7

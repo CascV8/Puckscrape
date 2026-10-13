@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup
 
-from puckscrape import _util, edge, eliteprospects as ep, nhl
+from puckscrape import _util, edge, eliteprospects as ep, espn, nhl
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -108,3 +108,85 @@ def test_edge_flatten_drops_noise():
     assert flat["player_last_name"] == "McDavid"
     assert flat["skating_speed_speed_max_imperial"] == pytest.approx(23.969)
     assert not any("overlay" in k or "logo" in k for k in flat)
+
+
+# ---- ESPN ----------------------------------------------------------------
+
+def espn_fixture(name):
+    return json.loads((FIXTURES / f"espn_{name}.json").read_text(encoding="utf-8"))
+
+
+def fake_espn(monkeypatch, name):
+    data = espn_fixture(name)
+    monkeypatch.setattr(espn._http, "get_json", lambda *a, **k: data)
+
+
+def test_espn_season_is_end_year():
+    assert espn.espn_season("2024-25") == espn.espn_season(2024) == 2025
+
+
+def test_espn_scoreboard_and_schedule_shapes(monkeypatch):
+    # The scoreboard sends scores as strings, team schedules as {"value": ...} dicts.
+    fake_espn(monkeypatch, "scoreboard")
+    sb = espn.scoreboard("2025-04-15")
+    g = sb[sb["game_id"] == 401688890].iloc[0]
+    assert (g["away_team"], g["home_team"], g["home_score"]) == ("NJ", "BOS", 4)
+    assert g["status"] == "Final/OT" and g["completed"]
+
+    fake_espn(monkeypatch, "team_schedule")
+    ts = espn.team_schedule("det", 2024)
+    assert len(ts) == 3 and ts["home_score"].notna().all() and (ts["season"] == 2025).all()
+
+
+def test_espn_standings():
+    rows = espn.parse_standings(espn_fixture("standings"))
+    assert len(rows) == 32
+    assert {r["division"] for r in rows} == {"Atlantic Division", "Metropolitan Division",
+                                             "Central Division", "Pacific Division"}
+    wsh = next(r for r in rows if r["abbreviation"] == "WSH")
+    assert (wsh["wins"], wsh["points"], wsh["clincher"], wsh["home"]) == (51, 111, "z", "26-9-6")
+
+
+def test_espn_boxscore_and_plays():
+    summary = espn_fixture("summary_401688578")
+    box = espn.parse_boxscore(summary, 401688578)
+    groups = {r["group"] for r in box}
+    assert {"forwards", "defenses", "goalies"} <= groups
+    bastian = next(r for r in box if r["player"] == "Nathan Bastian")
+    assert bastian["time_on_ice"] == "10:04" and bastian["shifts"] == "17"
+    goalie = next(r for r in box if r["group"] == "goalies")
+    assert "saves" in goalie and "hits" not in goalie
+
+    plays = espn.parse_plays(summary, 401688578)
+    goals = [p for p in plays if p["event"] == "Goal"]
+    assert len(goals) == 7
+    assert goals[0]["player1"] == "Wyatt Johnston" and goals[0]["player1_role"] == "scorer"
+    assert (goals[0]["x"], goals[0]["y"]) == (-72, 7)
+
+
+def test_espn_play_by_play_clock_is_elapsed(monkeypatch):
+    fake_espn(monkeypatch, "summary_401688578")
+    df = espn.play_by_play(401688578)
+    ends = df[df["event"] == "Period End"]
+    assert (ends["period_seconds"] == 1200).all()
+
+
+def test_espn_player_stats():
+    rows = espn.parse_player_stats(espn_fixture("byathlete"))  # 2024-25 playoffs
+    leon = next(r for r in rows if r["player"] == "Leon Draisaitl")
+    assert (leon["goals"], leon["points"], leon["team"]) == (11, 33, "EDM")
+    assert "save_pct" in leon
+
+
+def test_espn_game_log():
+    rows = espn.parse_game_log(espn_fixture("gamelog"), 3114727)
+    assert len(rows) == 93 and len({r["game_id"] for r in rows}) == 93
+    assert {r["season_type"] for r in rows} == {"2024-25 Regular Season", "2024-25 Postseason"}
+    assert all("goals" in r and "time_on_ice_per_game" in r for r in rows)
+
+
+def test_espn_roster_and_injuries():
+    roster = espn.parse_roster(espn_fixture("roster"))
+    assert roster and all(r["team"] == "DET" and r["player_id"] for r in roster)
+    injuries = espn.parse_injuries(espn_fixture("injuries"))
+    assert injuries and all(r["player_id"] and r["status"] for r in injuries)
