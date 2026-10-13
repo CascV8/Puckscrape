@@ -1,0 +1,32 @@
+"""Smoke tests against the real sites. Run with ``pytest -m live``."""
+
+import pytest
+
+import puckscrape as ps
+
+pytestmark = pytest.mark.live
+
+
+def test_nhl_skater_stats():
+    df = ps.nhl.skater_stats("2024-25")
+    assert len(df) > 800 and "skater_full_name" in df
+
+
+def test_nhl_shifts():
+    df = ps.nhl.shifts(2024020001)
+    assert len(df) > 500 and df["duration_seconds"].gt(0).all()
+
+
+def test_edge_skater_summary():
+    df = ps.edge.skater_summary([8478402, 8479318], 2024)
+    assert len(df) == 2 and "top_shot_speed_imperial" in df
+
+
+def test_moneypuck_skaters():
+    df = ps.moneypuck.skaters(2024)
+    assert len(df) > 800 and (df["situation"] == "all").all()
+
+
+def test_eliteprospects_goalies():
+    df = ps.eliteprospects.goalies("ahl", "2024-25")
+    assert len(df) > 50 and df["gp"].gt(0).all()

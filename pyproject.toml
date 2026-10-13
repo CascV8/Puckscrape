@@ -1,0 +1,29 @@
+[project]
+name = "puckscrape"
+version = "0.1.0"
+description = "Hockey stats scrapers (NHL API, NHL Edge, Elite Prospects, MoneyPuck) that return pandas DataFrames"
+readme = "README.md"
+authors = [
+    { name = "casc", email = "cruidadengv8@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4>=4.12",
+    "pandas>=2.0",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+# Full HTML play-by-play with on-ice players, via Patrick Bacon's TopDownHockey scraper.
+tdh = ["TopDownHockey_Scraper>=6.1"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["uv_build>=0.8.15,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: hits real websites (deselect with -m 'not live')"]
