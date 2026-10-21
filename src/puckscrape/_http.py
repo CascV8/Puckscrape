@@ -29,6 +29,20 @@ RATE_LIMITS: dict[str, float] = {
     "peter-tanner.com": 1.0,
     "site.api.espn.com": 0.25,
     "site.web.api.espn.com": 0.25,
+    # League and federation sites (puckscrape.leagues): HTML pages get 1 s, JSON APIs less.
+    "www.collegehockeynews.com": 1.0,
+    "www.eliteleague.co.uk": 1.0,
+    "www.hokej.cz": 1.0,
+    "www.penny-del.org": 1.0,
+    "www.del-2.org": 1.0,
+    "lscluster.hockeytech.com": 0.5,
+    "www.shl.se": 0.5,
+    "www.sdhl.se": 0.5,
+    "liiga.fi": 0.5,
+    "data.sihf.ch": 0.5,
+    "tulospalvelu.leijonat.fi": 0.5,
+    "hockeyallsvenskan.se": 0.5,
+    "statistik.metalligaen.dk": 0.5,
 }
 DEFAULT_RATE_LIMIT = 0.1
 
@@ -79,13 +93,33 @@ def get(
     ``retry_403`` treats 403 as a temporary block (Elite Prospects does this
     when it rate-limits you) instead of a hard failure.
     """
+    return _request("GET", url, params=params, retries=retries, backoff=backoff,
+                    retry_403=retry_403, timeout=timeout)
+
+
+def post_json(url: str, body: dict, **kwargs) -> dict:
+    """POST a JSON body (same throttling and retries as get) and decode the reply."""
+    return _request("POST", url, json_body=body, **kwargs).json()
+
+
+def _request(
+    method: str,
+    url: str,
+    *,
+    params: dict | None = None,
+    json_body: dict | None = None,
+    retries: int = 4,
+    backoff: float = 2.0,
+    retry_403: bool = False,
+    timeout: float = 60,
+) -> requests.Response:
     host = urlsplit(url).netloc
     statuses = RETRY_STATUSES | {403} if retry_403 else RETRY_STATUSES
 
     for attempt in range(retries + 1):
         _throttle(host)
         try:
-            resp = session().get(url, params=params, timeout=timeout)
+            resp = session().request(method, url, params=params, json=json_body, timeout=timeout)
         except (requests.ConnectionError, requests.Timeout) as e:
             if attempt == retries:
                 raise

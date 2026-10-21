@@ -1,6 +1,7 @@
 # puckscrape
 
-Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck and ESPN, as pandas DataFrames.
+Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN and league/federation websites
+(NCAA, the CHL, and leagues across Europe), as pandas DataFrames.
 
 ```python
 import puckscrape as ps
@@ -10,6 +11,7 @@ ps.edge.skater_summary([8478402, 8479318], 2024)        # Edge tracking: speed, 
 ps.eliteprospects.skaters(["ahl", "ohl"], "2024-25")    # any EP league
 ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
 ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
+ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league websites
 ```
 
 Seasons can be written any way: `2024`, `"2024-25"`, `"2024-2025"` or `"20242025"`.
@@ -18,8 +20,8 @@ A bare year is the season that **starts** that year, so `2024` means 2024-25.
 ## Install
 
 ```
-uv add ../puckscrape            # or: pip install -e ../puckscrape
-pip install -e "../puckscrape[tdh]"   # adds nhl.full_play_by_play
+uv add git+https://github.com/CascV8/Puckscrape.git      # or: pip install git+https://github.com/CascV8/Puckscrape.git
+pip install "puckscrape[tdh] @ git+https://github.com/CascV8/Puckscrape.git"   # adds nhl.full_play_by_play
 ```
 
 ## What's in it
@@ -30,6 +32,7 @@ pip install -e "../puckscrape[tdh]"   # adds nhl.full_play_by_play
 | `edge` | `skater_summary`, `skater_shot_locations`, `skater_zone_time`, `skater_top_speeds`, `skater_hardest_shots`, `skater_distance`, `goalie_summary`, `goalie_shot_locations`, `goalie_save_pct_last10`, `team_summary`, `team_zone_time`, `team_top_speeds`, `raw` |
 | `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
+| `leagues` | `leagues`, `skaters`, `goalies`, `standings` |
 | `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries`, `add_nhl_ids`, `player_ids`, `game_ids`, `team_ids` |
 
 \* `full_play_by_play` (play-by-play with every on-ice player) needs the `tdh` extra.
@@ -56,10 +59,45 @@ after that the crosswalks are cached for the session.
 
 ESPN's `roster` is current-season only, and `injuries` is today's injury report.
 
+## League and federation websites (`ps.leagues`)
+
+Stats taken directly from each league's or federation's own site, for leagues the NHL and ESPN
+don't cover. Every table starts with the same core columns (`league, season, phase, player, team,
+gp, g, a, pts, pim, plus_minus`; goalies `gp, w, l, ga, saves, sv_pct, gaa, so, toi`), followed by
+whatever else that site publishes (TOI, shots, faceoffs, bios, xG...). Save percentage is always a
+fraction (0.915).
+
+```python
+ps.leagues.leagues()                                      # coverage table
+ps.leagues.skaters("whl", "2025-26")
+ps.leagues.goalies(["del", "del2"], 2025, phase="playoffs")
+ps.leagues.standings("mestis", 2025)
+```
+
+| Code | League | Source | Notes |
+|---|---|---|---|
+| `ncaa` | NCAA Division I (men) | collegehockeynews.com | ~64 requests a season; whole-season totals; standings are team stats (no W-L) |
+| `ohl`, `whl`, `qmjhl` | CHL | HockeyTech feed behind chl.ca | full history; playoffs too |
+| `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
+| `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
+| `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
+| `mestis`, `suomi-sarja`, `u20-sm-sarja`, `u18-sm-sarja`, `auroraliiga` | Finland | tulospalvelu.leijonat.fi | multi-stage seasons keep a `stage` column |
+| `nl`, `sl`, `myhl` | Switzerland | data.sihf.ch | no standings (the API's table is incomplete for recent seasons) |
+| `del`, `del2` | Germany | penny-del.org, del-2.org | |
+| `extraliga`, `maxa-liga` | Czechia | hokej.cz | no standings yet |
+| `icehl` | ICE Hockey League | ice.hockey data files | skaters back to 2012-13; goalies and standings from 2025-26 (earlier files are partial) |
+| `metal-ligaen` | Denmark | statistik.metalligaen.dk | standings verified; the stats host stopped responding mid-testing, so skaters/goalies are checked by hand only |
+| `eihl` | UK Elite League | eliteleague.co.uk | |
+
+Not covered: the KHL, VHL and MHL (khl.ru answers every request with 403), Slovakia (behind a
+Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
+Hungary, Italy and J20 Nationell, which aren't wired yet. `ps.eliteprospects` covers most of these.
+
 ## Being polite
 
 Every request goes through one throttled session (`puckscrape/_http.py`): 1.5 s between
-Elite Prospects requests, 1 s for MoneyPuck, 0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
+Elite Prospects requests, 1 s for MoneyPuck and league websites, 0.5 s for league JSON APIs,
+0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.
 
@@ -76,6 +114,10 @@ logging.basicConfig(level=logging.INFO)
 
 - Elite Prospects scraping is for personal use: commercial use should go through the EP API.
 - MoneyPuck data is from [MoneyPuck.com](https://moneypuck.com). Credit them if you publish with it.
+- `ps.leagues` reads the same public pages and data feeds each league's website loads in a
+  browser (the CHL key, for instance, is the public site key chl.ca sends). They're unofficial,
+  can change without notice, and each site's terms apply: keep it to personal use, and keep the
+  default rate limits.
 - ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
   unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
 - Licenses for code adapted from other projects are in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).

@@ -1,7 +1,7 @@
 [project]
 name = "puckscrape"
 version = "0.1.0"
-description = "Hockey stats scrapers (NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN) that return pandas DataFrames"
+description = "Hockey stats scrapers (NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN, league and federation websites) that return pandas DataFrames"
 readme = "README.md"
 authors = [
     { name = "casc", email = "cruidadengv8@gmail.com" }

@@ -46,3 +46,22 @@ def test_espn_add_nhl_ids():
     df = ps.espn.add_nhl_ids(ps.espn.boxscore(401688578), 2024)
     assert (df["nhl_game_id"] == 2024020979).all()
     assert df["nhl_player_id"].notna().all() and set(df["nhl_team_id"]) == {1, 25}
+
+
+# ---- league and federation websites (one league per platform) --------------
+
+@pytest.mark.parametrize("league,min_rows", [
+    ("ohl", 500), ("shl", 300), ("hockeyallsvenskan", 300), ("liiga", 400), ("mestis", 250),
+    ("nl", 300), ("del", 300), ("del2", 300), ("extraliga", 300), ("icehl", 300), ("eihl", 200),
+    ("metal-ligaen", 200),
+])
+def test_league_skaters(league, min_rows):
+    df = ps.leagues.skaters(league, "2025-26")
+    assert len(df) >= min_rows
+    assert {"player", "team", "gp", "g", "a", "pts"} <= set(df.columns)
+    assert df["pts"].max() > 30
+
+
+def test_league_goalies_save_pct_is_a_fraction():
+    df = ps.leagues.goalies(["whl", "del", "mestis"], "2025-26")
+    assert df["sv_pct"].dropna().between(0, 1).all()
