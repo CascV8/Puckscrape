@@ -56,6 +56,18 @@ _REGISTRY = [
     League("ohl", "Ontario Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "ohl"}),
     League("whl", "Western Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "whl"}),
     League("qmjhl", "Quebec Maritimes Junior Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "lhjmq"}),
+    League("ahl", "American Hockey League", "USA", "pro second", "theahl.com (HockeyTech)", hockeytech, {"client": "ahl", "key": "ccb91f29d6744675"}),
+    League("echl", "ECHL", "USA", "pro third", "echl.com (HockeyTech)", hockeytech, {"client": "echl", "key": "2c2b89ea7345cae8"}),
+    League("ushl", "United States Hockey League", "USA", "junior", "ushl.com (HockeyTech)", hockeytech, {"client": "ushl", "key": "e828f89b243dc43f"}),
+    League("bchl", "British Columbia Hockey League", "Canada", "junior A", "bchl.ca (HockeyTech)", hockeytech, {"client": "bchl", "key": "f3ed30007ad2124e"}),
+    League("ajhl", "Alberta Junior Hockey League", "Canada", "junior A", "ajhl.ca (HockeyTech)", hockeytech, {"client": "ajhl", "key": "cbe60a1d91c44ade"}),
+    League("sjhl", "Saskatchewan Junior Hockey League", "Canada", "junior A", "sjhl.ca (HockeyTech)", hockeytech, {"client": "sjhl", "key": "2fb5c2e84bf3e4a8"}),
+    League("mjhl", "Manitoba Junior Hockey League", "Canada", "junior A", "mjhlhockey.ca (HockeyTech)", hockeytech, {"client": "mjhl", "key": "f894c324fe5fd8f0"}),
+    League("ojhl", "Ontario Junior Hockey League", "Canada", "junior A", "ojhl.ca (HockeyTech)", hockeytech, {"client": "ojhl", "key": "77a0bd73d9d363d3"}),
+    League("cchl", "Central Canada Hockey League", "Canada", "junior A", "cchl.ca (HockeyTech)", hockeytech, {"client": "cchl", "key": "b370f3e6c805baf3"}),
+    League("mjahl", "Maritime Junior Hockey League", "Canada", "junior A", "themhl.ca (HockeyTech)", hockeytech, {"client": "mhl", "key": "4a948e7faf5ee58d"}),
+    League("kijhl", "Kootenay International Junior Hockey League", "Canada", "junior B", "kijhl.ca (HockeyTech)", hockeytech, {"client": "kijhl", "key": "2589e0f644b1bb71"}),
+    League("vijhl", "Vancouver Island Junior Hockey League", "Canada", "junior B", "vijhl.ca (HockeyTech)", hockeytech, {"client": "vijhl", "key": "4f1a61df18906b61"}),
     # Sweden
     League("shl", "SHL", "Sweden", "top", "shl.se", sportality, {"host": "https://www.shl.se", "series": "SHL"}),
     League("hockeyallsvenskan", "HockeyAllsvenskan", "Sweden", "second", "hockeyallsvenskan.se", hockeyallsvenskan),
@@ -83,6 +95,7 @@ _REGISTRY = [
     League("metal-ligaen", "Metal Ligaen", "Denmark", "top", "statistik.metalligaen.dk", metalligaen),
 ]
 LEAGUES: dict[str, League] = {lg.code: lg for lg in _REGISTRY}
+hockeytech._KEYS.update({lg.opts["client"]: lg.opts["key"] for lg in _REGISTRY if "key" in lg.opts})
 
 
 def leagues() -> pd.DataFrame:

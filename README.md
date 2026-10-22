@@ -1,7 +1,7 @@
 # puckscrape
 
 Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN and league/federation websites
-(NCAA, the CHL, and leagues across Europe), as pandas DataFrames.
+(NCAA, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), as pandas DataFrames.
 
 ```python
 import puckscrape as ps
@@ -78,6 +78,8 @@ ps.leagues.standings("mestis", 2025)
 |---|---|---|---|
 | `ncaa` | NCAA Division I (men) | collegehockeynews.com | ~64 requests a season; whole-season totals; standings are team stats (no W-L) |
 | `ohl`, `whl`, `qmjhl` | CHL | HockeyTech feed behind chl.ca | full history; playoffs too |
+| `ahl`, `echl` | AHL, ECHL | HockeyTech (theahl.com, echl.com) | full history; playoffs too |
+| `ushl`, `bchl`, `ajhl`, `sjhl`, `mjhl`, `ojhl`, `cchl`, `mjahl`, `kijhl`, `vijhl` | US/Canadian junior | HockeyTech (each league's site key) | `mjahl` is the Maritime Junior Hockey League |
 | `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
 | `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
 | `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
@@ -91,7 +93,8 @@ ps.leagues.standings("mestis", 2025)
 
 Not covered: the KHL, VHL and MHL (khl.ru answers every request with 403), Slovakia (behind a
 Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
-Hungary, Italy and J20 Nationell, which aren't wired yet. `ps.eliteprospects` covers most of these.
+Hungary, Italy and J20 Nationell, which aren't wired yet. The NAHL's stats widget needs a
+CSRF session cookie, so it isn't wired either. `ps.eliteprospects` covers most of these.
 
 ## Being polite
 

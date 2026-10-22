@@ -1,6 +1,7 @@
-"""HockeyTech / LeagueStat feed: OHL, WHL, QMJHL.
+"""HockeyTech / LeagueStat feed: the CHL and most North American minor leagues.
 
-The key is the public site key the CHL's own pages (chl.ca) send to this feed.
+Each league has its own public site key: the one its website (or HockeyTech's
+statview widget config for it) sends to this feed.
 """
 
 from __future__ import annotations
@@ -13,11 +14,22 @@ import pandas as pd
 from ._common import Unsupported, finish, get_json, phase_key
 
 FEED = "https://lscluster.hockeytech.com/feed/index.php"
-KEY = "f1aa699db3d81487"
+CHL_KEY = "f1aa699db3d81487"
+
+_SKIP = ("pre", "prospect", "showcase", "combine", "draft", "all-star", "allstar", "exhibition",
+         "challenge", "top prospects", "classic", "tournament")
+
+
+def _key(client: str) -> str:
+    return _KEYS.get(client, CHL_KEY)
+
+
+# Filled in by the registry (leagues/__init__.py) from each league's opts.
+_KEYS: dict[str, str] = {}
 
 
 def _kit(client: str, **params) -> dict:
-    base = {"feed": "modulekit", "key": KEY, "client_code": client, "fmt": "json", "lang": "en"}
+    base = {"feed": "modulekit", "key": _key(client), "client_code": client, "fmt": "json", "lang": "en"}
     return get_json(FEED, **base, **params)["SiteKit"]
 
 
@@ -26,18 +38,34 @@ def seasons(client: str) -> pd.DataFrame:
     return pd.DataFrame(_kit(client, view="seasons")["Seasons"])
 
 
+def _start_year(name: str, playoffs: bool) -> int | None:
+    """Season start year from names like '2025-26 Regular Season', 'CCHL 2025-26',
+    '26-27 Regular Season', '2025/26', '2026 Playoffs' (single year = playoff end year)."""
+    m = re.search(r"(\d{2,4})\s*[-/|]\s*(\d{2,4})", name)
+    if m:
+        first = int(m.group(1))
+        return first + 2000 if first < 100 else first
+    m = re.search(r"\b(\d{4})\b", name)
+    if m:
+        year = int(m.group(1))
+        return year - 1 if playoffs else year
+    return None
+
+
 def season_id(client: str, y: int, phase: str) -> str:
-    """Names vary by league: '2025-26 Regular Season', '2025 - 26 Regular Season',
-    '2025-26 | Regular Season'; playoffs are named by end year ('2026 Playoffs')."""
+    """Regular season: a name with 'regular', or nothing but the league and years
+    ('2025-26', 'CCHL 2025-26'). Playoffs: a name with 'playoff'."""
     want = phase_key(phase)
     for _, s in seasons(client).iterrows():
         name = s["season_name"].lower()
-        years = [int(x) for x in re.findall(r"\d{4}", name)]
-        if not years or "pre" in name or "prospect" in name or "showcase" in name:
+        if any(w in name for w in _SKIP):
             continue
-        if want == "regular" and "regular" in name and years[0] == y:
-            return s["season_id"]
-        if want == "playoffs" and "playoff" in name and years[0] == y + 1:
+        is_playoff = "playoff" in name
+        if (want == "playoffs") != is_playoff:
+            continue
+        if want == "regular" and "regular" not in name and re.sub(r"[\d\s\-/|]+", "", name.replace(client, "")):
+            continue  # something other than a plain 'LEAGUE 2025-26'
+        if _start_year(name, is_playoff) == y:
             return s["season_id"]
     raise ValueError(f"no {want} season {y}-{y + 1} for {client}")
 
