@@ -1,6 +1,6 @@
 # puckscrape
 
-Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN and league/federation websites
+Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN, HockeyDB and league/federation websites
 (NCAA, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), as pandas DataFrames.
 
 ```python
@@ -12,6 +12,7 @@ ps.eliteprospects.skaters(["ahl", "ohl"], "2024-25")    # any EP league
 ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
 ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
 ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league websites
+ps.hockeydb.skaters("khl", "2024-25")                   # HockeyDB rosters, any league
 ```
 
 Seasons can be written any way: `2024`, `"2024-25"`, `"2024-2025"` or `"20242025"`.
@@ -33,6 +34,7 @@ pip install "puckscrape[tdh] @ git+https://github.com/CascV8/Puckscrape.git"   #
 | `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
 | `leagues` | `leagues`, `skaters`, `goalies`, `standings` |
+| `hockeydb` | `leagues`, `seasons`, `skaters` |
 | `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries`, `add_nhl_ids`, `player_ids`, `game_ids`, `team_ids` |
 
 \* `full_play_by_play` (play-by-play with every on-ice player) needs the `tdh` extra.
@@ -96,10 +98,26 @@ Cloudflare challenge), France (stats host unreachable), and the Alps League, Nor
 Hungary, Italy and J20 Nationell, which aren't wired yet. The NAHL's stats widget needs a
 CSRF session cookie, so it isn't wired either. `ps.eliteprospects` covers most of these.
 
+## HockeyDB (`ps.hockeydb`)
+
+Season rosters with stats for almost any league, from hockeydb.com: including the KHL, VHL, MHL,
+Slovakia and the NAHL, whose own sites are blocked or missing here. One row per player and team:
+`pid, player, team, pos`, regular season `gp, g, a, pts, pim, plus_minus`, playoffs `po_gp ... po_pim`,
+`birthplace, age`. The `pid` is HockeyDB's player id, the same in every league, so a player's stints
+in different leagues join exactly.
+
+```python
+ps.hockeydb.skaters("nahl", 2024)          # short names for common leagues: ps.hockeydb.LEAGUES
+ps.hockeydb.skaters(479, "2023-24")        # or any HockeyDB league id (479 = MHL)
+ps.hockeydb.leagues()                      # every league and its id
+```
+
+A league-season is one request per team (about 25 for the KHL) at one request a second.
+
 ## Being polite
 
 Every request goes through one throttled session (`puckscrape/_http.py`): 1.5 s between
-Elite Prospects requests, 1 s for MoneyPuck and league websites, 0.5 s for league JSON APIs,
+Elite Prospects requests, 1 s for MoneyPuck, HockeyDB and league websites, 0.5 s for league JSON APIs,
 0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.
@@ -116,6 +134,8 @@ logging.basicConfig(level=logging.INFO)
 ## Credits and terms
 
 - Elite Prospects scraping is for personal use: commercial use should go through the EP API.
+- HockeyDB data is from [hockeydb.com](https://www.hockeydb.com): keep it to personal use and the
+  default rate limit.
 - MoneyPuck data is from [MoneyPuck.com](https://moneypuck.com). Credit them if you publish with it.
 - `ps.leagues` reads the same public pages and data feeds each league's website loads in a
   browser (the CHL key, for instance, is the public site key chl.ca sends). They're unofficial,

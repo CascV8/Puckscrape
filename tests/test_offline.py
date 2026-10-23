@@ -218,3 +218,19 @@ def test_espn_match_players():
     assert out["nhl_player_id"].dropna().to_dict() == {1: 11, 2: 10, 3: 12, 4: 13, 5: 14}
     assert pd.isna(out.loc[6, "nhl_player_id"])
     assert out.loc[1, "match"] == "name+team" and out.loc[3, "match"] == "last name"
+
+
+def test_hockeydb_team_table():
+    from bs4 import BeautifulSoup
+    import pandas as pd
+
+    from puckscrape import hockeydb
+
+    soup = BeautifulSoup((FIXTURES / "hockeydb_team.html").read_bytes(), "html.parser")
+    rows = hockeydb._team_table(soup)
+    assert len(rows) == 5
+    k = rows[0]
+    assert (k["pid"], k["player"], k["pos"], k["gp"], k["pts"], k["po_pts"], k["age"]) == \
+        (56745, "Ilya Kovalchuk", "L", 53, 63, 10, 34)
+    assert rows[-2]["po_gp"] is pd.NA        # "--" (no playoffs) is missing, not 0
+    assert rows[-1]["pos"] == "G"
