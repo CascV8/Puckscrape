@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 .pytest_cache/
+
+# Claude Code worktrees and settings
+.claude/
