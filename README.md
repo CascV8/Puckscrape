@@ -122,6 +122,11 @@ Elite Prospects requests, 1 s for MoneyPuck, HockeyDB and league websites, 0.5 s
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.
 
+Elite Prospects sits behind a Cloudflare bot challenge that fingerprints the connection itself,
+so a browser User-Agent isn't enough. EP requests go through [curl_cffi](https://github.com/lexiforest/curl_cffi),
+which makes the same TLS/HTTP2 handshake as a real browser. If Cloudflare still challenges it,
+puckscrape backs off and retries as a different browser (Chrome, then Safari, then Firefox).
+
 Long Elite Prospects scrapes can be stopped with Ctrl-C, which returns everything scraped so far.
 
 To see progress:
