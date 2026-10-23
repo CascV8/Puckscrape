@@ -112,12 +112,13 @@ ps.hockeydb.skaters(479, "2023-24")        # or any HockeyDB league id (479 = MH
 ps.hockeydb.leagues()                      # every league and its id
 ```
 
-A league-season is one request per team (about 25 for the KHL) at one request a second.
+A league-season is one request per team (about 25 for the KHL), at one request every 3 seconds:
+HockeyDB puts a Cloudflare challenge on clients that go faster, and that block lasts a while.
 
 ## Being polite
 
 Every request goes through one throttled session (`puckscrape/_http.py`): 1.5 s between
-Elite Prospects requests, 1 s for MoneyPuck, HockeyDB and league websites, 0.5 s for league JSON APIs,
+Elite Prospects requests, 3 s for HockeyDB, 1 s for MoneyPuck and league websites, 0.5 s for league JSON APIs,
 0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.

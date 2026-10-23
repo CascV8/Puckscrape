@@ -11,7 +11,7 @@ Slovakia, the NAHL...).
 
 Every player has a HockeyDB id (``pid``) that's the same in every league, so a
 player's stints in different leagues link exactly. A league-season is one page
-per team (about 25 requests for the KHL), at one request a second.
+per team (about 25 requests for the KHL), at one request every 3 seconds.
 """
 
 from __future__ import annotations
