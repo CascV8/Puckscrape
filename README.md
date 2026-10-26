@@ -82,6 +82,7 @@ ps.leagues.standings("mestis", 2025)
 | `ohl`, `whl`, `qmjhl` | CHL | HockeyTech feed behind chl.ca | full history; playoffs too |
 | `ahl`, `echl` | AHL, ECHL | HockeyTech (theahl.com, echl.com) | full history; playoffs too |
 | `ushl`, `bchl`, `ajhl`, `sjhl`, `mjhl`, `ojhl`, `cchl`, `mjahl`, `kijhl`, `vijhl` | US/Canadian junior | HockeyTech (each league's site key) | `mjahl` is the Maritime Junior Hockey League |
+| `gohl`, `csshl` | GOHL (Ontario junior B), CSSHL U18 Prep | HockeyTech | CSSHL from 2021-22 (earlier seasons mix every age division) |
 | `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
 | `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
 | `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
@@ -95,7 +96,8 @@ ps.leagues.standings("mestis", 2025)
 
 Not covered: the KHL, VHL and MHL (khl.ru answers every request with 403), Slovakia (behind a
 Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
-Hungary, Italy and J20 Nationell, which aren't wired yet. The NAHL's stats widget needs a
+Hungary, Italy, J20 Nationell, the GTHL (no public stats pages) and the PJHL (an old Ramp
+frameset site), which aren't wired yet. The NAHL's stats widget needs a
 CSRF session cookie, so it isn't wired either. `ps.eliteprospects` covers most of these.
 
 ## HockeyDB (`ps.hockeydb`)

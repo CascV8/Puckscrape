@@ -16,7 +16,7 @@ from ._common import Unsupported, finish, get_json, phase_key
 FEED = "https://lscluster.hockeytech.com/feed/index.php"
 CHL_KEY = "f1aa699db3d81487"
 
-_SKIP = ("pre", "prospect", "showcase", "combine", "draft", "all-star", "allstar", "exhibition",
+_SKIP = ("pre-season", "preseason", "pre season", "prospect", "showcase", "combine", "draft", "all-star", "allstar", "exhibition",
          "challenge", "top prospects", "classic", "tournament")
 
 
@@ -34,8 +34,10 @@ def _kit(client: str, **params) -> dict:
 
 
 @cache
-def seasons(client: str) -> pd.DataFrame:
-    return pd.DataFrame(_kit(client, view="seasons")["Seasons"])
+def seasons(client: str, league_id: int | None = None) -> pd.DataFrame:
+    """A client's seasons; ``league_id`` picks one division where a client has several (the CSSHL)."""
+    extra = {} if league_id is None else {"league_id": league_id}
+    return pd.DataFrame(_kit(client, view="seasons", **extra)["Seasons"])
 
 
 def _start_year(name: str, playoffs: bool) -> int | None:
@@ -52,22 +54,38 @@ def _start_year(name: str, playoffs: bool) -> int | None:
     return None
 
 
-def season_id(client: str, y: int, phase: str) -> str:
-    """Regular season: a name with 'regular', or nothing but the league and years
-    ('2025-26', 'CCHL 2025-26'). Playoffs: a name with 'playoff'."""
+def season_id(client: str, y: int, phase: str, regular: str | None = None,
+              league_id: int | None = None) -> str:
+    """Regular season: a name with 'regular', nothing but the league and years
+    ('2025-26', 'CCHL 2025-26'), or one matching the league's own ``regular``
+    pattern ('2025-2026 GOHL Season', '2025-26 U18 Prep'). Playoffs: a name with 'playoff'."""
     want = phase_key(phase)
-    for _, s in seasons(client).iterrows():
+    for _, s in seasons(client, league_id).iterrows():
         name = s["season_name"].lower()
         if any(w in name for w in _SKIP):
             continue
         is_playoff = "playoff" in name
         if (want == "playoffs") != is_playoff:
             continue
-        if want == "regular" and "regular" not in name and re.sub(r"[\d\s\-/|]+", "", name.replace(client, "")):
-            continue  # something other than a plain 'LEAGUE 2025-26'
+        plain = not re.sub(r"[\d\s\-/|]+", "", name.replace(client, ""))
+        if want == "regular" and "regular" not in name and not plain and not (regular and re.search(regular, name)):
+            continue  # a tournament or event, not the league season
         if _start_year(name, is_playoff) == y:
             return s["season_id"]
     raise ValueError(f"no {want} season {y}-{y + 1} for {client}")
+
+
+def _season(opts: dict, y: int, phase: str) -> dict:
+    """The feed parameters for one season: season_id, plus league_id for a client
+    with divisions (the CSSHL's U18 Prep), trying each listed league_id in order."""
+    client = opts["client"]
+    for league_id in opts.get("league_ids", [None]):
+        try:
+            sid = season_id(client, y, phase, opts.get("regular"), league_id)
+        except ValueError:
+            continue
+        return {"season_id": sid} if league_id is None else {"season_id": sid, "league_id": league_id}
+    raise ValueError(f"no {phase_key(phase)} season {y}-{y + 1} for {client}")
 
 
 def _first_last(name):
@@ -84,7 +102,7 @@ _DROP = ("phonetic_name", "shortname", "suspension_games_remaining", "suspension
 
 def skaters(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
     client = opts["client"]
-    rows = _kit(client, view="statviewtype", type="topscorers", season_id=season_id(client, y, phase),
+    rows = _kit(client, view="statviewtype", type="topscorers", **_season(opts, y, phase),
                 first=0, limit=5000)["Statviewtype"]
     df = pd.DataFrame(rows)
     if client == "lhjmq" and not df.empty:
@@ -97,7 +115,7 @@ def skaters(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
 
 def goalies(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
     client = opts["client"]
-    rows = _kit(client, view="statviewtype", type="topgoalies", season_id=season_id(client, y, phase),
+    rows = _kit(client, view="statviewtype", type="topgoalies", **_season(opts, y, phase),
                 first=0, limit=1000)["Statviewtype"]
     df = pd.DataFrame(rows)
     if client == "lhjmq" and not df.empty:
@@ -114,7 +132,7 @@ def standings(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
         raise Unsupported("standings are regular season only")
     client = opts["client"]
     rows = _kit(client, view="statviewtype", stat="conference", type="standings",
-                season_id=season_id(client, y, phase))["Statviewtype"]
+                **_season(opts, y, phase))["Statviewtype"]
     df = pd.DataFrame([r for r in rows if r.get("team_code")])
     if not df.empty:
         # Clinch markers are glued to the name: 'xyz - Brantford Bulldogs'.

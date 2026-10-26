@@ -68,6 +68,10 @@ _REGISTRY = [
     League("mjahl", "Maritime Junior Hockey League", "Canada", "junior A", "themhl.ca (HockeyTech)", hockeytech, {"client": "mhl", "key": "4a948e7faf5ee58d"}),
     League("kijhl", "Kootenay International Junior Hockey League", "Canada", "junior B", "kijhl.ca (HockeyTech)", hockeytech, {"client": "kijhl", "key": "2589e0f644b1bb71"}),
     League("vijhl", "Vancouver Island Junior Hockey League", "Canada", "junior B", "vijhl.ca (HockeyTech)", hockeytech, {"client": "vijhl", "key": "4f1a61df18906b61"}),
+    League("gohl", "Greater Ontario Hockey League", "Canada", "junior B", "gohl.ca (HockeyTech)", hockeytech,
+           {"client": "gojhl", "key": "34b10d4d34d7b59a", "regular": r"\bgo(j)?hl season$"}),
+    League("csshl", "Canadian Sport School Hockey League (U18 Prep)", "Canada", "U18", "csshl.ca (HockeyTech)", hockeytech,
+           {"client": "csshl", "key": "dbb3085c9c2968c6", "league_ids": [6], "regular": r"^\d{4}-\d{2} u18 prep$"}),
     # Sweden
     League("shl", "SHL", "Sweden", "top", "shl.se", sportality, {"host": "https://www.shl.se", "series": "SHL"}),
     League("hockeyallsvenskan", "HockeyAllsvenskan", "Sweden", "second", "hockeyallsvenskan.se", hockeyallsvenskan),
