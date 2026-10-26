@@ -62,12 +62,24 @@ def test_hockeytech_season_names(monkeypatch):
     seasons = pd.DataFrame({"season_id": ["10", "11", "12", "13", "14"], "season_name": [
         "2026 - 27 Regular Season", "2026 Playoffs", "2025-26 | Regular Season",
         "2025-26 OHL Top Prospects", "Pre-Season 2025"]})
-    monkeypatch.setattr(hockeytech, "seasons", lambda client: seasons)
+    monkeypatch.setattr(hockeytech, "seasons", lambda client, league_id=None: seasons)
     assert hockeytech.season_id("x", 2026, "regular") == "10"
     assert hockeytech.season_id("x", 2025, "regular") == "12"
     assert hockeytech.season_id("x", 2025, "playoffs") == "11"
     with pytest.raises(ValueError):
         hockeytech.season_id("x", 2019, "regular")
+
+
+def test_hockeytech_league_regular_pattern(monkeypatch):
+    # The GOHL calls its season "2025-2026 GOHL Season"; the CSSHL's U18 Prep "2025-26 U18 Prep",
+    # which the pre-season skip must not catch.
+    seasons = pd.DataFrame({"season_id": ["1", "2", "3", "4"], "season_name": [
+        "2025-2026 Special Events", "2025-2026 GOHL Season", "2026 GOHL Pre-Season", "2025-26 U18 Prep"]})
+    monkeypatch.setattr(hockeytech, "seasons", lambda client, league_id=None: seasons)
+    assert hockeytech.season_id("gojhl", 2025, "regular", r"\bgo(j)?hl season$") == "2"
+    assert hockeytech.season_id("csshl", 2025, "regular", r"^\d{4}-\d{2} u18 prep$") == "4"
+    with pytest.raises(ValueError):   # without its pattern, a league's own name isn't a regular season
+        hockeytech.season_id("gojhl", 2025, "regular")
 
 
 def test_phase_key():
