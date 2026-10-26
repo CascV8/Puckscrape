@@ -8,11 +8,13 @@ import time
 from urllib.parse import urlsplit
 
 import requests
+from curl_cffi import requests as curl_requests
 
 log = logging.getLogger("puckscrape")
 
 # A realistic browser User-Agent. Sending the default "python-requests/x.x"
-# is a common trigger for bot filtering -- Elite Prospects answers it with 403.
+# is a common trigger for bot filtering. (Not enough for Elite Prospects any
+# more: see IMPERSONATE_HOSTS.)
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -49,6 +51,16 @@ DEFAULT_RATE_LIMIT = 0.1
 
 RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
 
+# Hosts behind a Cloudflare bot challenge. Cloudflare fingerprints the TLS and
+# HTTP/2 handshake, so a browser User-Agent on top of python-requests still
+# gets the "Just a moment" page. These go through curl_cffi instead, which
+# impersonates a real browser's handshake (and sends that browser's headers).
+IMPERSONATE_HOSTS = frozenset({"www.eliteprospects.com"})
+
+# Browser profiles to impersonate, in order. If Cloudflare still challenges one,
+# the next request starts a fresh session as the next browser.
+IMPERSONATE_TARGETS = ("chrome", "safari", "firefox")
+
 
 class PuckscrapeError(RuntimeError):
     """Base error for this package."""
@@ -59,6 +71,8 @@ class BlockedError(PuckscrapeError):
 
 
 _session: requests.Session | None = None
+_browser_session: curl_requests.Session | None = None
+_browser_target = 0
 _last_request: dict[str, float] = {}
 _lock = threading.Lock()
 
@@ -69,6 +83,27 @@ def session() -> requests.Session:
         _session = requests.Session()
         _session.headers.update(HEADERS)
     return _session
+
+
+def browser_session() -> curl_requests.Session:
+    """The session for IMPERSONATE_HOSTS: same handshake and headers as a real browser."""
+    global _browser_session
+    if _browser_session is None:
+        target = IMPERSONATE_TARGETS[_browser_target % len(IMPERSONATE_TARGETS)]
+        log.debug("Impersonating %s", target)
+        _browser_session = curl_requests.Session(impersonate=target)
+    return _browser_session
+
+
+def _next_browser() -> None:
+    """Drop the browser session (and its cookies) and switch to the next profile."""
+    global _browser_session, _browser_target
+    _browser_session = None
+    _browser_target += 1
+
+
+def _is_challenge(resp) -> bool:
+    return resp.headers.get("cf-mitigated") == "challenge"
 
 
 def _throttle(host: str) -> None:
@@ -115,12 +150,16 @@ def _request(
     timeout: float = 60,
 ) -> requests.Response:
     host = urlsplit(url).netloc
+    impersonate = host in IMPERSONATE_HOSTS
     statuses = RETRY_STATUSES | {403} if retry_403 else RETRY_STATUSES
 
     for attempt in range(retries + 1):
         _throttle(host)
         try:
-            resp = session().request(method, url, params=params, json=json_body, timeout=timeout)
+            if impersonate:
+                resp = _browser_request(method, url, params=params, json=json_body, timeout=timeout)
+            else:
+                resp = session().request(method, url, params=params, json=json_body, timeout=timeout)
         except (requests.ConnectionError, requests.Timeout) as e:
             if attempt == retries:
                 raise
@@ -129,21 +168,46 @@ def _request(
             time.sleep(wait)
             continue
 
+        if impersonate and _is_challenge(resp):
+            if attempt == retries:
+                raise BlockedError(f"Cloudflare challenge from {url} after {retries} retries")
+            _next_browser()
+            wait = backoff * 2**attempt
+            log.warning("Cloudflare challenge on %s; retrying as another browser in %.0fs", url, wait)
+            time.sleep(wait)
+            continue
+
         if resp.status_code in statuses:
             if attempt == retries:
                 if resp.status_code in (403, 429):
                     raise BlockedError(f"{resp.status_code} from {url} after {retries} retries")
-                resp.raise_for_status()
+                _raise_for_status(resp)
             retry_after = resp.headers.get("Retry-After", "")
             wait = float(retry_after) if retry_after.isdigit() else backoff * 2**attempt
             log.warning("HTTP %s on %s; retrying in %.0fs", resp.status_code, url, wait)
             time.sleep(wait)
             continue
 
-        resp.raise_for_status()
+        _raise_for_status(resp)
         return resp
 
     raise AssertionError("unreachable")
+
+
+def _browser_request(method: str, url: str, **kwargs):
+    """curl_cffi request, with its errors re-raised as the requests ones callers catch."""
+    try:
+        return browser_session().request(method, url, **kwargs)
+    except curl_requests.exceptions.Timeout as e:
+        raise requests.Timeout(str(e)) from e
+    except curl_requests.exceptions.RequestException as e:
+        raise requests.ConnectionError(str(e)) from e
+
+
+def _raise_for_status(resp) -> None:
+    """raise_for_status that raises requests.HTTPError for curl_cffi responses too."""
+    if resp.status_code >= 400:
+        raise requests.HTTPError(f"{resp.status_code} error for url: {resp.url}", response=resp)
 
 
 def get_json(url: str, **kwargs) -> dict:
