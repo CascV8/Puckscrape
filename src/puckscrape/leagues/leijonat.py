@@ -24,9 +24,14 @@ def _filters(sorted_by: str) -> dict:
 
 
 @cache
-def _level_id(season: int, level_name: str) -> int:
-    for lv in get_json(MAIN + "getlevels", season=season):
-        if lv.get("LevelName") == level_name:
+def _level_id(season: int, level_name: str | tuple[str, ...]) -> int:
+    """A level's id that season. ``level_name`` can list the names it has had
+    (U20 SM-sarja was Nuorten SM-Liiga until 2020-21); the first one found wins."""
+    names = [level_name] if isinstance(level_name, str) else level_name
+    levels = {lv.get("LevelName"): lv for lv in get_json(MAIN + "getlevels", season=season)}
+    for name in names:
+        if name in levels:
+            lv = levels[name]
             return lv["LevelID"]
     raise ValueError(f"no level {level_name!r} in season {season - 1}-{season}")
 

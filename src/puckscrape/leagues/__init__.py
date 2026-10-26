@@ -80,8 +80,8 @@ _REGISTRY = [
     League("liiga", "Liiga", "Finland", "top", "liiga.fi", liiga),
     League("mestis", "Mestis", "Finland", "second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Mestis"}),
     League("suomi-sarja", "Suomi-sarja", "Finland", "third", "tulospalvelu.leijonat.fi", leijonat, {"level": "Suomi-sarja"}),
-    League("u20-sm-sarja", "U20 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": "U20 SM-sarja"}),
-    League("u18-sm-sarja", "U18 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": "U18 SM-sarja"}),
+    League("u20-sm-sarja", "U20 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": ("U20 SM-sarja", "Nuorten SM-Liiga")}),
+    League("u18-sm-sarja", "U18 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": ("U18 SM-sarja", "B-nuorten SM-sarja")}),
     League("auroraliiga", "Auroraliiga (women)", "Finland", "women", "tulospalvelu.leijonat.fi", leijonat, {"level": "Auroraliiga"}),
     # Switzerland
     League("nl", "National League", "Switzerland", "top", "data.sihf.ch", sihf, {"league_id": 1}),
