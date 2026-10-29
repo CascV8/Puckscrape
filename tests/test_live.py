@@ -43,6 +43,19 @@ def test_tsn_draft_ranking():
     assert len(df) == 32 and df["player"].iloc[0] == "Landon DuPont" and (df["draft_year"] == 2027).all()
 
 
+def test_nhl_central_scouting():
+    df = ps.nhl.draft_rankings(2025)
+    assert df["category"].nunique() == 4 and len(df) > 400
+    top = df[(df["category"] == "north-american-skater") & (df["final_rank"] == 1)]
+    assert top["name"].tolist() == ["Matthew Schaefer"]
+
+
+def test_mckenzie_ranking():
+    df = ps.tsn.mckenzie_ranking(2025, "final")
+    assert df["rank"].max() == 80 and (df["rank_note"] == "HM").sum() == 20
+    assert df.loc[df["rank"] == 1, "player"].tolist() == ["Matthew Schaefer"]
+
+
 def test_espn_standings():
     df = ps.espn.standings(2024)
     assert len(df) == 32 and df["points"].max() > 100

@@ -16,6 +16,8 @@ ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league 
 ps.hockeydb.skaters("khl", "2024-25")                   # HockeyDB rosters, any league
 ps.eliteprospects.draft_rankings("all")                 # NHL draft rankings: EP's and other outlets'
 ps.tsn.draft_ranking(ps.tsn.draft_ranking_articles())   # TSN's draft rankings
+ps.tsn.mckenzie_ranking(editions="final")               # Bob McKenzie's final lists, 2020 on
+ps.nhl.draft_rankings(2025)                             # NHL Central Scouting, 2008 on
 ```
 
 Seasons can be written any way: `2024`, `"2024-25"`, `"2024-2025"` or `"20242025"`.
@@ -32,10 +34,10 @@ pip install "puckscrape[tdh] @ git+https://github.com/CascV8/Puckscrape.git"   #
 
 | Module | Functions |
 |---|---|
-| `nhl` | `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `shifts`, `full_play_by_play`*, `roster`, `player_info`, `game_log`, `standings`, `skater_stats`, `goalie_stats`, `team_stats`, `teams` |
+| `nhl` | `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `shifts`, `full_play_by_play`*, `roster`, `player_info`, `game_log`, `standings`, `skater_stats`, `goalie_stats`, `team_stats`, `teams`, `draft_rankings` |
 | `edge` | `skater_summary`, `skater_shot_locations`, `skater_zone_time`, `skater_top_speeds`, `skater_hardest_shots`, `skater_distance`, `goalie_summary`, `goalie_shot_locations`, `goalie_save_pct_last10`, `team_summary`, `team_zone_time`, `team_top_speeds`, `raw` |
 | `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info`, `draft_rankings`, `draft_scouts` |
-| `tsn` | `draft_ranking`, `draft_ranking_articles` |
+| `tsn` | `draft_ranking`, `mckenzie_ranking`, `draft_ranking_articles` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
 | `leagues` | `leagues`, `skaters`, `goalies`, `standings` |
 | `hockeydb` | `leagues`, `seasons`, `skaters` |
@@ -121,7 +123,34 @@ ps.hockeydb.leagues()                      # every league and its id
 A league-season is one request per team (about 25 for the KHL), at one request every 3 seconds:
 HockeyDB puts a Cloudflare challenge on clients that go faster, and that block lasts a while.
 
-## NHL draft rankings (`ps.eliteprospects`, `ps.tsn`)
+## NHL draft rankings (`ps.nhl`, `ps.tsn`, `ps.eliteprospects`)
+
+NHL Central Scouting's lists come from the NHL's own API, for every draft from 2008. Each of its
+four categories (North American and international skaters and goalies) is ranked separately,
+with the January midterm and April final ranks side by side, plus bio and last amateur club:
+
+```python
+ps.nhl.draft_rankings()                                   # the latest draft, all four categories
+ps.nhl.draft_rankings(2015, "north-american-skater")      # also "international-skater", "...-goalie"
+```
+
+Players Central Scouting lists as "LV" (limited viewing) have no rank, and "LV" in `midterm_note` / `final_note`.
+
+Bob McKenzie's ranking, a consensus of 10 NHL scouts he surveyed for TSN, came out up to four times
+a season. `tsn.mckenzie_ranking` fetches them by draft year and edition (`"pre-season"`,
+`"mid-season"`, `"lottery"`, `"final"`) from a built-in index of the articles, `tsn.MCKENZIE_RANKINGS`:
+
+```python
+ps.tsn.mckenzie_ranking(2025, "final")          # 80 ranked + 20 honourable mentions
+ps.tsn.mckenzie_ranking(editions="final")       # every final list
+ps.tsn.mckenzie_ranking([2024, 2025])           # every edition of both years
+```
+
+The index covers the lists TSN still serves: 2020 and 2021 finals, every 2023-2025 edition but the
+2024 final, and from 2026 TSN's own scout-survey ranking, which replaced McKenzie's (`author` says
+who wrote each). The 2022 lists and the 2024 final weren't found on tsn.ca (their old links 404);
+if you find one, add its URL to the index or pass it to `tsn.draft_ranking`. Honourable mentions have
+no rank and "HM" in `rank_note`; tied players share a rank and have `tied` set.
 
 Elite Prospects' Draft Center collects rankings for the upcoming draft: its own, a consolidated
 ranking, and other outlets' (TSN's Craig Button and Chris Peters, NHL Central Scouting, Daily Faceoff,
@@ -137,9 +166,9 @@ ps.eliteprospects.draft_rankings("tsn-chris-peters", unranked=True)    # + EP's 
 
 EP only keeps lists for the upcoming draft, not past years'.
 
-TSN publishes each ranking (Craig Button's "Craig's List", TSN's scouting-survey ranking) as a table
-in a tsn.ca article, so `tsn.draft_ranking` takes article URLs, old or new URL style. It returns the
-table as printed (rank, team, league, position, height, weight, stats; goalies get `gaa` and `sv_pct`)
+TSN publishes each ranking (Craig Button's "Craig's List", the scout-survey ranking) in a tsn.ca
+article, so `tsn.draft_ranking` takes article URLs, old or new URL style. It reads the ranking
+table, or on older articles the player cards or numbered list, and returns it as printed (rank, team, league, position, height, weight, stats; goalies get `gaa` and `sv_pct`)
 plus the article's headline, author, publish date and the `draft_year` it's for:
 
 ```python
@@ -185,7 +214,8 @@ logging.basicConfig(level=logging.INFO)
   default rate limits.
 - ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
   unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
-- TSN draft rankings are Craig Button's and TSN's work, read from public tsn.ca articles. TSN's
+- NHL Central Scouting rankings come from the same public NHL API as the rest of `ps.nhl`.
+- TSN draft rankings are Bob McKenzie's, Craig Button's and TSN's work, read from public tsn.ca articles. TSN's
   terms of use apply: keep it to personal use, and credit TSN if you publish with them.
 - Licenses for code adapted from other projects are in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
 

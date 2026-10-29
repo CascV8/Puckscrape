@@ -261,3 +261,62 @@ def team_stats(seasons, report: str = "summary", game_type: int = REGULAR) -> pd
 def teams() -> pd.DataFrame:
     """All franchises ever, with ids and tri-codes."""
     return snake_columns(pd.DataFrame(_http.get_json(f"{STATS}/team").get("data", [])))
+
+
+# --------------------------------------------------------------------------
+# NHL Central Scouting draft rankings
+# --------------------------------------------------------------------------
+
+DRAFT_RANKING_CATEGORIES = {
+    "north-american-skater": 1,
+    "international-skater": 2,
+    "north-american-goalie": 3,
+    "international-goalie": 4,
+}
+LIMITED_VIEWING = 900   # Central Scouting's "LV" players come back as ranks 900+
+
+
+def draft_rankings(year=None, category="all") -> pd.DataFrame:
+    """NHL Central Scouting's draft rankings, one row per prospect.
+
+    >>> draft_rankings(2025, "north-american-skater")
+
+    ``year`` is the draft year (2008 on); the default is the latest one
+    Central Scouting has published. ``category`` is "north-american-skater",
+    "international-skater", "north-american-goalie", "international-goalie"
+    (or their ids 1-4), a list of them, or "all". Each category is ranked
+    separately, so there are four No. 1s. ``midterm_rank`` and ``final_rank``
+    are Central Scouting's January and April lists; either is empty if that
+    list hasn't come out yet, or didn't rank the player. Players Central
+    Scouting saw too little of to rank are listed "LV" (limited viewing):
+    the API codes them as ranks 900+, which come back here as an empty rank
+    with "LV" in ``midterm_note`` / ``final_note``.
+    """
+    if isinstance(category, str) and category == "all":
+        category = list(DRAFT_RANKING_CATEGORIES)
+    frames = []
+    for cat in as_list(category):
+        cat_id = DRAFT_RANKING_CATEGORIES.get(cat, cat)
+        if cat_id not in DRAFT_RANKING_CATEGORIES.values():
+            raise ValueError(f"category must be one of {list(DRAFT_RANKING_CATEGORIES)} or 1-4, not {cat!r}")
+        if year is None:
+            # "now" only serves the default category; ask for the latest year by number.
+            year = _http.get_json(f"{WEB}/draft/rankings/now").get("draftYear")
+        data = _http.get_json(f"{WEB}/draft/rankings/{year}/{cat_id}")
+        df = snake_columns(pd.DataFrame([{k: localized(v) for k, v in p.items()}
+                                         for p in data.get("rankings", [])]))
+        if df.empty:
+            continue
+        df.insert(0, "draft_year", data.get("draftYear", year))
+        df.insert(1, "category", data.get("categoryKey"))
+        df.insert(2, "name", df["first_name"] + " " + df["last_name"])
+        frames.append(df)
+    df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    for list_ in ("midterm", "final"):
+        col = f"{list_}_rank"
+        if col in df:
+            rank = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+            limited = rank >= LIMITED_VIEWING
+            df[col] = rank.mask(limited)
+            df[f"{list_}_note"] = pd.Series("LV", index=df.index, dtype="object").where(limited.fillna(False))
+    return df

@@ -1,0 +1,141 @@
+{
+ "draftYear": 2019,
+ "categoryId": 1,
+ "categoryKey": "north-american-skater",
+ "draftYears": [
+  2026,
+  2025,
+  2024,
+  2023,
+  2022,
+  2021,
+  2020,
+  2019,
+  2018,
+  2017,
+  2016,
+  2015,
+  2014,
+  2013,
+  2012,
+  2011,
+  2010,
+  2009,
+  2008
+ ],
+ "categories": [
+  {
+   "id": 1,
+   "name": "North American Skater",
+   "consumerKey": "north-american-skater"
+  },
+  {
+   "id": 2,
+   "name": "International Skater",
+   "consumerKey": "international-skater"
+  },
+  {
+   "id": 3,
+   "name": "North American Goalie",
+   "consumerKey": "north-american-goalie"
+  },
+  {
+   "id": 4,
+   "name": "International Goalie",
+   "consumerKey": "international-goalie"
+  }
+ ],
+ "rankings": [
+  {
+   "lastName": "Hughes",
+   "firstName": "Jack",
+   "positionCode": "C",
+   "shootsCatches": "L",
+   "heightInInches": 70,
+   "weightInPounds": 171,
+   "lastAmateurClub": "USA U-18",
+   "lastAmateurLeague": "NTDP",
+   "birthDate": "2001-05-14",
+   "birthCity": "Orlando",
+   "birthStateProvince": "FL",
+   "birthCountry": "USA",
+   "midtermRank": 1,
+   "finalRank": 1
+  },
+  {
+   "lastName": "Byram",
+   "firstName": "Bowen",
+   "positionCode": "D",
+   "shootsCatches": "L",
+   "heightInInches": 73,
+   "weightInPounds": 195,
+   "lastAmateurClub": "Vancouver",
+   "lastAmateurLeague": "WHL",
+   "birthDate": "2001-06-13",
+   "birthCity": "Cranbrook",
+   "birthStateProvince": "BC",
+   "birthCountry": "CAN",
+   "midtermRank": 4,
+   "finalRank": 2
+  },
+  {
+   "lastName": "Dach",
+   "firstName": "Kirby",
+   "positionCode": "C",
+   "shootsCatches": "R",
+   "heightInInches": 76,
+   "weightInPounds": 198,
+   "lastAmateurClub": "Saskatoon",
+   "lastAmateurLeague": "WHL",
+   "birthDate": "2001-01-21",
+   "birthCity": "Fort Saskatchewan",
+   "birthStateProvince": "AB",
+   "birthCountry": "CAN",
+   "midtermRank": 2,
+   "finalRank": 3
+  },
+  {
+   "lastName": "Alami",
+   "firstName": "Cade",
+   "positionCode": "D",
+   "shootsCatches": "R",
+   "heightInInches": 79,
+   "weightInPounds": 200,
+   "birthDate": "2001-03-13",
+   "birthCity": "New York",
+   "birthStateProvince": "NY",
+   "birthCountry": "USA",
+   "midtermRank": 918,
+   "finalRank": 173
+  },
+  {
+   "lastName": "Alexander",
+   "firstName": "Jacson",
+   "positionCode": "D",
+   "shootsCatches": "L",
+   "heightInInches": 70,
+   "weightInPounds": 183,
+   "birthDate": "2001-02-01",
+   "birthCity": "Victoria",
+   "birthStateProvince": "BC",
+   "birthCountry": "CAN",
+   "midtermRank": 919,
+   "finalRank": 918
+  },
+  {
+   "lastName": "Crozier",
+   "firstName": "Maxwell",
+   "positionCode": "D",
+   "shootsCatches": "R",
+   "heightInInches": 73,
+   "weightInPounds": 195,
+   "lastAmateurClub": "Sioux Falls",
+   "lastAmateurLeague": "USHL",
+   "birthDate": "2000-04-19",
+   "birthCity": "Calgary",
+   "birthStateProvince": "AB",
+   "birthCountry": "CAN",
+   "finalRank": 85
+  }
+ ]
+}

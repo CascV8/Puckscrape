@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 
+import pandas as pd
 import pytest
 from bs4 import BeautifulSoup
 
@@ -116,7 +117,7 @@ def test_ep_draft_scouts(monkeypatch):
 # ---- TSN -----------------------------------------------------------------
 
 @pytest.mark.parametrize("text,inches", [("5′11", 71), ("6'1 ¾", 73.75), ("6′0", 72), ("511 ¾", 71.75),
-                                         ("6'5 ¼", 77.25), ("", None)])
+                                         ("6'5 ¼", 77.25), ("5'11 3/4", 71.75), ("", None)])
 def test_tsn_height_inches(text, inches):
     assert tsn.height_inches(text) == inches
 
@@ -148,7 +149,85 @@ def test_tsn_draft_year(published, year):
     assert tsn._draft_year(published) == year
 
 
+def _card(heading, team, stats=("G", "P"), values=("46", "86"), last_rank=None):
+    last = f"<h4>Last Rank: {last_rank}</h4>" if last_rank else ""
+    head = "".join(f"<th>{h}</th>" for h in ("Team", "HT", "WT", "GP") + stats)
+    cells = "".join(f"<td>{v}</td>" for v in (team, "5'11 3/4", "189", "50") + values)
+    return f"<h3>{heading}</h3><p>Name</p>{last}<h4>2022-23 Stats</h4><table><tr>{head}</tr><tr>{cells}</tr></table>"
+
+
+def test_tsn_card_ranking():
+    """Older lists: one card per player, and honourable mentions in a table without RK."""
+    html = ('<div class="b-article-body"><p>1. A sentence that is not a card, though it starts with a number.</p>'
+            + _card("1. Macklin Celebrini, C - Chicago", "Chicago (USHL)", last_rank=2)
+            + _card("2. Cole Eiserman, LW", "USA NTDP (USHL)")
+            + _card("3. Michael Hrabal, G - Omaha", "Omaha (USHL)", ("GAA", "SV%"), ("2.46", ".907"))
+            + "<h4>Honourable Mentions</h4><table><tr><th>Player</th><th>Team</th><th>Pos</th></tr>"
+              "<tr><td>Cole Hutson</td><td>USA NTDP (USHL)</td><td>D</td></tr></table></div>")
+    rows = tsn.parse_ranking_page(BeautifulSoup(html, "html.parser"), "x")
+    assert [(r.get("rank"), r["player"]) for r in rows] == [
+        ("1", "Macklin Celebrini"), ("2", "Cole Eiserman"), ("3", "Michael Hrabal"), (None, "Cole Hutson")]
+    top = rows[0]
+    assert (top["position"], top["team"], top["league"], top["last_rank"]) == ("C", "Chicago", "USHL", "2")
+    assert top["height_in"] == 71.75 and (top["g"], top["pts"]) == ("46", "86")
+    assert (rows[2]["gaa"], rows[2]["sv_pct"]) == ("2.46", ".907") and "g" not in rows[2]
+    assert rows[3]["rank_note"] == "HM" and rows[3]["position"] == "D"
+
+
+def test_tsn_text_ranking():
+    """The oldest lists are numbered lines: with or without a period, ties, then mentions."""
+    lines = ["Ten of 10 scouts had Power first.", "1. Owen Power", "2 Matty Beniers", "3 Simon Edvinsson",
+             "T4 William Eklund", "T4 Mason McTavish", "4. A repeated rank is skipped"] + \
+            [f"{n} Player {chr(59 + n)}" for n in range(6, 11)] + \
+            ["11. Yaroslav Askarov (G)", "————", "Honourable Mentions:", "Joel Blomqvist (G)", "Calle Clang",
+             "That's the list. More notes below, with 12 names in them."]
+    html = '<div class="b-article-body">' + "".join(f"<p>{line}</p>" for line in lines) + "</div>"
+    rows = tsn.parse_ranking_page(BeautifulSoup(html, "html.parser"), "x")
+    ranked = [r for r in rows if "rank" in r]
+    assert [r["rank"] for r in ranked] == ["1", "2", "3", "4", "4", "6", "7", "8", "9", "10", "11"]
+    assert ranked[3]["tied"] and ranked[4]["tied"] and "tied" not in ranked[2]
+    assert (ranked[-1]["player"], ranked[-1]["position"]) == ("Yaroslav Askarov", "G")
+    mentions = [r for r in rows if r.get("rank_note") == "HM"]
+    assert [(r["player"], r["position"]) for r in mentions] == [("Joel Blomqvist", "G"), ("Calle Clang", None)]
+
+
+def test_tsn_text_ranking_ignores_numbered_prose():
+    html = "".join(f"<p>{n}. Scout number {n} said something</p>" for n in range(1, 6))
+    assert tsn.parse_ranking_page(BeautifulSoup(html, "html.parser"), "x") == []
+
+
+def test_mckenzie_ranking_index(monkeypatch):
+    fetched = []
+
+    def fake(url):
+        fetched.append(url)
+        return pd.DataFrame({"rank": [1], "player": ["X"], "draft_year": [None]})
+    monkeypatch.setattr(tsn, "draft_ranking", fake)
+    df = tsn.mckenzie_ranking([2025, 2023], "final")
+    assert fetched == [tsn.MCKENZIE_RANKINGS[(2023, "final")], tsn.MCKENZIE_RANKINGS[(2025, "final")]]
+    assert df["edition"].tolist() == ["final", "final"] and df["draft_year"].tolist() == [2023, 2025]
+    with pytest.raises(ValueError):
+        tsn.mckenzie_ranking(2025, "midseason")
+    assert set(e for _, e in tsn.MCKENZIE_RANKINGS) <= set(tsn.EDITIONS)
+
+
 # ---- NHL / Edge ----------------------------------------------------------
+
+def test_nhl_draft_rankings(monkeypatch):
+    data = json.loads((FIXTURES / "nhl_draft_rankings_2019_1.json").read_text(encoding="utf-8"))
+    urls = []
+    monkeypatch.setattr(nhl._http, "get_json", lambda url, **k: urls.append(url) or data)
+    df = nhl.draft_rankings(2019, "north-american-skater")
+    assert urls == ["https://api-web.nhle.com/v1/draft/rankings/2019/1"]
+    assert df["name"].tolist()[:3] == ["Jack Hughes", "Bowen Byram", "Kirby Dach"]
+    assert (df["draft_year"] == 2019).all() and (df["category"] == "north-american-skater").all()
+    assert df["final_rank"].tolist()[:3] == [1, 2, 3] and str(df["final_rank"].dtype) == "Int64"
+    alami, alexander = df.iloc[3], df.iloc[4]     # Central Scouting's "LV" (limited viewing) players
+    assert pd.isna(alami["midterm_rank"]) and alami["midterm_note"] == "LV" and alami["final_rank"] == 173
+    assert pd.isna(alexander["final_rank"]) and alexander["final_note"] == "LV"
+    assert df["midterm_rank"].max() < 900 and pd.isna(df.iloc[5]["midterm_rank"])
+    with pytest.raises(ValueError):
+        nhl.draft_rankings(2019, "europe")
 
 def test_play_by_play(monkeypatch):
     data = json.loads((FIXTURES / "pbp_2024020001.json").read_text(encoding="utf-8"))

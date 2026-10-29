@@ -12,6 +12,8 @@ returned as pandas DataFrames.
     ps.hockeydb.skaters("khl", "2024-25")         # HockeyDB rosters, any league
     ps.eliteprospects.draft_rankings("all")       # NHL draft rankings
     ps.tsn.draft_ranking(ps.tsn.draft_ranking_articles())
+    ps.tsn.mckenzie_ranking(2025, "final")        # Bob McKenzie's lists
+    ps.nhl.draft_rankings(2025)                   # NHL Central Scouting
 
 Progress is reported through the ``puckscrape`` logger; call
 ``logging.basicConfig(level=logging.INFO)`` to see it.
