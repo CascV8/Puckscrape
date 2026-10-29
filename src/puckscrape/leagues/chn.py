@@ -21,8 +21,13 @@ BASE = "https://www.collegehockeynews.com"
 
 def _team_pages(y: int) -> list[str]:
     index = soup(f"{BASE}/stats/index.php", season=f"{y}{y + 1}")
-    links = {a["href"] for a in index.find_all("a", href=True)
-             if re.match(r"/stats/team/[^/]+/\d+/overall,\d{8}$", a["href"])}
+    # Past seasons link '/stats/team/Michigan/31/overall,20252026'; the season under way links plain
+    # '/stats/team/Michigan/31', so both are read and pointed at the season asked for.
+    links = set()
+    for a in index.find_all("a", href=True):
+        m = re.match(r"(/stats/team/[^/]+/\d+)(?:/overall,\d{8})?$", a["href"])
+        if m:
+            links.add(f"{m.group(1)}/overall,{y}{y + 1}")
     if not links:
         raise ValueError(f"College Hockey News has no {y}-{y + 1} season")
     return sorted(links)
