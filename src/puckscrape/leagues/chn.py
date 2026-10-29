@@ -52,7 +52,7 @@ def _collect(y: int, goalie: bool) -> pd.DataFrame:
         if table is None:
             continue
         df = table_rows(table, ("Name, Yr",))
-        df = df[~df["Name, Yr"].str.contains(r"^(?:Totals?|Opponents?|Team)\b", regex=True)]
+        df = df[~df["Name, Yr"].str.contains(r"^(?:Totals?|Opponents?|Team)\b", regex=True, case=False)]
         split = [_split_name(n, goalie) for n in df["Name, Yr"]]
         df.insert(0, "player", [s[0] for s in split])
         df.insert(1, "position", [s[1] for s in split])
