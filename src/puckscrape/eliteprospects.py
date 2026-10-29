@@ -1,4 +1,4 @@
-"""Elite Prospects league stats and player bios.
+"""Elite Prospects league stats, player bios and NHL draft rankings.
 
 Stats come from the Next.js ``__NEXT_DATA__`` JSON embedded in each page,
 with the header-matched HTML table as a fallback.
@@ -323,3 +323,101 @@ def add_player_info(df: pd.DataFrame) -> pd.DataFrame:
         return df
     bios = bios.drop(columns=["player", "player_id", "nation"], errors="ignore")
     return df.merge(bios, on="link", how="left")
+
+
+# --------------------------------------------------------------------------
+# Draft rankings (Draft Center)
+# --------------------------------------------------------------------------
+
+def _draft_page(scout: str | None = None) -> dict:
+    """pageProps of the Draft Center, or of one scout's list in it."""
+    path = f"/draft-center/{scout}" if scout else "/draft-center"
+    soup = _fetch_soup(BASE + path, None, lambda s: bool(_page_props(s).get("draftRankings")),
+                       strict_path=True)
+    if soup is None:
+        raise ValueError(f"no Elite Prospects draft ranking called {scout!r}; see draft_scouts()")
+    return _page_props(soup)
+
+
+def draft_scouts() -> pd.DataFrame:
+    """Every ranking in EP's Draft Center: its ``scout`` slug, name and last update.
+
+    EP collects its own lists (``eliteprospects-com``, ``consolidated-ranking``)
+    and other outlets' (``tsn-craig-button``, ``daily-faceoff``, ``nhl-central-scouting-na``...).
+    ``last_update`` says "NO RANKING PUBLISHED" for lists that are empty so far.
+    """
+    props = _draft_page()
+    return pd.DataFrame([
+        {
+            "scout": s.get("slug"),
+            "name": s.get("name"),
+            "source": (s.get("rankingSource") or {}).get("name"),
+            "last_update": s.get("lastUpdateInformation"),
+            "draft_year": props.get("year"),
+            "link": BASE + s["eliteprospectsUrlPath"] if s.get("eliteprospectsUrlPath") else None,
+        }
+        for s in (props.get("draftRankingScouts") or {}).get("scouts", [])
+    ])
+
+
+def parse_draft_rankings(props: dict) -> list[dict]:
+    """Rows from a Draft Center page's ``draftRankings``. Unranked prospects have rank None."""
+    scout = (props.get("scout") or {}).get("slug")
+    rows = []
+    for entry in (props.get("draftRankings") or {}).get("rankings", []):
+        p = entry.get("player") or {}
+        line = entry.get("playerStats") or {}
+        height, weight = p.get("height"), p.get("weight")
+        row = {
+            "draft_year": props.get("year"),
+            "scout": scout,
+            "rank": entry.get("rank"),
+            "player": p.get("name"),
+            "player_id": int(p["id"]) if p.get("id") else None,
+            "position": "/".join(p.get("detailedPosition") or []) or None,
+            "dob": p.get("dateOfBirth"),
+            "shoots": p.get("shoots"),
+            "nation": (p.get("nationality") or {}).get("name"),
+            "height_cm": height.get("metrics") if isinstance(height, dict) else None,
+            "weight_kg": weight.get("metrics") if isinstance(weight, dict) else None,
+            "team": (line.get("team") or {}).get("name"),
+            "league": (line.get("league") or {}).get("name"),
+        }
+        for k, v in (line.get("regularStats") or {}).items():
+            if k != "__typename":
+                row[_STAT_RENAMES.get(k, k.lower())] = _stat_value(k, v)
+        path = p.get("eliteprospectsUrlPath")
+        row["link"] = BASE + path if path else None
+        rows.append(row)
+    return rows
+
+
+def draft_rankings(scouts="consolidated-ranking", *, unranked: bool = False) -> pd.DataFrame:
+    """NHL draft rankings from EP's Draft Center, one row per player and list.
+
+    >>> draft_rankings(["eliteprospects-com", "tsn-craig-button"])
+
+    ``scouts`` are slugs from :func:`draft_scouts`, or "all". The default is
+    EP's consolidated ranking. EP only keeps lists for the upcoming draft
+    (``draft_year``); past years' rankings aren't available. ``unranked=True``
+    also returns the prospects in EP's pool that a list doesn't rank.
+    Player stats are the current season's, at the player's current team.
+    """
+    if isinstance(scouts, str) and scouts == "all":
+        scouts = draft_scouts()["scout"]
+    rows: list[dict] = []
+    try:
+        for scout in as_list(scouts):
+            page = parse_draft_rankings(_draft_page(scout))
+            ranked = [r for r in page if r["rank"] is not None]
+            if not ranked:
+                log.info("%s: no ranking published yet", scout)
+            rows.extend(page if unranked else ranked)
+            log.info("%s: %d ranked", scout, len(ranked))
+    except (KeyboardInterrupt, _http.BlockedError) as e:
+        log.warning("Stopped early (%s); returning the %d rows scraped so far", type(e).__name__, len(rows))
+    df = pd.DataFrame(rows)
+    for col in ("rank", "height_cm", "weight_kg", "gp", "g", "a", "tp", "pim", "w", "l", "t", "so"):
+        if col in df:
+            df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+    return df

@@ -31,6 +31,7 @@ RATE_LIMITS: dict[str, float] = {
     "peter-tanner.com": 1.0,
     "site.api.espn.com": 0.25,
     "site.web.api.espn.com": 0.25,
+    "www.tsn.ca": 1.0,
     # League and federation sites (puckscrape.leagues): HTML pages get 1 s, JSON APIs less.
     "www.collegehockeynews.com": 1.0,
     "www.hockeydb.com": 3.0,   # it challenges clients that go faster

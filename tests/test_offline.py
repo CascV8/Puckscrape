@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup
 
-from puckscrape import _util, edge, eliteprospects as ep, espn, nhl
+from puckscrape import _util, edge, eliteprospects as ep, espn, nhl, tsn
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -85,6 +85,67 @@ def test_ep_player_page_parse():
     assert row["player"] == "Test Guy" and row["nation"] == "Sweden"
     assert row["nhl_rights"] == "Detroit Red Wings" and row["rights_status"] == "Signed"
     assert (row["draft_year"], row["draft_overall"]) == (2023, 9)
+
+
+def test_ep_draft_rankings_parse():
+    rows = ep.parse_draft_rankings(ep._page_props(soup("ep_draft_ranking.html")))
+    assert [r["rank"] for r in rows] == [1, 2, 3, None, None]
+    top = rows[0]
+    assert (top["draft_year"], top["scout"], top["player"]) == (2027, "tsn-craig-button", "Landon DuPont")
+    assert (top["league"], top["position"], top["shoots"]) == ("NCAA", "D", "R")
+    assert (top["gp"], top["a"], top["tp"]) == (6, 6, 6)
+    assert top["height_cm"] > 170 and top["link"].endswith("/player/701503/landon-dupont")
+    assert rows[1]["position"] == "C/LW"
+
+
+def test_ep_draft_rankings_drops_unranked(monkeypatch):
+    monkeypatch.setattr(ep, "_draft_page", lambda scout=None: ep._page_props(soup("ep_draft_ranking.html")))
+    assert ep.draft_rankings("tsn-craig-button")["rank"].tolist() == [1, 2, 3]
+    df = ep.draft_rankings("tsn-craig-button", unranked=True)
+    assert len(df) == 5 and df["rank"].isna().sum() == 2
+    assert str(df["tp"].dtype) == "Int64"
+
+
+def test_ep_draft_scouts(monkeypatch):
+    monkeypatch.setattr(ep, "_draft_page", lambda scout=None: ep._page_props(soup("ep_draft_ranking.html")))
+    df = ep.draft_scouts()
+    assert df["scout"].iloc[0] == "consolidated-ranking"
+    assert "tsn-craig-button" in set(df["scout"]) and (df["draft_year"] == 2027).all()
+
+
+# ---- TSN -----------------------------------------------------------------
+
+@pytest.mark.parametrize("text,inches", [("5′11", 71), ("6'1 ¾", 73.75), ("6′0", 72), ("511 ¾", 71.75),
+                                         ("6'5 ¼", 77.25), ("", None)])
+def test_tsn_height_inches(text, inches):
+    assert tsn.height_inches(text) == inches
+
+
+def test_tsn_ranking_page():
+    rows = tsn.parse_ranking_page(soup("tsn_draft_ranking.html"), "https://www.tsn.ca/x")
+    assert [r["rank"] for r in rows] == ["1", "2", "3", "12", "20", "29"]   # blank spacer row skipped
+    top = rows[0]
+    assert (top["player"], top["team"], top["league"], top["position"]) == ("Matthew Schaefer", "Erie", "OHL", "D")
+    assert top["height_in"] == 73.75 and (top["gp"], top["g"], top["pts"]) == ("17", "7", "22")
+    assert (top["draft_year"], top["published"], top["author"]) == (2025, "2025-06-16", "Brianne Spiker")
+    goalie = rows[3]
+    assert goalie["position"] == "G" and "g" not in goalie
+    assert (goalie["gaa"], goalie["sv_pct"]) == ("3.05", ".903")
+
+
+def test_tsn_draft_ranking_types(monkeypatch):
+    class Resp:
+        content = (FIXTURES / "tsn_draft_ranking.html").read_bytes()
+    monkeypatch.setattr(tsn._http, "get", lambda *a, **k: Resp)
+    df = tsn.draft_ranking("/nhl/some-article")
+    assert df["url"].iloc[0] == "https://www.tsn.ca/nhl/some-article"
+    assert str(df["rank"].dtype) == "Int64" and str(df["pts"].dtype) == "Int64"
+    assert df.loc[df["position"] == "G", "sv_pct"].between(0.8, 1).all()
+
+
+@pytest.mark.parametrize("published,year", [("2026-09-24", 2027), ("2025-06-16", 2025), ("2026-01-10", 2026), (None, None)])
+def test_tsn_draft_year(published, year):
+    assert tsn._draft_year(published) == year
 
 
 # ---- NHL / Edge ----------------------------------------------------------

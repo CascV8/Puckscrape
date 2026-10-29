@@ -32,6 +32,17 @@ def test_eliteprospects_goalies():
     assert len(df) > 50 and df["gp"].gt(0).all()
 
 
+def test_eliteprospects_draft_rankings():
+    df = ps.eliteprospects.draft_rankings("eliteprospects-com")
+    assert len(df) >= 32 and df["rank"].tolist() == list(range(1, len(df) + 1))
+
+
+def test_tsn_draft_ranking():
+    url = "https://www.tsn.ca/nhl/article/dupont-opens-the-season-at-no-1-on-craigs-list/"
+    df = ps.tsn.draft_ranking(url)
+    assert len(df) == 32 and df["player"].iloc[0] == "Landon DuPont" and (df["draft_year"] == 2027).all()
+
+
 def test_espn_standings():
     df = ps.espn.standings(2024)
     assert len(df) == 32 and df["points"].max() > 100

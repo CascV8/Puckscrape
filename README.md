@@ -1,7 +1,8 @@
 # puckscrape
 
 Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN, HockeyDB and league/federation websites
-(NCAA, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), as pandas DataFrames.
+(NCAA, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), plus NHL draft rankings
+from Elite Prospects and TSN, as pandas DataFrames.
 
 ```python
 import puckscrape as ps
@@ -13,6 +14,8 @@ ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
 ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
 ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league websites
 ps.hockeydb.skaters("khl", "2024-25")                   # HockeyDB rosters, any league
+ps.eliteprospects.draft_rankings("all")                 # NHL draft rankings: EP's and other outlets'
+ps.tsn.draft_ranking(ps.tsn.draft_ranking_articles())   # TSN's draft rankings
 ```
 
 Seasons can be written any way: `2024`, `"2024-25"`, `"2024-2025"` or `"20242025"`.
@@ -31,7 +34,8 @@ pip install "puckscrape[tdh] @ git+https://github.com/CascV8/Puckscrape.git"   #
 |---|---|
 | `nhl` | `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `shifts`, `full_play_by_play`*, `roster`, `player_info`, `game_log`, `standings`, `skater_stats`, `goalie_stats`, `team_stats`, `teams` |
 | `edge` | `skater_summary`, `skater_shot_locations`, `skater_zone_time`, `skater_top_speeds`, `skater_hardest_shots`, `skater_distance`, `goalie_summary`, `goalie_shot_locations`, `goalie_save_pct_last10`, `team_summary`, `team_zone_time`, `team_top_speeds`, `raw` |
-| `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info` |
+| `eliteprospects` | `skaters`, `goalies`, `player_info`, `add_player_info`, `draft_rankings`, `draft_scouts` |
+| `tsn` | `draft_ranking`, `draft_ranking_articles` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
 | `leagues` | `leagues`, `skaters`, `goalies`, `standings` |
 | `hockeydb` | `leagues`, `seasons`, `skaters` |
@@ -117,10 +121,40 @@ ps.hockeydb.leagues()                      # every league and its id
 A league-season is one request per team (about 25 for the KHL), at one request every 3 seconds:
 HockeyDB puts a Cloudflare challenge on clients that go faster, and that block lasts a while.
 
+## NHL draft rankings (`ps.eliteprospects`, `ps.tsn`)
+
+Elite Prospects' Draft Center collects rankings for the upcoming draft: its own, a consolidated
+ranking, and other outlets' (TSN's Craig Button and Chris Peters, NHL Central Scouting, Daily Faceoff,
+Sportsnet, THN, McKeen's...). One row per player and list, with EP's player id, bio and current-season stats:
+
+```python
+ps.eliteprospects.draft_scouts()                                       # every list, and when it was last updated
+ps.eliteprospects.draft_rankings()                                     # EP's consolidated ranking
+ps.eliteprospects.draft_rankings(["eliteprospects-com", "tsn-craig-button"])
+ps.eliteprospects.draft_rankings("all")                                # every list with a ranking published
+ps.eliteprospects.draft_rankings("tsn-chris-peters", unranked=True)    # + EP's unranked prospects
+```
+
+EP only keeps lists for the upcoming draft, not past years'.
+
+TSN publishes each ranking (Craig Button's "Craig's List", TSN's scouting-survey ranking) as a table
+in a tsn.ca article, so `tsn.draft_ranking` takes article URLs, old or new URL style. It returns the
+table as printed (rank, team, league, position, height, weight, stats; goalies get `gaa` and `sv_pct`)
+plus the article's headline, author, publish date and the `draft_year` it's for:
+
+```python
+ps.tsn.draft_ranking_articles()     # the rankings linked from TSN's draft centre (only the latest few)
+ps.tsn.draft_ranking("https://www.tsn.ca/nhl/article/dupont-opens-the-season-at-no-1-on-craigs-list/")
+ps.tsn.draft_ranking(ps.tsn.draft_ranking_articles())
+```
+
+For older TSN lists, pass the article's URL. TSN's stats columns are whatever the article printed
+(usually the player's previous season), and its heights are converted to inches in `height_in`.
+
 ## Being polite
 
 Every request goes through one throttled session (`puckscrape/_http.py`): 1.5 s between
-Elite Prospects requests, 3 s for HockeyDB, 1 s for MoneyPuck and league websites, 0.5 s for league JSON APIs,
+Elite Prospects requests, 3 s for HockeyDB, 1 s for MoneyPuck, TSN and league websites, 0.5 s for league JSON APIs,
 0.25 s for ESPN, 0.1 s for the NHL. 403/429/5xx are retried
 with exponential backoff, and Elite Prospects pages that come back empty are retried
 because EP sometimes soft-blocks instead of returning 403.
@@ -151,6 +185,8 @@ logging.basicConfig(level=logging.INFO)
   default rate limits.
 - ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
   unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
+- TSN draft rankings are Craig Button's and TSN's work, read from public tsn.ca articles. TSN's
+  terms of use apply: keep it to personal use, and credit TSN if you publish with them.
 - Licenses for code adapted from other projects are in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
 
 ## Tests
