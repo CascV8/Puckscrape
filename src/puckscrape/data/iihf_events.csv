@@ -1,0 +1,858 @@
+event_id,year,title,gender,tournament,division,teams
+732,1990,1990 IIHF Ice Hockey Women's World Championship,women,ww,Top,0
+733,1992,1992 IIHF Ice Hockey Women's World Championship,women,ww,Top,0
+734,1994,1994 IIHF Ice Hockey Women's World Championship,women,ww,Top,0
+743,1996,1996 European Women Champions Cup,women,other,Top,0
+735,1997,1997 IIHF Ice Hockey Women's World Championship,women,ww,Top,0
+689,1999,1999 IIHF Ice Hockey Women's World Championship Group A,women,ww,Group A,0
+438,2003,2003 IIHF Ice Hockey World Championship,men,wm,Top,0
+799,2003,2003 IIHF Ice Hockey U20 World Championship,men,wm20,Top,0
+160,2008,2008 European Champions Cup,men,other,Top,6
+161,2008,2008 Continental Cup,men,other,Top,4
+162,2008,2008 European Women Champions Cup,women,other,Top,5
+133,2008,2008 IIHF World Championship Div I Group A,men,wm,Div I Group A,6
+134,2008,2008 IIHF World Championship Div I Group B,men,wm,Div I Group B,6
+135,2008,2008 IIHF World Championship Div II Group A,men,wm,Div II Group A,6
+136,2008,2008 IIHF World Championship Div II Group B,men,wm,Div II Group B,6
+137,2008,2008 IIHF World Championship Div III,men,wm,Div III,6
+165,2008,2008 IIHF World Championship Div IIIQ,men,wm,Div IIIQ,3
+132,2008,2008 IIHF World Championship,men,wm,Top,16
+149,2008,2008 IIHF World U18 Championship Div I Group A,men,wm18,Div I Group A,6
+150,2008,2008 IIHF World U18 Championship Div I Group B,men,wm18,Div I Group B,6
+151,2008,2008 IIHF World U18 Championship Div II Group A,men,wm18,Div II Group A,6
+152,2008,2008 IIHF World U18 Championship Div II Group B,men,wm18,Div II Group B,6
+153,2008,2008 IIHF World U18 Championship Div III Group A,men,wm18,Div III Group A,5
+154,2008,2008 IIHF World U18 Championship Div III Group B,men,wm18,Div III Group B,5
+148,2008,2008 IIHF World U18 Championship,men,wm18,Top,10
+143,2008,2008 IIHF World U20 Championship Div I Group A,men,wm20,Div I Group A,6
+144,2008,2008 IIHF World U20 Championship Div I Group B,men,wm20,Div I Group B,6
+145,2008,2008 IIHF World U20 Championship Div II Group A,men,wm20,Div II Group A,6
+146,2008,2008 IIHF World U20 Championship Div II Group B,men,wm20,Div II Group B,6
+147,2008,2008 IIHF World U20 Championship Div III,men,wm20,Div III,7
+142,2008,2008 IIHF World U20 Championship,men,wm20,Top,10
+139,2008,2008 IIHF World Womens Championship Div I,women,ww,Div I,6
+163,2008,2008 IIHF World Womens Championship Div II,women,ww,Div II,6
+140,2008,2008 IIHF World Womens Championship Div III,women,ww,Div III,6
+141,2008,2008 IIHF World Womens Championship Div IV,women,ww,Div IV,6
+138,2008,2008 IIHF World Womens Championship,women,ww,Top,9
+156,2008,2008 IIHF World Womens U18 Championship,women,ww18,Top,8
+180,2009,2009 Final Olympic Qualifcation Tournament Group C,men,olyq-m,Final Olympic Qualifcation Tournament Group C,4
+173,2009,2009 Final Olympic Qualifcation Tournament Group D,men,olyq-m,Final Olympic Qualifcation Tournament Group D,4
+182,2009,2009 Final Olympic Qualifcation Tournament Group E,men,olyq-m,Final Olympic Qualifcation Tournament Group E,4
+189,2009,2009 Final Olympic Qualifcation Tournament Group G,men,olyq-m,Final Olympic Qualifcation Tournament Group G,4
+186,2009,2009 Final Olympic Qualification Tournament Group F,men,olyq-m,Final Olympic Qualification Tournament Group F,4
+166,2009,2009 Pre-Olympic Qualification Tournament,men,olyq-m,Pre-Olympic Qualification Tournament,5
+167,2009,2009 Pre-Olympic Qualification Tournament,men,olyq-m,Pre-Olympic Qualification Tournament,4
+168,2009,2009 Pre-Olympic Qualification Tournament,men,olyq-m,Pre-Olympic Qualification Tournament,4
+177,2009,2009 Pre-Olympic Qualification Tournament Group B,men,olyq-m,Pre-Olympic Qualification Tournament Group B,4
+183,2009,2009 Pre-Olympic Qualification Tournament Group C,men,olyq-m,Pre-Olympic Qualification Tournament Group C,4
+191,2009,2009 Pre-Olympic Qualification Tournament Group D,men,olyq-m,Pre-Olympic Qualification Tournament Group D,4
+3,2009,2009 Victoria Cup Legends Game,men,other,Top,2
+179,2009,2009 IIHF Continental Cup Super Final,men,other,Top,4
+203,2009,2009 European Women Champions Cup,women,other,Top,4
+187,2009,2009 IIHF World Championship Div I Group A,men,wm,Div I Group A,6
+192,2009,2009 IIHF World Championship Div I Group B,men,wm,Div I Group B,6
+195,2009,2009 IIHF World Championship Div II Group A,men,wm,Div II Group A,6
+171,2009,2009 IIHF World Championship Div II Group B,men,wm,Div II Group B,6
+188,2009,2009 IIHF World Championship Div III,men,wm,Div III,5
+200,2009,2009 IIHF World Championship,men,wm,Top,16
+170,2009,2009 IIHF World U18 Championship Div I Group A,men,wm18,Div I Group A,6
+185,2009,2009 IIHF World U18 Championship Div I Group B,men,wm18,Div I Group B,6
+197,2009,2009 IIHF World U18 Championship Div II Group A,men,wm18,Div II Group A,6
+176,2009,2009 IIHF World U18 Championship Div II Group B,men,wm18,Div II Group B,6
+174,2009,2009 IIHF World U18 Championship Div III Group A,men,wm18,Div III Group A,5
+204,2009,2009 IIHF World U18 Championship Div III Group B,men,wm18,Div III Group B,4
+199,2009,2009 IIHF World U18 Championship,men,wm18,Top,10
+201,2009,2009 IIHF World U20 Championship Div I Group A,men,wm20,Div I Group A,6
+175,2009,2009 IIHF World U20 Championship Div I Group B,men,wm20,Div I Group B,6
+196,2009,2009 IIHF World U20 Championship Div II Group A,men,wm20,Div II Group A,6
+198,2009,2009 IIHF World U20 Championship Div II Group B,men,wm20,Div II Group B,6
+172,2009,2009 IIHF World U20 Championship,men,wm20,Top,10
+169,2009,2009 IIHF World Womens Championship Div I,women,ww,Div I,6
+184,2009,2009 IIHF World Womens Championship Div II,women,ww,Div II,6
+178,2009,2009 IIHF World Womens Championship,women,ww,Top,9
+202,2009,2009 IIHF World Womens U18 Championship Div I,women,ww18,Div I,5
+181,2009,2009 IIHF World Womens U18 Championship,women,ww18,Top,8
+6,2010,2010 Victoria Cup,men,other,Top,2
+232,2010,2010 IIHF Continental Cup Super Final,men,other,Top,4
+234,2010,2010 European Women Champions Cup,women,other,Top,4
+235,2010,2010 Trojka Energy Ice Hockey Tournament,men,other,Top,4
+224,2010,2010 IIHF World Championship Div I Group A,men,wm,Div I Group A,6
+225,2010,2010 IIHF World Championship Div I Group B,men,wm,Div I Group B,6
+226,2010,2010 IIHF World Championship Div II Group A,men,wm,Div II Group A,6
+227,2010,2010 IIHF World Championship Div II Group B,men,wm,Div II Group B,6
+228,2010,2010 IIHF World Championship Div III Group A,men,wm,Div III Group A,4
+231,2010,2010 IIHF World Championship Div III Group B,men,wm,Div III Group B,0
+230,2010,2010 IIHF World Championship,men,wm,Top,16
+212,2010,2010 IIHF World U18 Championship Div I Group A,men,wm18,Div I Group A,6
+213,2010,2010 IIHF World U18 Championship Div I Group B,men,wm18,Div I Group B,6
+214,2010,2010 IIHF World U18 Championship Div II Group A,men,wm18,Div II Group A,6
+216,2010,2010 IIHF World U18 Championship Div II Group B,men,wm18,Div II Group B,6
+218,2010,2010 IIHF World U18 Championship Div III Group A,men,wm18,Div III Group A,5
+219,2010,2010 IIHF World U18 Championship Div III Group B,men,wm18,Div III Group B,5
+211,2010,2010 IIHF World U18 Championship,men,wm18,Top,10
+206,2010,2010 IIHF World U20 Championship Div I Group A,men,wm20,Div I Group A,6
+207,2010,2010 IIHF World U20 Championship Div I Group B,men,wm20,Div I Group B,6
+208,2010,2010 IIHF World U20 Championship Div II Group A,men,wm20,Div II Group A,6
+209,2010,2010 IIHF World U20 Championship Div II Group B,men,wm20,Div II Group B,6
+210,2010,2010 IIHF World U20 Championship Div III,men,wm20,Div III,7
+205,2010,2010 IIHF World U20 Championship,men,wm20,Top,10
+222,2010,2010 IIHF World Womens U18 Championship Div I,women,ww18,Div I,6
+220,2010,2010 IIHF World Womens U18 Championship,women,ww18,Top,8
+297,2011,2011 Continental Cup Group E,men,other,Group E,0
+266,2011,2011 IIHF Continental Cup Super Final,men,other,Top,4
+268,2011,2011 European Women Champions Cup,women,other,Top,4
+258,2011,2011 IIHF World Championship Div I Group A,men,wm,Div I Group A,5
+259,2011,2011 IIHF World Championship Div I Group B,men,wm,Div I Group B,6
+263,2011,2011 IIHF World Championship Div II Group A,men,wm,Div II Group A,5
+264,2011,2011 IIHF World Championship Div II Group B,men,wm,Div II Group B,6
+269,2011,2011 IIHF World Championship Div III,men,wm,Div III,5
+261,2011,2011 IIHF World Championship,men,wm,Top,16
+245,2011,2011 IIHF World U18 Championship Div I Group A,men,wm18,Div I Group A,5
+246,2011,2011 IIHF World U18 Championship Div I Group B,men,wm18,Div I Group B,6
+247,2011,2011 IIHF World U18 Championship Div II Group A,men,wm18,Div II Group A,6
+248,2011,2011 IIHF World U18 Championship Div II Group B,men,wm18,Div II Group B,6
+249,2011,2011 IIHF World U18 Championship Div III Group A,men,wm18,Div III Group A,4
+250,2011,2011 IIHF World U18 Championship Div III Group B,men,wm18,Div III Group B,5
+244,2011,2011 IIHF World U18 Championship,men,wm18,Top,10
+237,2011,2011 IIHF World U20 Championship Div I Group A,men,wm20,Div I Group A,6
+238,2011,2011 IIHF World U20 Championship Div I Group B,men,wm20,Div I Group B,6
+239,2011,2011 IIHF World U20 Championship Div II Group A,men,wm20,Div II Group A,6
+240,2011,2011 IIHF World U20 Championship Div II Group B,men,wm20,Div II Group B,6
+241,2011,2011 IIHF World U20 Championship Div III,men,wm20,Div III,7
+236,2011,2011 IIHF World U20 Championship,men,wm20,Top,10
+253,2011,2011 IIHF World Womens Championship Div I,women,ww,Div I,5
+254,2011,2011 IIHF World Womens Championship Div II,women,ww,Div II,5
+255,2011,2011 IIHF World Womens Championship Div III,women,ww,Div III,6
+256,2011,2011 IIHF World Womens Championship Div IV,women,ww,Div IV,5
+257,2011,2011 IIHF World Womens Championship Div V,women,ww,Div V,5
+252,2011,2011 IIHF World Womens Championship,women,ww,Top,8
+243,2011,2011 IIHF World Womens U18 Championship Div I,women,ww18,Div I,6
+242,2011,2011 IIHF World Womens U18 Championship,women,ww18,Top,8
+298,2012,2012 Continental Cup Group D,men,other,Group D,0
+299,2012,2012 European Women Champions Cup Group E,women,other,Group E,0
+300,2012,2012 European Women Champions Cup Group F,women,other,Group F,0
+301,2012,2012 Continental Cup Group F,men,other,Group F,4
+1,2012,2012 Men Tournament TEST,men,other,Top,1
+302,2012,2012 Youth Olympics Men Tournament,men,other,Top,0
+303,2012,2012 Youth Olympics Women Tournament,women,other,Top,0
+304,2012,2012 European Women Champions Cup,women,other,Top,4
+293,2012,2012 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+294,2012,2012 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+291,2012,2012 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+287,2012,2012 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+295,2012,2012 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+272,2012,2012 IIHF Ice Hockey World Championship,men,wm,Top,16
+289,2012,2012 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+290,2012,2012 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+286,2012,2012 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+283,2012,2012 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+282,2012,2012 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+292,2012,2012 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+276,2012,2012 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+277,2012,2012 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+278,2012,2012 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+274,2012,2012 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+280,2012,2012 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,5
+270,2012,2012 IIHF Ice Hockey U20 World Championship,men,wm20,Top,10
+284,2012,2012 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+288,2012,2012 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+285,2012,2012 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+281,2012,2012 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+271,2012,2012 IIHF Ice Hockey Women's World Championship,women,ww,Top,8
+296,2012,2012 IIHF Ice Hockey U18 Women's World Championship Div I,women,ww18,Div I,6
+273,2012,2012 IIHF Ice Hockey U18 Women's World Championship Div IQ,women,ww18,Div IQ,6
+279,2012,2012 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+329,2013,2013 Final Olympic Qualification Tournament Group C,men,olyq-m,Final Olympic Qualification Tournament Group C,4
+330,2013,2013 Final Olympic Qualification Tournament Group D,men,olyq-m,Final Olympic Qualification Tournament Group D,4
+331,2013,2013 Final Olympic Qualification Tournament Group D,men,olyq-m,Final Olympic Qualification Tournament Group D,4
+332,2013,2013 Final Olympic Qualification Tournament Group E,men,olyq-m,Final Olympic Qualification Tournament Group E,4
+333,2013,2013 Final Olympic Qualification Tournament Group F,men,olyq-m,Final Olympic Qualification Tournament Group F,4
+313,2013,2013 Pre-Olympic Qualification Tournament Group E,men,olyq-m,Pre-Olympic Qualification Tournament Group E,4
+314,2013,2013 Pre-Olympic Qualification Tournament Group F,men,olyq-m,Pre-Olympic Qualification Tournament Group F,4
+310,2013,2013 Pre-Olympic Qualification Tournament Group G,men,olyq-m,Pre-Olympic Qualification Tournament Group G,4
+315,2013,2013 Pre-Olympic Qualification Tournament Group G,men,olyq-m,Pre-Olympic Qualification Tournament Group G,4
+309,2013,2013 Pre-Olympic Qualification Tournament Group H,men,olyq-m,Pre-Olympic Qualification Tournament Group H,4
+316,2013,2013 Pre-Olympic Qualification Tournament Group H,men,olyq-m,Pre-Olympic Qualification Tournament Group H,4
+318,2013,2013 Pre-Olympic Qualification Tournament Group J,men,olyq-m,Pre-Olympic Qualification Tournament Group J,4
+307,2013,2013 Pre-Olympic Qualification Tournament Group K,men,olyq-m,Pre-Olympic Qualification Tournament Group K,4
+354,2013,2013 Continental Cup Group D,men,other,Group D,0
+355,2013,2013 Continental Cup Group E,men,other,Group E,0
+356,2013,2013 European Women Champions Cup Group E,women,other,Group E,0
+326,2013,2013 IIHF Continental Cup Super Final Group F,men,other,Group F,4
+357,2013,2013 European Women Champions Cup Group F,women,other,Group F,0
+334,2013,2013 European Women Champions Cup,women,other,Top,4
+425,2013,2013 Winter Universiade,men,other,Top,0
+440,2013,2013 Winter Universiade,men,other,Top,0
+345,2013,2013 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+347,2013,2013 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+342,2013,2013 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+350,2013,2013 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+348,2013,2013 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+311,2013,2013 IIHF Ice Hockey World Championship Div IIIQ,men,wm,Div IIIQ,4
+352,2013,2013 IIHF Ice Hockey World Championship,men,wm,Top,16
+341,2013,2013 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+346,2013,2013 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+337,2013,2013 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+335,2013,2013 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+336,2013,2013 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,5
+328,2013,2013 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,4
+349,2013,2013 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+320,2013,2013 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+322,2013,2013 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+321,2013,2013 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+323,2013,2013 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+327,2013,2013 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,5
+306,2013,2013 IIHF Ice Hockey U20 World Championship,men,wm20,Top,10
+340,2013,2013 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+344,2013,2013 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+343,2013,2013 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+338,2013,2013 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+319,2013,2013 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,0
+339,2013,2013 IIHF Ice Hockey Women's World Championship,women,ww,Top,8
+325,2013,2013 IIHF Ice Hockey U18 Women's World Championship Div I,women,ww18,Div I,6
+312,2013,2013 IIHF Ice Hockey U18 Women's World Championship Div IQ,women,ww18,Div IQ,6
+324,2013,2013 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+388,2014,2014 Men Tournament,men,oly-m,Top,12
+389,2014,2014 Women Tournament,women,oly-w,Top,8
+445,2014,2014 Challenge Cup of Asia Div I,men,other,Div I,0
+448,2014,2014 Women Challenge Cup of Asia Div I,women,other,Div I,0
+395,2014,2014 First Round Group A,men,other,Group A,4
+426,2014,2014 First Round Group A,men,other,Group A,4
+396,2014,2014 First Round Group B,men,other,Group B,4
+427,2014,2014 Second Round Group B,men,other,Group B,4
+397,2014,2014 First Round Group C,men,other,Group C,4
+428,2014,2014 Second Round Group C,men,other,Group C,4
+398,2014,2014 First Round Group D,men,other,Group D,4
+429,2014,2014 Third Round Group D,men,other,Group D,4
+399,2014,2014 Second Round Group E,men,other,Group E,4
+430,2014,2014 Third Round Group E,men,other,Group E,4
+400,2014,2014 Second Round Group F,men,other,Group F,4
+431,2014,2014 Super Final Group F,men,other,Group F,4
+392,2014,2014 IIHF In-Line Hockey World Championship,men,other,Top,0
+403,2014,2014 Final Round,men,other,Top,4
+444,2014,2014 Challenge Cup of Asia,men,other,Top,0
+446,2014,2014 Women Challenge Cup of Asia,women,other,Top,0
+385,2014,2014 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+386,2014,2014 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+383,2014,2014 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+384,2014,2014 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+382,2014,2014 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+387,2014,2014 IIHF Ice Hockey World Championship,men,wm,Top,16
+369,2014,2014 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+370,2014,2014 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+371,2014,2014 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+372,2014,2014 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+373,2014,2014 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+374,2014,2014 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+368,2014,2014 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+360,2014,2014 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+361,2014,2014 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+362,2014,2014 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+363,2014,2014 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+364,2014,2014 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,6
+359,2014,2014 IIHF World Junior Championship,men,wm20,Top,10
+380,2014,2014 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+379,2014,2014 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+378,2014,2014 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+377,2014,2014 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+376,2014,2014 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,4
+366,2014,2014 IIHF Ice Hockey U18 Women's World Championship Div I,women,ww18,Div I,6
+367,2014,2014 IIHF Ice Hockey U18 Women's World Championship Div IQ,women,ww18,Div IQ,5
+365,2014,2014 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+515,2015,2015 First Round Group A,men,other,Group A,4
+522,2015,2015 First Round Group A,men,other,Group A,4
+517,2015,2015 Second Round Group B,men,other,Group B,4
+523,2015,2015 First Round Group B,men,other,Group B,4
+518,2015,2015 Second Round Group C,men,other,Group C,4
+524,2015,2015 First Round Group C,men,other,Group C,4
+519,2015,2015 Third Round Group D,men,other,Group D,4
+526,2015,2015 First Round Group D,men,other,Group D,4
+520,2015,2015 Third Round Group E,men,other,Group E,4
+527,2015,2015 Second Round Group E,men,other,Group E,4
+528,2015,2015 Second Round Group F,men,other,Group F,4
+529,2015,2015 Second Round Group G,men,other,Group G,4
+432,2015,2015 Winter Universiade,men,other,Top,0
+441,2015,2015 Winter Universiade,men,other,Top,0
+521,2015,2015 Super Final,men,other,Top,4
+530,2015,2015 Final Round,men,other,Top,4
+472,2015,2015 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+473,2015,2015 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+474,2015,2015 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+475,2015,2015 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+476,2015,2015 IIHF Ice Hockey World Championship Div III,men,wm,Div III,7
+414,2015,2015 IIHF Ice Hockey World Championship,men,wm,Top,16
+478,2015,2015 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+479,2015,2015 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+482,2015,2015 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+483,2015,2015 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+484,2015,2015 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+485,2015,2015 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+477,2015,2015 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+451,2015,2015 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+453,2015,2015 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+454,2015,2015 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+456,2015,2015 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+457,2015,2015 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,5
+417,2015,2015 IIHF World Junior Championship,men,wm20,Top,10
+487,2015,2015 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+488,2015,2015 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+489,2015,2015 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+490,2015,2015 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+491,2015,2015 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,4
+532,2015,2015 IIHF Ice Hockey Women's World Championship Div Q,women,ww,Div Q,2
+486,2015,2015 IIHF Ice Hockey Women's World Championship,women,ww,Top,8
+512,2015,2015 IIHF Ice Hockey U18 Women's World Championship Div I,women,ww18,Div I,6
+494,2015,2015 IIHF Ice Hockey U18 Women's World Championship Div IQ,women,ww18,Div IQ,6
+492,2015,2015 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+576,2016,2016 Mens Final Olympic Qualification Group F,men,olyq-m,Final Olympic Qualification Group F,0
+567,2016,2016 Mens Olympic Qualification Preliminary Round 1 Group K,men,olyq-m,Preliminary Round 1 Group K,4
+569,2016,2016 Mens Olympic Qualification Preliminary Round 1 Group L,men,olyq-m,Preliminary Round 1 Group L,4
+571,2016,2016 Mens Olympic Qualification Preliminary Round 2 Group G,men,olyq-m,Preliminary Round 2 Group G,4
+572,2016,2016 Mens Olympic Qualification Preliminary Round 2 Group H,men,olyq-m,Preliminary Round 2 Group H,4
+573,2016,2016 Mens Olympic Qualification Preliminary Round 2 Group J,men,olyq-m,Preliminary Round 2 Group J,4
+566,2016,2016 Mens Olympic Qualification Game,men,olyq-m,Qualification Game,2
+580,2016,2016 Challenge Cup of Asia Div I,men,other,Div I,0
+581,2016,2016 Challenge Cup of Asia Div I,men,other,Div I,0
+560,2016,2016 First Round Group A,men,other,Group A,4
+561,2016,2016 Second Round Group B,men,other,Group B,4
+562,2016,2016 Second Round Group C,men,other,Group C,4
+563,2016,2016 Third Round Group D,men,other,Group D,4
+564,2016,2016 Third Round Group E,men,other,Group E,4
+411,2016,2016 Youth Olympic Winter Games,men,other,Top,0
+437,2016,2016 Youth Olympic Winter Games,men,other,Top,0
+565,2016,2016 Continental Cup Final,men,other,Top,4
+578,2016,2016 Challenge Cup of Asia,men,other,Top,0
+536,2016,2016 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+537,2016,2016 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+538,2016,2016 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+539,2016,2016 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+540,2016,2016 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+415,2016,2016 IIHF Ice Hockey World Championship,men,wm,Top,16
+547,2016,2016 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+548,2016,2016 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+549,2016,2016 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+550,2016,2016 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+551,2016,2016 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+552,2016,2016 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+546,2016,2016 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+541,2016,2016 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+542,2016,2016 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,5
+543,2016,2016 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+544,2016,2016 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+545,2016,2016 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,7
+419,2016,2016 IIHF Ice Hockey U20 World Championship,men,wm20,Top,10
+553,2016,2016 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+554,2016,2016 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+555,2016,2016 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+556,2016,2016 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+557,2016,2016 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,4
+508,2016,2016 IIHF Ice Hockey Women's World Championship,women,ww,Top,8
+559,2016,2016 IIHF Ice Hockey U18 Women's World Championship Div I,women,ww18,Div I,6
+577,2016,2016 IIHF Ice Hockey U18 Women's World Championship Div IQ,women,ww18,Div IQ,8
+558,2016,2016 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+588,2017,2017 Mens Final Olympic Qualification Group D,men,olyq-m,Final Olympic Qualification Group D,4
+589,2017,2017 Mens Final Olympic Qualification Group E,men,olyq-m,Final Olympic Qualification Group E,4
+590,2017,2017 Mens Final Olympic Qualification Group F,men,olyq-m,Final Olympic Qualification Group F,4
+627,2017,2017 Womens Final Olympic Qualification Group C,women,olyq-w,Final Olympic Qualification Group C,4
+626,2017,2017 Womens Final Olympic Qualification Group D,women,olyq-w,Final Olympic Qualification Group D,4
+620,2017,2017 Womens Olympic Qualification Preliminary Round 1 Group J,women,olyq-w,Preliminary Round 1 Group J,3
+622,2017,2017 Womens Olympic Qualification Preliminary Round 2 Group G,women,olyq-w,Preliminary Round 2 Group G,4
+621,2017,2017 Womens Olympic Qualification Preliminary Round 2 Group H,women,olyq-w,Preliminary Round 2 Group H,4
+625,2017,2017 Womens Olympic Qualification Preliminary Round 3 Group E,women,olyq-w,Preliminary Round 3 Group E,4
+624,2017,2017 Womens Olympic Qualification Preliminary Round 3 Group F,women,olyq-w,Preliminary Round 3 Group F,4
+637,2017,2017 Challenge Cup of Asia Div I,men,other,Div I,4
+582,2017,2017 First Round Group A,men,other,Group A,4
+583,2017,2017 Second Round Group B,men,other,Group B,4
+584,2017,2017 Second Round Group C,men,other,Group C,4
+585,2017,2017 Third Round Group D,men,other,Group D,4
+586,2017,2017 Third Round Group E,men,other,Group E,4
+433,2017,2017 Winter Universiade,men,other,Top,0
+442,2017,2017 Winter Universiade,men,other,Top,0
+587,2017,2017 Final Round,men,other,Top,4
+635,2017,2017 Challenge Cup of Asia,men,other,Top,7
+636,2017,2017 Challenge Cup of Asia,men,other,Top,5
+617,2017,2017 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+618,2017,2017 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+600,2017,2017 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+601,2017,2017 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+603,2017,2017 IIHF Ice Hockey World Championship Div III,men,wm,Div III,7
+416,2017,2017 IIHF Ice Hockey World Championship,men,wm,Top,16
+602,2017,2017 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+604,2017,2017 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+628,2017,2017 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+597,2017,2017 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+599,2017,2017 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+598,2017,2017 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+506,2017,2017 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+591,2017,2017 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+592,2017,2017 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+593,2017,2017 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+595,2017,2017 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+596,2017,2017 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,8
+418,2017,2017 IIHF Ice Hockey U20 World Championship,men,wm20,Top,10
+605,2017,2017 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+606,2017,2017 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+607,2017,2017 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+616,2017,2017 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+609,2017,2017 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,5
+509,2017,2017 IIHF Ice Hockey Women's World Championship,women,ww,Top,8
+611,2017,2017 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+612,2017,2017 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+613,2017,2017 IIHF Ice Hockey U18 Women's World Championship Div IBQ,women,ww18,Div IBQ,4
+610,2017,2017 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+683,2018,2018 IIHF Ice Hockey Challenge Cup of Asia Div I,men,other,Div I,4
+686,2018,2018 IIHF Ice Hockey Women’s Challenge Cup of Asia Div I,women,other,Div I,4
+675,2018,2018 First Round Group A,men,other,Group A,4
+676,2018,2018 Second Round Group B,men,other,Group B,4
+677,2018,2018 Second Round Group C,men,other,Group C,4
+678,2018,2018 Third Round Group D,men,other,Group D,4
+679,2018,2018 Third Round Group E,men,other,Group E,4
+680,2018,2018 Continental Cup Final,men,other,Top,4
+682,2018,2018 IIHF Ice Hockey U20 Challenge Cup of Asia,men,other,Top,5
+684,2018,2018 IIHF Ice Hockey Challenge Cup of Asia,men,other,Top,5
+685,2018,2018 IIHF Ice Hockey Women’s Challenge Cup of Asia,women,other,Top,4
+638,2018,2018 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+639,2018,2018 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+640,2018,2018 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+641,2018,2018 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+642,2018,2018 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+643,2018,2018 IIHF Ice Hockey World Championship Div IIIQ,men,wm,Div IIIQ,4
+495,2018,2018 IIHF Ice Hockey World Championship,men,wm,Top,16
+650,2018,2018 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+652,2018,2018 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+653,2018,2018 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+654,2018,2018 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+655,2018,2018 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+656,2018,2018 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+500,2018,2018 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+644,2018,2018 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+645,2018,2018 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+646,2018,2018 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+647,2018,2018 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+648,2018,2018 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,6
+649,2018,2018 IIHF Ice Hockey U20 World Championship Div IIIQ,men,wm20,Div IIIQ,2
+420,2018,2018 IIHF Ice Hockey U20 World Championship,men,wm20,Top,10
+657,2018,2018 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+658,2018,2018 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+659,2018,2018 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+660,2018,2018 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+661,2018,2018 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,5
+664,2018,2018 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+665,2018,2018 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+666,2018,2018 IIHF Ice Hockey U18 Women's World Championship Div IBQ,women,ww18,Div IBQ,5
+663,2018,2018 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+740,2019,2019 IIHF Ice Hockey U20 Challenge Cup of Asia Div I,men,other,Div I,4
+742,2019,2019 IIHF Ice Hockey Women’s Challenge Cup of Asia Div I,women,other,Div I,4
+726,2019,2019 First Round Group A,men,other,Group A,4
+727,2019,2019 Second Round Group B,men,other,Group B,4
+728,2019,2019 Second Round Group C,men,other,Group C,4
+729,2019,2019 Third Round Group D,men,other,Group D,4
+730,2019,2019 Third Round Group E,men,other,Group E,4
+731,2019,2019 Continental Cup Final,men,other,Top,4
+737,2019,2019 IIHF Ice Hockey Challenge Cup of Asia,men,other,Top,7
+739,2019,2019 IIHF Ice Hockey U20 Challenge Cup of Asia,men,other,Top,4
+741,2019,2019 IIHF Ice Hockey Women’s Challenge Cup of Asia,women,other,Top,5
+688,2019,2019 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+691,2019,2019 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+692,2019,2019 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+693,2019,2019 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+694,2019,2019 IIHF Ice Hockey World Championship Div III,men,wm,Div III,6
+695,2019,2019 IIHF Ice Hockey World Championship Div IIIQ,men,wm,Div IIIQ,6
+690,2019,2019 IIHF Ice Hockey World Championship,men,wm,Top,16
+716,2019,2019 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+717,2019,2019 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+718,2019,2019 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+719,2019,2019 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+720,2019,2019 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+721,2019,2019 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,4
+715,2019,2019 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+697,2019,2019 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+698,2019,2019 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+699,2019,2019 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+700,2019,2019 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+701,2019,2019 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,8
+421,2019,2019 IIHF World Junior Championship,men,wm20,Top,10
+709,2019,2019 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+710,2019,2019 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+711,2019,2019 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+713,2019,2019 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+714,2019,2019 IIHF Ice Hockey Women's World Championship Div IIBQ,women,ww,Div IIBQ,5
+510,2019,2019 IIHF Ice Hockey Women's World Championship,women,ww,Top,10
+705,2019,2019 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+706,2019,2019 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+707,2019,2019 IIHF Ice Hockey U18 Women's World Championship Div IBQ,women,ww18,Div IBQ,7
+704,2019,2019 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+888,2020,2020 Mens Olympic Qualification Preliminary Round 1 Group N,men,olyq-m,Preliminary Round 1 Group N,4
+891,2020,2020 Mens Olympic Qualification Preliminary Round 1 Group O,men,olyq-m,Preliminary Round 1 Group O,4
+894,2020,2020 Mens Olympic Qualification Preliminary Round 2 Group K,men,olyq-m,Preliminary Round 2 Group K,4
+893,2020,2020 Mens Olympic Qualification Preliminary Round 2 Group L,men,olyq-m,Preliminary Round 2 Group L,4
+892,2020,2020 Mens Olympic Qualification Preliminary Round 2 Group M,men,olyq-m,Preliminary Round 2 Group M,4
+897,2020,2020 Mens Olympic Qualification Preliminary Round 3 Group G,men,olyq-m,Preliminary Round 3 Group G,4
+896,2020,2020 Mens Olympic Qualification Preliminary Round 3 Group H,men,olyq-m,Preliminary Round 3 Group H,4
+895,2020,2020 Mens Olympic Qualification Preliminary Round 3 Group J,men,olyq-m,Preliminary Round 3 Group J,4
+921,2020,2020 IIHF Ice Hockey U20 Challenge Cup of Asia Div I,men,other,Div I,0
+923,2020,2020 IIHF Ice Hockey Women’s Challenge Cup of Asia Div I,women,other,Div I,0
+906,2020,2020 First Round Group A,men,other,Group A,4
+917,2020,2020 First Round Group B,men,other,Group B,4
+907,2020,2020 Second Round Group C,men,other,Group C,4
+908,2020,2020 Second Round Group D,men,other,Group D,4
+909,2020,2020 Third Round Group E,men,other,Group E,4
+915,2020,2020 Third Round Group F,men,other,Group F,4
+918,2020,2020 Continental Cup Final,men,other,Top,4
+919,2020,2020 Southeast Asian Games,men,other,Top,5
+920,2020,2020 IIHF Ice Hockey U20 Challenge Cup of Asia,men,other,Top,0
+922,2020,2020 IIHF Ice Hockey Women’s Challenge Cup of Asia,women,other,Top,0
+924,2020,2020 IIHF Ice Hockey Challenge Cup of Asia,men,other,Top,0
+870,2020,2020 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,0
+760,2020,2020 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,0
+803,2020,2020 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,0
+806,2020,2020 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,0
+807,2020,2020 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,0
+809,2020,2020 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,0
+875,2020,2020 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,0
+747,2020,2020 IIHF Ice Hockey World Championship,men,wm,Top,0
+830,2020,2020 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,0
+834,2020,2020 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,0
+879,2020,2020 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,0
+840,2020,2020 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,0
+842,2020,2020 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,0
+844,2020,2020 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,0
+764,2020,2020 IIHF Ice Hockey U18 World Championship,men,wm18,Top,0
+814,2020,2020 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+789,2020,2020 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+818,2020,2020 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+823,2020,2020 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+792,2020,2020 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,8
+422,2020,2020 IIHF World Junior Championship,men,wm20,Top,10
+868,2020,2020 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,0
+846,2020,2020 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,0
+848,2020,2020 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,0
+853,2020,2020 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+855,2020,2020 IIHF Ice Hockey Women's World Championship Div III,women,ww,Div III,6
+511,2020,2020 IIHF Ice Hockey Women's World Championship,women,ww,Top,0
+856,2020,2020 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+860,2020,2020 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+887,2020,2020 IIHF Ice Hockey U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,4
+864,2020,2020 IIHF Ice Hockey U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,4
+886,2020,2020 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+930,2021,2021 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,0
+761,2021,2021 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,0
+748,2021,2021 IIHF Ice Hockey World Championship,men,wm,Top,16
+765,2021,2021 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+503,2021,2021 IIHF World Junior Championship,men,wm20,Top,10
+957,2021,2021 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,0
+929,2021,2021 IIHF Ice Hockey Women's World Championship,women,ww,Top,10
+752,2022,2022 Men's Tournament,men,oly-m,Top,12
+753,2022,2022 Women's Tournament,women,oly-w,Top,10
+901,2022,2022 Mens Final Olympic Qualification Group D,men,olyq-m,Final Olympic Qualification Group D,4
+900,2022,2022 Mens Final Olympic Qualification Group E,men,olyq-m,Final Olympic Qualification Group E,4
+899,2022,2022 Mens Final Olympic Qualification Group F,men,olyq-m,Final Olympic Qualification Group F,4
+965,2022,2022 Womens Final Olympic Qualification Group C,women,olyq-w,Final Olympic Qualification Group C,4
+966,2022,2022 Womens Final Olympic Qualification Group D,women,olyq-w,Final Olympic Qualification Group D,4
+967,2022,2022 Womens Final Olympic Qualification Group E,women,olyq-w,Final Olympic Qualification Group E,4
+962,2022,2022 Womens Olympic Qualification Preliminary Round 2 Group F,women,olyq-w,Preliminary Round 2 Group F,4
+963,2022,2022 Womens Olympic Qualification Preliminary Round 2 Group G,women,olyq-w,Preliminary Round 2 Group G,4
+964,2022,2022 Womens Olympic Qualification Preliminary Round 2 Group H,women,olyq-w,Preliminary Round 2 Group H,4
+15,2022,2022 First Round Group A,men,other,Group A,0
+217,2022,2022 First Round Group A,men,other,Group A,4
+221,2022,2022 First Round Group B,men,other,Group B,3
+215,2022,2022 Second Round Group C,men,other,Group C,4
+223,2022,2022 Second Round Group D,men,other,Group D,4
+233,2022,2022 Third Round Group E,men,other,Group E,4
+251,2022,2022 Third Round Group F,men,other,Group F,4
+260,2022,2022 Continental Cup Final,men,other,Top,3
+696,2022,2022 IIHF Ice Hockey U20 Asia & Oceania Championship,men,other,Top,8
+758,2022,2022 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,5
+762,2022,2022 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,5
+2,2022,2022 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,5
+4,2022,2022 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,5
+5,2022,2022 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,5
+7,2022,2022 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,3
+8,2022,2022 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,5
+749,2022,2022 IIHF Ice Hockey World Championship,men,wm,Top,16
+49,2022,2022 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+53,2022,2022 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+61,2022,2022 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+68,2022,2022 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,4
+72,2022,2022 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+73,2022,2022 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,3
+766,2022,2022 IIHF Ice Hockey U18 World Championship,men,wm18,Top,8
+40,2022,2022 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+41,2022,2022 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+44,2022,2022 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+45,2022,2022 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,5
+48,2022,2022 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,8
+393,2022,2022 IIHF World Junior Championship,men,wm20,Top,10
+750,2022,2022 IIHF World Junior Championship,men,wm20,Top (abandoned Dec 2021),10
+77,2022,2022 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,5
+80,2022,2022 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+88,2022,2022 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,5
+89,2022,2022 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,5
+90,2022,2022 IIHF Ice Hockey Women's World Championship Div III Group A,women,ww,Div III Group A,3
+381,2022,2022 IIHF Ice Hockey Women's World Championship Div III Group B,women,ww,Div III Group B,4
+164,2022,2022 IIHF Ice Hockey Women's World Championship,women,ww,Top,10
+118,2022,2022 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,5
+123,2022,2022 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,5
+124,2022,2022 IIHF Ice Hockey U18 Women's World Championship Div II,women,ww18,Div II,9
+92,2022,2022 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+614,2023,2023 First Round Group A,men,other,Group A,4
+623,2023,2023 First Round Group B,men,other,Group B,4
+629,2023,2023 Second Round Group C,men,other,Group C,4
+630,2023,2023 Second Round Group D,men,other,Group D,4
+634,2023,2023 Third Round Group E,men,other,Group E,4
+651,2023,2023 Third Round Group F,men,other,Group F,4
+662,2023,2023 Continental Cup Final,men,other,Top,4
+744,2023,2023 IIHF Womens Development Cup,women,other,Top,0
+791,2023,2023 Test Tournament,men,other,Top,0
+810,2023,2023 IIHF Ice Hockey U18 Asia and Oceania Championship,men,other,Top,6
+821,2023,2023 IIHF Ice Hockey Women’s Asia and Oceania Championship,women,other,Top,8
+759,2023,2023 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+763,2023,2023 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+407,2023,2023 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+423,2023,2023 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+424,2023,2023 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,5
+434,2023,2023 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,6
+435,2023,2023 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,4
+788,2023,2023 IIHF Ice Hockey World Championship,men,wm,Top,16
+480,2023,2023 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+481,2023,2023 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+496,2023,2023 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+497,2023,2023 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+499,2023,2023 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+501,2023,2023 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,4
+469,2023,2023 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+439,2023,2023 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+443,2023,2023 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+447,2023,2023 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+449,2023,2023 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+455,2023,2023 IIHF Ice Hockey U20 World Championship Div III,men,wm20,Div III,8
+751,2023,2023 IIHF World Junior Championship,men,wm20,Top,10
+504,2023,2023 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+505,2023,2023 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+507,2023,2023 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,5
+513,2023,2023 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,5
+516,2023,2023 IIHF Ice Hockey Women's World Championship Div III Group A,women,ww,Div III Group A,6
+502,2023,2023 IIHF Ice Hockey Women's World Championship Div III Group B,women,ww,Div III Group B,3
+498,2023,2023 IIHF Women's World Championship,women,ww,Top,10
+534,2023,2023 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+568,2023,2023 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,5
+570,2023,2023 IIHF Ice Hockey U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,6
+579,2023,2023 IIHF Ice Hockey U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,6
+525,2023,2023 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+916,2024,2024 Men’s Olympic Ice Hockey Qualification Round 1,men,olyq-m,Qualification Round 1,0
+912,2024,2024 Men’s Olympic Ice Hockey Qualification Round 2 Group K,men,olyq-m,Qualification Round 2 Group K,4
+913,2024,2024 Men’s Olympic Ice Hockey Qualification Round 2 Group L,men,olyq-m,Qualification Round 2 Group L,4
+914,2024,2024 Men’s Olympic Ice Hockey Qualification Round 2 Group M,men,olyq-m,Qualification Round 2 Group M,4
+925,2024,2024 Men’s Olympic Ice Hockey Qualification Round 3 Group G,men,olyq-m,Qualification Round 3 Group G,4
+928,2024,2024 Men’s Olympic Ice Hockey Qualification Round 3 Group H,men,olyq-m,Qualification Round 3 Group H,4
+939,2024,2024 Men’s Olympic Ice Hockey Qualification Round 3 Group J,men,olyq-m,Qualification Round 3 Group J,4
+889,2024,2024 First Round Group A,men,other,Group A,3
+890,2024,2024 First Round Group B,men,other,Group B,4
+898,2024,2024 Second Round Group C,men,other,Group C,4
+903,2024,2024 Second Round Group D,men,other,Group D,4
+904,2024,2024 Third Round Group E,men,other,Group E,4
+910,2024,2024 Third Round Group F,men,other,Group F,4
+16,2024,2024 Women's Development Cup,women,other,Top,4
+17,2024,2024 IIHF Ice Hockey Men's Asia and Oceania Cup,men,other,Top,10
+18,2024,2024 IIHF Ice Hockey Women's Asia and Oceania Cup,women,other,Top,5
+62,2024,2024 Men's Development Cup,men,other,Top,6
+390,2024,2024 Youth Olympic Winter Games,men,other,Top,0
+911,2024,2024 Continental Cup Final,men,other,Top,4
+673,2024,2024 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+703,2024,2024 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+19,2024,2024 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+36,2024,2024 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+38,2024,2024 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,6
+39,2024,2024 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,6
+42,2024,2024 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,4
+902,2024,2024 IIHF Ice Hockey World Championship,men,wm,Top,16
+86,2024,2024 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+87,2024,2024 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+122,2024,2024 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+128,2024,2024 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+129,2024,2024 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+131,2024,2024 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,4
+674,2024,2024 IIHF Ice Hockey U18 World Championship,men,wm18,Top,10
+43,2024,2024 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+76,2024,2024 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+83,2024,2024 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+84,2024,2024 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+85,2024,2024 IIHF Ice Hockey U20 World Championship Div III Group A,men,wm20,Div III Group A,6
+767,2024,2024 IIHF Ice Hockey U20 World Championship Div III Group B,men,wm20,Div III Group B,3
+978,2024,2024 IIHF World Junior Championship,men,wm20,Top,10
+157,2024,2024 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+158,2024,2024 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+159,2024,2024 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+406,2024,2024 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+412,2024,2024 IIHF Ice Hockey Women's World Championship Div III Group A,women,ww,Div III Group A,6
+155,2024,2024 IIHF Ice Hockey Women's World Championship Div III Group B,women,ww,Div III Group B,5
+667,2024,2024 IIHF Ice Hockey Women's World Championship,women,ww,Top,10
+452,2024,2024 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+465,2024,2024 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+493,2024,2024 IIHF Ice Hockey U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,6
+608,2024,2024 IIHF Ice Hockey U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,6
+672,2024,2024 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+992,2025,2025 Men’s Final Olympic Ice Hockey Qualification Group D,men,olyq-m,Final Olympic Ice Hockey Qualification Group D,4
+993,2025,2025 Men’s Final Olympic Ice Hockey Qualification Group E,men,olyq-m,Final Olympic Ice Hockey Qualification Group E,4
+994,2025,2025 Men’s Final Olympic Ice Hockey Qualification Group F,men,olyq-m,Final Olympic Ice Hockey Qualification Group F,4
+816,2025,2025 Women’s Final Olympic Ice Hockey Qualification Group G,women,olyq-w,Final Olympic Ice Hockey Qualification Group G,4
+817,2025,2025 Women’s Final Olympic Ice Hockey Qualification Group H,women,olyq-w,Final Olympic Ice Hockey Qualification Group H,4
+819,2025,2025 Women’s Final Olympic Ice Hockey Qualification Group I,women,olyq-w,Final Olympic Ice Hockey Qualification Group I,4
+854,2025,2025 Women’s Olympic Ice Hockey Qualification Round 2,women,olyq-w,Qualification Round 2,0
+820,2025,2025 Women’s Olympic Ice Hockey Qualification Round 3 Group D,women,olyq-w,Qualification Round 3 Group D,4
+822,2025,2025 Women’s Olympic Ice Hockey Qualification Round 3 Group E,women,olyq-w,Qualification Round 3 Group E,4
+824,2025,2025 Women’s Olympic Ice Hockey Qualification Round 3 Group F,women,olyq-w,Qualification Round 3 Group F,4
+841,2025,2025 First Round Group A,men,other,Group A,4
+843,2025,2025 First Round Group B,men,other,Group B,4
+845,2025,2025 Second Round Group C,men,other,Group C,4
+847,2025,2025 Second Round Group D,men,other,Group D,4
+849,2025,2025 Third Round Group E,men,other,Group E,4
+850,2025,2025 Third Round Group F,men,other,Group F,4
+267,2025,2025 IIHF Ice Hockey Women’s Asia Cup,women,other,Top,6
+275,2025,2025 Men's Development Cup,men,other,Top,6
+838,2025,2025 IIHF Ice Hockey Asia Championship,men,other,Top,4
+839,2025,2025 IIHF Ice Hockey Women's Asia Championship,women,other,Top,4
+851,2025,2025 Continental Cup Final,men,other,Top,3
+812,2025,2025 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+813,2025,2025 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+97,2025,2025 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,6
+111,2025,2025 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+190,2025,2025 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,6
+193,2025,2025 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,6
+194,2025,2025 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,6
+905,2025,2025 IIHF Ice Hockey World Championship,men,wm,Top,16
+594,2025,2025 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+615,2025,2025 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+619,2025,2025 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+708,2025,2025 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+738,2025,2025 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+756,2025,2025 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,6
+995,2025,2025 IIHF U18 Men's World Championship,men,wm18,Top,10
+229,2025,2025 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+353,2025,2025 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+394,2025,2025 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+574,2025,2025 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+575,2025,2025 IIHF Ice Hockey U20 World Championship Div III Group A,men,wm20,Div III Group A,6
+815,2025,2025 IIHF Ice Hockey U20 World Championship Div III Group B,men,wm20,Div III Group B,4
+757,2025,2025 IIHF World Junior Championship,men,wm20,Top,10
+793,2025,2025 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+796,2025,2025 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+800,2025,2025 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,6
+801,2025,2025 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+802,2025,2025 IIHF Ice Hockey Women's World Championship Div III Group A,women,ww,Div III Group A,6
+790,2025,2025 IIHF Ice Hockey Women's World Championship Div III Group B,women,ww,Div III Group B,5
+712,2025,2025 IIHF Women's World Championship,women,ww,Top,10
+804,2025,2025 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+805,2025,2025 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+808,2025,2025 IIHF Ice Hockey U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,6
+811,2025,2025 IIHF Ice Hockey U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,5
+829,2025,2025 IIHF Ice Hockey U18 Women's World Championship Div III,women,ww18,Div III,4
+736,2025,2025 IIHF U18 Women's World Championship,women,ww18,Top,8
+991,2026,2026 Men's Tournament,men,oly-m,Top,0
+852,2026,2026 Women's Tournament,women,oly-w,Top,0
+774,2026,2026 First Round Group A,men,other,Group A,4
+876,2026,2026 IIHF European Cup of Nations Group A,men,other,Group A,0
+775,2026,2026 First Round Group B,men,other,Group B,4
+877,2026,2026 IIHF European Cup of Nations Group B,men,other,Group B,0
+776,2026,2026 Second Round Group C,men,other,Group C,4
+878,2026,2026 IIHF European Cup of Nations Group C,men,other,Group C,0
+880,2026,2026 IIHF European Cup of Nations Group D,men,other,Group D,0
+881,2026,2026 IIHF European Cup of Nations Group E,men,other,Group E,0
+883,2026,2026 IIHF European Cup of Nations Group F,men,other,Group F,0
+882,2026,2026 IIHF European Cup of Nations Group G,men,other,Group G,0
+884,2026,2026 IIHF European Cup of Nations Group H,men,other,Group H,0
+777,2026,2026 Continental Cup Final,men,other,Top,6
+866,2026,2026 IIHF Ice Hockey Asia Championship,men,other,Top,4
+867,2026,2026 IIHF Ice Hockey Women's Asia Championship,women,other,Top,4
+869,2026,2026 IIHF Ice Hockey U18 Asia and Oceania Championship,men,other,Top,6
+871,2026,2026 Southeast Asian Games,men,other,Top,4
+874,2026,2026 Southeast Asian Games,men,other,Top,5
+722,2026,2026 IIHF Ice Hockey World Championship Div I Group A,men,wm,Div I Group A,6
+723,2026,2026 IIHF Ice Hockey World Championship Div I Group B,men,wm,Div I Group B,6
+305,2026,2026 IIHF Ice Hockey World Championship Div II Group A,men,wm,Div II Group A,0
+308,2026,2026 IIHF Ice Hockey World Championship Div II Group B,men,wm,Div II Group B,6
+317,2026,2026 IIHF Ice Hockey World Championship Div III Group A,men,wm,Div III Group A,6
+351,2026,2026 IIHF Ice Hockey World Championship Div III Group B,men,wm,Div III Group B,6
+358,2026,2026 IIHF Ice Hockey World Championship Div IV,men,wm,Div IV,0
+969,2026,2026 IIHF Ice Hockey World Championship,men,wm,Top,16
+458,2026,2026 IIHF Ice Hockey U18 World Championship Div I Group A,men,wm18,Div I Group A,6
+459,2026,2026 IIHF Ice Hockey U18 World Championship Div I Group B,men,wm18,Div I Group B,6
+460,2026,2026 IIHF Ice Hockey U18 World Championship Div II Group A,men,wm18,Div II Group A,6
+461,2026,2026 IIHF Ice Hockey U18 World Championship Div II Group B,men,wm18,Div II Group B,6
+462,2026,2026 IIHF Ice Hockey U18 World Championship Div III Group A,men,wm18,Div III Group A,6
+463,2026,2026 IIHF Ice Hockey U18 World Championship Div III Group B,men,wm18,Div III Group B,6
+996,2026,2026 IIHF U18 Men's World Championship,men,wm18,Top,10
+375,2026,2026 IIHF Ice Hockey U20 World Championship Div I Group A,men,wm20,Div I Group A,6
+404,2026,2026 IIHF Ice Hockey U20 World Championship Div I Group B,men,wm20,Div I Group B,6
+405,2026,2026 IIHF Ice Hockey U20 World Championship Div II Group A,men,wm20,Div II Group A,6
+408,2026,2026 IIHF Ice Hockey U20 World Championship Div II Group B,men,wm20,Div II Group B,6
+409,2026,2026 IIHF Ice Hockey U20 World Championship Div III Group A,men,wm20,Div III Group A,6
+724,2026,2026 IIHF Ice Hockey U20 World Championship Div III Group B,men,wm20,Div III Group B,6
+37,2026,2026 IIHF World Junior Championship,men,wm20,Top,10
+466,2026,2026 IIHF Ice Hockey Women's World Championship Div I Group A,women,ww,Div I Group A,6
+467,2026,2026 IIHF Ice Hockey Women's World Championship Div I Group B,women,ww,Div I Group B,6
+468,2026,2026 IIHF Ice Hockey Women's World Championship Div II Group A,women,ww,Div II Group A,5
+470,2026,2026 IIHF Ice Hockey Women's World Championship Div II Group B,women,ww,Div II Group B,6
+471,2026,2026 IIHF Ice Hockey Women's World Championship Div III Group A,women,ww,Div III Group A,6
+464,2026,2026 IIHF Ice Hockey Women's World Championship Div III Group B,women,ww,Div III Group B,6
+773,2026,2026 IIHF Women's World Championship,women,ww,Top,0
+668,2026,2026 IIHF Ice Hockey U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,6
+669,2026,2026 IIHF Ice Hockey U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,6
+670,2026,2026 IIHF Ice Hockey U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,6
+671,2026,2026 IIHF Ice Hockey U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,6
+725,2026,2026 IIHF Ice Hockey U18 Women's World Championship Div III,women,ww18,Div III,0
+772,2026,2026 IIHF Ice Hockey U18 Women's World Championship,women,ww18,Top,8
+1004,2027,2027 First Round Group A,men,other,Group A,4
+1009,2027,2027 IIHF Women's European Cup of Nations Group A,women,other,Group A,0
+1022,2027,2027 IIHF Men's European Cup of Nations Group A,men,other,Group A,0
+1005,2027,2027 First Round Group B,men,other,Group B,4
+1017,2027,2027 IIHF Women's European Cup of Nations Group B,women,other,Group B,0
+1023,2027,2027 IIHF Men's European Cup of Nations Group B,men,other,Group B,0
+1006,2027,2027 Second Round Group C,men,other,Group C,0
+1018,2027,2027 IIHF Women's European Cup of Nations Group C,women,other,Group C,0
+1020,2027,2027 IIHF Men's European Cup of Nations Group C,men,other,Group C,0
+1007,2027,2027 Second Round Group D,men,other,Group D,0
+1019,2027,2027 IIHF Women's European Cup of Nations Group D,women,other,Group D,0
+1021,2027,2027 IIHF Men's European Cup of Nations Group D,men,other,Group D,0
+1002,2027,2027 IIHF Women's Asia Championship,women,other,Top,4
+1003,2027,2027 IIHF Asia Championship,men,other,Top,0
+1008,2027,2027 Continental Cup Final,men,other,Top,0
+987,2027,2027 IIHF World Championship Div I Group B,men,wm,Div I Group B,0
+10,2027,2027 IIHF World Championship Div II Group A,men,wm,Div II Group A,0
+262,2027,2027 IIHF World Championship Div II Group B,men,wm,Div II Group B,0
+413,2027,2027 IIHF World Championship Div III Group A,men,wm,Div III Group A,0
+450,2027,2027 IIHF World Championship Div III Group B,men,wm,Div III Group B,0
+681,2027,2027 IIHF World Championship Div IV Group A,men,wm,Div IV Group A,0
+998,2027,2027 IIHF World Championship Div IV Group B,men,wm,Div IV Group B,0
+985,2027,2027 IIHF World Championship,men,wm,Top,0
+836,2027,2027 IIHF U18 World Championship Div I Group A,men,wm18,Div I Group A,0
+837,2027,2027 IIHF U18 World Championship Div I Group B,men,wm18,Div I Group B,0
+872,2027,2027 IIHF U18 World Championship Div II Group A,men,wm18,Div II Group A,0
+873,2027,2027 IIHF U18 World Championship Div II Group B,men,wm18,Div II Group B,0
+885,2027,2027 IIHF U18 World Championship Div III Group A,men,wm18,Div III Group A,0
+926,2027,2027 IIHF U18 World Championship Div III Group B,men,wm18,Div III Group B,0
+1000,2027,2027 IIHF U18 World Championship Div IV,men,wm18,Div IV,0
+782,2027,2027 IIHF U18 World Championship,men,wm18,Top,0
+687,2027,2027 IIHF U20 World Championship Div I Group A,men,wm20,Div I Group A,0
+794,2027,2027 IIHF U20 World Championship Div I Group B,men,wm20,Div I Group B,0
+795,2027,2027 IIHF U20 World Championship Div II Group A,men,wm20,Div II Group A,0
+797,2027,2027 IIHF U20 World Championship Div II Group B,men,wm20,Div II Group B,0
+798,2027,2027 IIHF U20 World Championship Div III Group A,men,wm20,Div III Group A,0
+989,2027,2027 IIHF U20 World Championship Div III Group B,men,wm20,Div III Group B,0
+999,2027,2027 IIHF U20 World Championship Div IV,men,wm20,Div IV,0
+781,2027,2027 IIHF World Junior Championship,men,wm20,Top,0
+943,2027,2027 IIHF Women's World Championship Div I Group A,women,ww,Div I Group A,0
+959,2027,2027 IIHF Women's World Championship Div I Group B,women,ww,Div I Group B,0
+968,2027,2027 IIHF Women's World Championship Div II Group A,women,ww,Div II Group A,0
+970,2027,2027 IIHF Women's World Championship Div II Group B,women,ww,Div II Group B,0
+979,2027,2027 IIHF Women's World Championship Div III Group A,women,ww,Div III Group A,0
+927,2027,2027 IIHF Women's World Championship Div III Group B,women,ww,Div III Group B,0
+997,2027,2027 IIHF Women's World Championship Div IV,women,ww,Div IV,0
+779,2027,2027 IIHF Women's World Championship,women,ww,Top,0
+980,2027,2027 IIHF U18 Women's World Championship Div I Group A,women,ww18,Div I Group A,0
+981,2027,2027 IIHF U18 Women's World Championship Div I Group B,women,ww18,Div I Group B,0
+984,2027,2027 IIHF U18 Women's World Championship Div II Group A,women,ww18,Div II Group A,0
+986,2027,2027 IIHF U18 Women's World Championship Div II Group B,women,ww18,Div II Group B,0
+990,2027,2027 IIHF U18 Women's World Championship Div III,women,ww18,Div III,0
+783,2027,2027 IIHF U18 Women's World Championship,women,ww18,Top,0

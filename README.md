@@ -1,8 +1,9 @@
 # puckscrape
 
 Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN, HockeyDB and league/federation websites
-(NCAA, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), plus NHL draft rankings
-from Elite Prospects and TSN, as pandas DataFrames.
+(NCAA men and women, the PWHL, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), IIHF
+tournaments (men's and women's, every division), plus NHL draft rankings from Elite Prospects and TSN,
+as pandas DataFrames.
 
 ```python
 import puckscrape as ps
@@ -13,6 +14,8 @@ ps.eliteprospects.skaters(["ahl", "ohl"], "2024-25")    # any EP league
 ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
 ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
 ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league websites
+ps.leagues.skaters(["pwhl", "ncaa-w", "sdhl"], 2025)    # women's leagues too
+ps.iihf.skaters("ww", 2025)                             # IIHF tournaments, men's and women's
 ps.hockeydb.skaters("khl", "2024-25")                   # HockeyDB rosters, any league
 ps.eliteprospects.draft_rankings("all")                 # NHL draft rankings: EP's and other outlets'
 ps.tsn.draft_ranking(ps.tsn.draft_ranking_articles())   # TSN's draft rankings
@@ -38,6 +41,7 @@ pip install "puckscrape[tdh] @ git+https://github.com/CascV8/Puckscrape.git"   #
 | `tsn` | `draft_ranking`, `draft_ranking_articles` |
 | `moneypuck` | `skaters`, `goalies`, `teams`, `lines`, `shots` |
 | `leagues` | `leagues`, `skaters`, `goalies`, `standings` |
+| `iihf` | `events`, `skaters`, `goalies`, `standings`, `final_ranking`, `scan_events`, `classify` |
 | `hockeydb` | `leagues`, `seasons`, `skaters` |
 | `espn` | `scoreboard`, `schedule`, `team_schedule`, `boxscore`, `play_by_play`, `standings`, `teams`, `roster`, `player_stats`, `game_log`, `injuries`, `add_nhl_ids`, `player_ids`, `game_ids`, `team_ids` |
 
@@ -83,6 +87,8 @@ ps.leagues.standings("mestis", 2025)
 | Code | League | Source | Notes |
 |---|---|---|---|
 | `ncaa` | NCAA Division I (men) | collegehockeynews.com | ~64 requests a season; whole-season totals; standings are team stats (no W-L) |
+| `ncaa-w` | NCAA Division I (women) | collegehockeynews.com | ~45 requests a season; same tables as `ncaa` |
+| `pwhl` | Professional Women's Hockey League | HockeyTech (thepwhl.com) | from 2023-24 (its first season, Jan-May 2024); playoffs too |
 | `ohl`, `whl`, `qmjhl` | CHL | HockeyTech feed behind chl.ca | full history; playoffs too |
 | `ahl`, `echl` | AHL, ECHL | HockeyTech (theahl.com, echl.com) | full history; playoffs too |
 | `ushl`, `bchl`, `ajhl`, `sjhl`, `mjhl`, `ojhl`, `cchl`, `mjahl`, `kijhl`, `vijhl` | US/Canadian junior | HockeyTech (each league's site key) | `mjahl` is the Maritime Junior Hockey League |
@@ -90,19 +96,59 @@ ps.leagues.standings("mestis", 2025)
 | `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
 | `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
 | `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
-| `mestis`, `suomi-sarja`, `u20-sm-sarja`, `u18-sm-sarja`, `auroraliiga` | Finland | tulospalvelu.leijonat.fi | multi-stage seasons keep a `stage` column |
-| `nl`, `sl`, `myhl` | Switzerland | data.sihf.ch | no standings (the API's table is incomplete for recent seasons) |
+| `mestis`, `suomi-sarja`, `u20-sm-sarja`, `u18-sm-sarja`, `auroraliiga`, `naisten-mestis` | Finland | tulospalvelu.leijonat.fi | multi-stage seasons keep a `stage` column; Auroraliiga and Naisten Mestis are the women's top two |
+| `nl`, `sl`, `myhl`, `swhl` | Switzerland | data.sihf.ch | `swhl` is the PostFinance Women's League (goalies without SV% or W-L: SIHF doesn't publish them); no standings (the API's table is incomplete for recent seasons) |
 | `del`, `del2` | Germany | penny-del.org, del-2.org | |
 | `extraliga`, `maxa-liga` | Czechia | hokej.cz | no standings yet |
 | `icehl` | ICE Hockey League | ice.hockey data files | skaters back to 2012-13; goalies and standings from 2025-26 (earlier files are partial) |
 | `metal-ligaen` | Denmark | statistik.metalligaen.dk | standings verified; the stats host stopped responding mid-testing, so skaters/goalies are checked by hand only |
 | `eihl` | UK Elite League | eliteleague.co.uk | |
+| `iihf-wm`, `iihf-ww`, `iihf-wm20`, `iihf-wm18`, `iihf-ww18` | IIHF World Championships: men, women, U20, U18 men, U18 women | stats.iihf.com | top division only (`ps.iihf` has every division); season 2024-25 is the 2025 tournament; phase `tournament` |
+
+Women's leagues: `pwhl`, `ncaa-w`, `sdhl`, `auroraliiga`, `naisten-mestis`, `swhl`, plus `iihf-ww` and `iihf-ww18`.
 
 Not covered: the KHL, VHL and MHL (khl.ru answers every request with 403), Slovakia (behind a
 Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
 Hungary, Italy, J20 Nationell, the GTHL (no public stats pages) and the PJHL (an old Ramp
 frameset site), which aren't wired yet. The NAHL's stats widget needs a
-CSRF session cookie, so it isn't wired either. `ps.eliteprospects` covers most of these.
+CSRF session cookie, so it isn't wired either. The Czech women's Extraliga (hokej.cz answers 403)
+and Germany's DFEL aren't wired either. `ps.eliteprospects` covers most of these.
+
+## IIHF tournaments (`ps.iihf`)
+
+Every IIHF championship, men's and women's, senior, U20 and U18, every division and group, plus
+Olympic qualification and other IIHF events, from the IIHF's own stats archive (stats.iihf.com/Hydra).
+
+```python
+ps.iihf.events(year=2025, gender="women")         # the catalog: event_id, title, tournament, division, teams
+ps.iihf.skaters("ww", 2025)                       # Women's Worlds 2025, top division
+ps.iihf.goalies("wm20", 2026)                     # World Juniors 2026 (played Dec 2025 - Jan 2026)
+ps.iihf.skaters("ww18", 2025, division="all")     # every division
+ps.iihf.skaters("wm", 2025, division="Div I Group A")
+ps.iihf.skaters(510)                              # any event by id; or a list, or a frame from events()
+ps.iihf.standings("wm", 2025)                     # group standings
+ps.iihf.final_ranking("wm", 2025)
+```
+
+Tournament codes: `wm` (men's Worlds), `ww` (women's), `wm20` (U20), `wm18`, `ww18`, `olyq-m`, `olyq-w`
+(Olympic qualification), `oly-m`, `oly-w` (Olympic tournaments: only 2014 has stats in the archive; 2018
+isn't there, 2022's team reports are linked but gone, and 2026 has only its schedule). Years are the year a
+tournament is named for. `wm20` 2022 is the August 2022 replay; the abandoned December 2021 tournament is
+division `"Top (abandoned Dec 2021)"`. Covered: every championship from 2008 (some events back to 1990),
+through the 2026 tournaments. Rows start with the event (`event_id, event, year, gender, tournament,
+division`), then `player, team, team_code, position, gp, g, a, pts, pim, plus_minus` and whatever else
+the report has (GWG, PPG, SHG, shots, SG%, and in the top divisions ice time and shifts). Goalies get
+`gp, w, l, ga, saves, sv_pct, gaa, so, toi` (minutes). Player names are written "Hilary Knight"; the IIHF's
+own spelling is kept in `first_name` / `last_name` ("KNIGHT").
+
+An event is one request for its index page plus one per team (about 11 for a 10-team event).
+The archive has no list of events, so the catalog ships with puckscrape (`src/puckscrape/data/iihf_events.csv`);
+`ps.iihf.scan_events()` rebuilds it (about 1,100 requests). The archive's newest top-division events may
+lag iihf.com, which sits behind a Cloudflare challenge and isn't used.
+
+The IIHF's PDFs have no readable text layer: their subset fonts carry no character map. puckscrape
+identifies each glyph by a hash of its outline, matched against Arial's (`data/arial_glyphs.json`,
+built by `scripts/build_arial_glyphs.py`; it holds hashes, not the font).
 
 ## HockeyDB (`ps.hockeydb`)
 
@@ -183,6 +229,8 @@ logging.basicConfig(level=logging.INFO)
   browser (the CHL key, for instance, is the public site key chl.ca sends). They're unofficial,
   can change without notice, and each site's terms apply: keep it to personal use, and keep the
   default rate limits.
+- IIHF statistics are the IIHF's, read from the public report PDFs at stats.iihf.com. Keep it to
+  personal use and the default rate limit, and credit the IIHF if you publish with them.
 - ESPN data comes from the undocumented JSON endpoints behind espn.com. They're unofficial and
   unsupported, can change without notice, and ESPN's terms of use apply: keep it to personal use.
 - TSN draft rankings are Craig Button's and TSN's work, read from public tsn.ca articles. TSN's

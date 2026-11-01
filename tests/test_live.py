@@ -76,3 +76,33 @@ def test_league_skaters(league, min_rows):
 def test_league_goalies_save_pct_is_a_fraction():
     df = ps.leagues.goalies(["whl", "del", "mestis"], "2025-26")
     assert df["sv_pct"].dropna().between(0, 1).all()
+
+
+# ---- women's leagues and IIHF tournaments ----------------------------------
+
+@pytest.mark.parametrize("league,season,min_rows", [
+    ("pwhl", "2025-26", 150), ("pwhl", "2023-24", 100), ("swhl", "2025-26", 150),
+    ("naisten-mestis", "2025-26", 200),
+])
+def test_womens_league_skaters(league, season, min_rows):
+    df = ps.leagues.skaters(league, season)
+    assert len(df) >= min_rows and df["pts"].max() > 20
+
+
+def test_iihf_womens_worlds():
+    df = ps.iihf.skaters("ww", 2025)
+    assert df["team_code"].nunique() == 10 and (df["gender"] == "women").all()
+    poulin = df[df["player"] == "Marie-Philip Poulin"].iloc[0]
+    assert (poulin["g"], poulin["a"], poulin["pts"]) == (4, 8, 12)
+    assert not df["player"].str.contains("�").any()
+
+
+def test_iihf_mens_worlds_ranking_and_goalies():
+    assert ps.iihf.final_ranking("wm", 2025)["team_code"].iloc[0] == "USA"
+    df = ps.iihf.goalies("wm", 2025)
+    assert df["sv_pct"].dropna().between(0, 1).all() and len(df) > 30
+
+
+def test_iihf_as_a_league():
+    df = ps.leagues.skaters("iihf-wm20", "2025-26")   # the 2026 World Juniors
+    assert len(df) > 200 and (df["phase"] == "tournament").all()
