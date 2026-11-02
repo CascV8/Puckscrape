@@ -47,6 +47,7 @@ RATE_LIMITS: dict[str, float] = {
     "tulospalvelu.leijonat.fi": 0.5,
     "hockeyallsvenskan.se": 0.5,
     "statistik.metalligaen.dk": 0.5,
+    "stats.iihf.com": 0.5,
 }
 DEFAULT_RATE_LIMIT = 0.1
 

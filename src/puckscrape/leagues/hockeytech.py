@@ -40,9 +40,13 @@ def seasons(client: str, league_id: int | None = None) -> pd.DataFrame:
     return pd.DataFrame(_kit(client, view="seasons", **extra)["Seasons"])
 
 
-def _start_year(name: str, playoffs: bool) -> int | None:
+def _start_year(name: str, playoffs: bool, start_date: str | None = None) -> int | None:
     """Season start year from names like '2025-26 Regular Season', 'CCHL 2025-26',
-    '26-27 Regular Season', '2025/26', '2026 Playoffs' (single year = playoff end year)."""
+    '26-27 Regular Season', '2025/26', '2026 Playoffs' (single year = playoff end year).
+
+    A single-year regular season ('2024 Regular Season', the PWHL's first, played
+    January to May 2024) is read from its start date where the feed gives one:
+    a season starting before July belongs to the season that began the year before."""
     m = re.search(r"(\d{2,4})\s*[-/|]\s*(\d{2,4})", name)
     if m:
         first = int(m.group(1))
@@ -50,7 +54,12 @@ def _start_year(name: str, playoffs: bool) -> int | None:
     m = re.search(r"\b(\d{4})\b", name)
     if m:
         year = int(m.group(1))
-        return year - 1 if playoffs else year
+        if playoffs:
+            return year - 1
+        d = re.match(r"(\d{4})-(\d{2})", start_date or "")
+        if d:
+            return int(d.group(1)) - (int(d.group(2)) < 7)
+        return year
     return None
 
 
@@ -70,7 +79,7 @@ def season_id(client: str, y: int, phase: str, regular: str | None = None,
         plain = not re.sub(r"[\d\s\-/|]+", "", name.replace(client, ""))
         if want == "regular" and "regular" not in name and not plain and not (regular and re.search(regular, name)):
             continue  # a tournament or event, not the league season
-        if _start_year(name, is_playoff) == y:
+        if _start_year(name, is_playoff, s.get("start_date")) == y:
             return s["season_id"]
     raise ValueError(f"no {want} season {y}-{y + 1} for {client}")
 

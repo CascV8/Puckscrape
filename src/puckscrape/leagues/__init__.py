@@ -24,6 +24,7 @@ from .._util import as_list, start_year
 from . import (chn, delhockey, eihl, hockeyallsvenskan, hockeytech, hokejcz, icehl, leijonat, liiga,
                metalligaen, sihf, sportality)
 from ._common import Unsupported
+from .iihf import Tournament
 
 log = logging.getLogger("puckscrape.leagues")
 
@@ -53,6 +54,9 @@ _DEL, _DEL2 = _Split(delhockey, "del"), _Split(delhockey, "del2")
 _REGISTRY = [
     # North America
     League("ncaa", "NCAA Division I (men)", "USA", "college", "collegehockeynews.com", chn),
+    League("ncaa-w", "NCAA Division I (women)", "USA", "women", "collegehockeynews.com", chn, {"women": True}),
+    League("pwhl", "Professional Women's Hockey League", "USA", "women", "thepwhl.com (HockeyTech)", hockeytech,
+           {"client": "pwhl", "key": "694cfeed58c932ee"}),
     League("ohl", "Ontario Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "ohl"}),
     League("whl", "Western Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "whl"}),
     League("qmjhl", "Quebec Maritimes Junior Hockey League", "Canada", "major junior", "chl.ca (HockeyTech)", hockeytech, {"client": "lhjmq"}),
@@ -83,10 +87,12 @@ _REGISTRY = [
     League("u20-sm-sarja", "U20 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": ("U20 SM-sarja", "Nuorten SM-Liiga")}),
     League("u18-sm-sarja", "U18 SM-sarja", "Finland", "junior", "tulospalvelu.leijonat.fi", leijonat, {"level": ("U18 SM-sarja", "B-nuorten SM-sarja")}),
     League("auroraliiga", "Auroraliiga (women)", "Finland", "women", "tulospalvelu.leijonat.fi", leijonat, {"level": "Auroraliiga"}),
+    League("naisten-mestis", "Naisten Mestis (women)", "Finland", "women second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Naisten Mestis"}),
     # Switzerland
     League("nl", "National League", "Switzerland", "top", "data.sihf.ch", sihf, {"league_id": 1}),
     League("sl", "Swiss League", "Switzerland", "second", "data.sihf.ch", sihf, {"league_id": 2}),
     League("myhl", "MyHockey League", "Switzerland", "third", "data.sihf.ch", sihf, {"league_id": 3}),
+    League("swhl", "PostFinance Women's League", "Switzerland", "women", "data.sihf.ch", sihf, {"league_id": 42}),
     # Germany
     League("del", "PENNY DEL", "Germany", "top", "penny-del.org", _DEL),
     League("del2", "DEL2", "Germany", "second", "del-2.org", _DEL2),
@@ -97,6 +103,12 @@ _REGISTRY = [
     League("icehl", "ICE Hockey League", "Austria", "top", "ice.hockey", icehl),
     League("eihl", "Elite Ice Hockey League", "United Kingdom", "top", "eliteleague.co.uk", eihl),
     League("metal-ligaen", "Metal Ligaen", "Denmark", "top", "statistik.metalligaen.dk", metalligaen),
+    # IIHF tournaments, top division (ps.iihf has every division). Season 2024-25 = the 2025 tournament.
+    League("iihf-wm", "IIHF World Championship (men)", "International", "national teams", "stats.iihf.com", Tournament("wm")),
+    League("iihf-ww", "IIHF Women's World Championship", "International", "national teams women", "stats.iihf.com", Tournament("ww")),
+    League("iihf-wm20", "IIHF U20 World Championship (World Juniors)", "International", "national teams U20", "stats.iihf.com", Tournament("wm20")),
+    League("iihf-wm18", "IIHF U18 World Championship (men)", "International", "national teams U18", "stats.iihf.com", Tournament("wm18")),
+    League("iihf-ww18", "IIHF U18 Women's World Championship", "International", "national teams women U18", "stats.iihf.com", Tournament("ww18")),
 ]
 LEAGUES: dict[str, League] = {lg.code: lg for lg in _REGISTRY}
 hockeytech._KEYS.update({lg.opts["client"]: lg.opts["key"] for lg in _REGISTRY if "key" in lg.opts})
