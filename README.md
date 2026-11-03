@@ -95,6 +95,8 @@ ps.leagues.standings("mestis", 2025)
 | `gohl`, `csshl` | GOHL (Ontario junior B), CSSHL U18 Prep | HockeyTech | CSSHL from 2021-22 (earlier seasons mix every age division) |
 | `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
 | `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
+| `u20-nationell` | U20 Nationell | stats.swehockey.se | skaters; birth dates and nationality from the rosters |
+| `u18-nationell` | U18 Nationell | stats.swehockey.se | skaters; birth dates and nationality from the rosters |
 | `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
 | `mestis`, `suomi-sarja`, `u20-sm-sarja`, `u18-sm-sarja`, `auroraliiga`, `naisten-mestis` | Finland | tulospalvelu.leijonat.fi | multi-stage seasons keep a `stage` column; Auroraliiga and Naisten Mestis are the women's top two |
 | `nl`, `sl`, `myhl`, `swhl` | Switzerland | data.sihf.ch | `swhl` is the PostFinance Women's League (goalies without SV% or W-L: SIHF doesn't publish them); no standings (the API's table is incomplete for recent seasons) |

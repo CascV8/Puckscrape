@@ -87,3 +87,15 @@ def test_phase_key():
     assert _common.phase_key("playoffs") == "playoffs"
     with pytest.raises(ValueError):
         _common.phase_key("preseason")
+
+
+def test_swehockey_team_tables_and_names():
+    from bs4 import BeautifulSoup
+    from puckscrape.leagues import swehockey
+    html = """<table><tr><td>Frölunda HC</td><td>[Top]</td></tr><tr><th>Playing Statistics</th></tr>
+      <tr><th>Rk</th><th>No</th><th>Name</th><th>Pos</th><th>GP</th></tr>
+      <tr><td>1</td><td>19</td><td>Meijer, Bosse</td><td>CE</td><td>31</td></tr></table>
+      <table><tr><th>Goalkeeping Statistics</th></tr><tr><th>Rk</th><th>Name</th></tr></table>"""
+    (team, df), = swehockey._team_tables(BeautifulSoup(html, "html.parser"), "Rk")
+    assert team == "Frölunda HC" and df.loc[0, "Name"] == "Meijer, Bosse" and df.loc[0, "GP"] == "31"
+    assert swehockey._first_last("Meijer, Bosse") == "Bosse Meijer"

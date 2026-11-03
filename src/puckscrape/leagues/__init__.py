@@ -22,7 +22,7 @@ import pandas as pd
 
 from .._util import as_list, start_year
 from . import (chn, delhockey, eihl, hockeyallsvenskan, hockeytech, hokejcz, icehl, leijonat, liiga,
-               metalligaen, sihf, sportality)
+               metalligaen, sihf, sportality, swehockey)
 from ._common import Unsupported
 from .iihf import Tournament
 
@@ -80,6 +80,8 @@ _REGISTRY = [
     League("shl", "SHL", "Sweden", "top", "shl.se", sportality, {"host": "https://www.shl.se", "series": "SHL"}),
     League("hockeyallsvenskan", "HockeyAllsvenskan", "Sweden", "second", "hockeyallsvenskan.se", hockeyallsvenskan),
     League("sdhl", "SDHL (women)", "Sweden", "women", "sdhl.se", sportality, {"host": "https://www.sdhl.se", "series": "SDHL"}),
+    League("u20-nationell", "U20 Nationell", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start": 20964, "series": "U20"}),
+    League("u18-nationell", "U18 Nationell", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start": 19937, "series": "U18"}),
     # Finland
     League("liiga", "Liiga", "Finland", "top", "liiga.fi", liiga),
     League("mestis", "Mestis", "Finland", "second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Mestis"}),
