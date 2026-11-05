@@ -22,7 +22,7 @@ import pandas as pd
 
 from .._util import as_list, start_year
 from . import (ceskyhokej, chn, delhockey, eihl, hockeyallsvenskan, hockeydb, hockeytech, icehl, khl, leijonat,
-               liiga, metalligaen, sihf, sportality)
+               liiga, metalligaen, sihf, sportality, swehockey)
 from ._common import Unsupported
 from .iihf import Tournament
 
@@ -80,6 +80,8 @@ _REGISTRY = [
     League("shl", "SHL", "Sweden", "top", "shl.se", sportality, {"host": "https://www.shl.se", "series": "SHL"}),
     League("hockeyallsvenskan", "HockeyAllsvenskan", "Sweden", "second", "hockeyallsvenskan.se", hockeyallsvenskan),
     League("sdhl", "SDHL (women)", "Sweden", "women", "sdhl.se", sportality, {"host": "https://www.sdhl.se", "series": "SDHL"}),
+    League("u20-nationell", "U20 Nationell (J20)", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start_id": 20964}),
+    League("u18-nationell", "U18 Nationell (J18)", "Sweden", "U18", "stats.swehockey.se", swehockey, {"start_id": 19937}),
     # Finland
     League("liiga", "Liiga", "Finland", "top", "liiga.fi", liiga),
     League("mestis", "Mestis", "Finland", "second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Mestis"}),
@@ -93,6 +95,10 @@ _REGISTRY = [
     League("sl", "Swiss League", "Switzerland", "second", "data.sihf.ch", sihf, {"league_id": 2}),
     League("myhl", "MyHockey League", "Switzerland", "third", "data.sihf.ch", sihf, {"league_id": 3}),
     League("swhl", "PostFinance Women's League", "Switzerland", "women", "data.sihf.ch", sihf, {"league_id": 42}),
+    League("u21-elit", "U21-Elit (formerly U20-Elit)", "Switzerland", "junior", "data.sihf.ch", sihf,
+           {"league_ids": ((0, 4), (2025, 113))}),
+    League("u18-elit", "U18-Elit (formerly U17-Elit)", "Switzerland", "U18", "data.sihf.ch", sihf,
+           {"league_ids": ((0, 23), (2025, 116))}),
     # Germany
     League("del", "PENNY DEL", "Germany", "top", "penny-del.org", _DEL),
     League("del2", "DEL2", "Germany", "second", "del-2.org", _DEL2),

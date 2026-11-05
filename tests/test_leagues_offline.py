@@ -144,6 +144,43 @@ def test_vhl_from_hockeydb_splits_phases_with_one_scrape(monkeypatch):
     hdb._rosters.cache_clear()
 
 
+_SWE_PLAYERS_BY_TEAM = """<html><body>
+<table><tr><td>AIK</td><td>AIK</td><td>[Top]</td></tr></table>
+<table><tr><th>Playing Statistics</th></tr>
+<tr><th>Rk</th><th>No</th><th>Name</th><th>Pos</th><th>GP</th><th>G</th><th>A</th><th>TP</th><th>PIM</th><th>+</th><th>-</th><th>+/-</th></tr>
+<tr><td>1</td><td>34</td><td>Furuvik, Christian</td><td>LW</td><td>22</td><td>15</td><td>8</td><td>23</td><td>12</td><td>21</td><td>25</td><td>-4</td></tr>
+<tr><td>2</td><td>35</td><td>Wadströmer, Frode</td><td>GK</td><td>19</td><td>0</td><td>0</td><td>0</td><td>2</td><td></td><td></td><td></td></tr></table>
+<table><tr><th>Goalkeeping Statistics</th></tr>
+<tr><th>Rk</th><th>No</th><th>Name</th><th>GPT</th><th>GKD</th><th>GPI</th><th>MIP</th><th>GA</th><th>SVS</th><th>SOG</th><th>SVS%</th><th>GAA</th><th>SO</th><th>W</th><th>L</th></tr>
+<tr><td>1</td><td>35</td><td>Wadströmer, Frode</td><td>22</td><td>19</td><td>18</td><td>1063:28</td><td>45</td><td>505</td><td>550</td><td>91.82</td><td>2.54</td><td>2</td><td>9</td><td>9</td></tr>
+<tr><td></td><td>30</td><td>Michel, Alex</td><td>22</td><td>3</td><td>0</td><td>00:00</td><td>0</td><td>0</td><td>0</td><td>N/A</td><td>N/A</td><td>0</td><td>0</td><td>0</td></tr></table>
+</body></html>"""
+
+
+def test_swehockey_players_by_team(monkeypatch):
+    from bs4 import BeautifulSoup
+    from puckscrape.leagues import swehockey
+    monkeypatch.setattr(swehockey, "soup", lambda url, **p: BeautifulSoup(_SWE_PLAYERS_BY_TEAM, "html.parser"))
+    monkeypatch.setattr(swehockey, "_phase_series", lambda opts, y, phase: [(1, "U18 Nationell Norra")])
+    sk = swehockey.skaters({}, "u18-nationell", 2025, "regular")
+    assert sk["player"].tolist() == ["Christian Furuvik"]          # the goalie's empty skater line is dropped
+    assert (sk["team"].iloc[0], sk["pts"].iloc[0], sk["plus_minus"].iloc[0]) == ("AIK", 23, -4)
+    gk = swehockey.goalies({}, "u18-nationell", 2025, "regular")
+    assert gk["player"].tolist() == ["Frode Wadströmer"]           # dressed-only backups are dropped
+    row = gk.iloc[0]
+    assert (row["gp"], row["w"], row["toi"], row["sv_pct"]) == (18, 9, 1063.47, pytest.approx(0.9182))
+    assert row["stage"] == "U18 Nationell Norra"
+
+
+def test_sihf_league_id_by_season_and_toi():
+    from puckscrape.leagues import sihf
+    opts = {"league_ids": ((0, 23), (2025, 116))}
+    assert sihf._league_id(opts, 2024) == 23 and sihf._league_id(opts, 2025) == 116
+    assert sihf._league_id({"league_id": 1}, 2025) == 1
+    assert sihf._toi_minutes("1075:20") == 1075.33 and sihf._toi_minutes(3600) == 60.0
+    assert pd.isna(sihf._toi_minutes(""))
+
+
 def test_phase_key():
     assert _common.phase_key("Regular") == "regular"
     assert _common.phase_key("playoffs") == "playoffs"

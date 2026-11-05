@@ -90,6 +90,15 @@ def test_khl_from_the_app_feed():
     assert len(st) == 23 and (st["gp"] == 68).all()
 
 
+@pytest.mark.parametrize("league,min_rows", [
+    ("u18-nationell", 500), ("u18-elit", 350), ("czech-u18", 800), ("u18-sm-sarja", 300),
+])
+def test_european_u18_leagues(league, min_rows):
+    sk = ps.leagues.skaters(league, "2025-26")
+    gk = ps.leagues.goalies(league, "2025-26")
+    assert len(sk) >= min_rows and sk["pts"].max() > 30 and len(gk) > 20
+
+
 def test_czech_youth_stages():
     df = ps.leagues.skaters("czech-u18", "2025-26")
     assert df["stage"].nunique() >= 3 and len(df) > 800

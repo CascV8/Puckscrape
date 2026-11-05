@@ -37,6 +37,7 @@ RATE_LIMITS: dict[str, float] = {
     "www.hockeydb.com": 3.0,   # it challenges clients that go faster
     "www.eliteleague.co.uk": 1.0,
     "ceskyhokej.cz": 1.0,
+    "stats.swehockey.se": 1.0,
     "khl.api.webcaster.pro": 0.5,
     "www.penny-del.org": 1.0,
     "www.del-2.org": 1.0,
@@ -52,7 +53,8 @@ RATE_LIMITS: dict[str, float] = {
 }
 DEFAULT_RATE_LIMIT = 0.1
 
-RETRY_STATUSES = frozenset({429, 500, 502, 503, 504})
+# 520-524: Cloudflare could not get an answer from the site behind it (transient, like 502).
+RETRY_STATUSES = frozenset({429, 500, 502, 503, 504, 520, 521, 522, 523, 524})
 
 # Hosts behind a Cloudflare bot challenge. Cloudflare fingerprints the TLS and
 # HTTP/2 handshake, so a browser User-Agent on top of python-requests still
