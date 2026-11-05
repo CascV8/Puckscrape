@@ -38,6 +38,7 @@ RATE_LIMITS: dict[str, float] = {
     "www.eliteleague.co.uk": 1.0,
     "ceskyhokej.cz": 1.0,
     "stats.swehockey.se": 1.0,
+    "sf34-terminlister-prod-app.azurewebsites.net": 0.5,
     "khl.api.webcaster.pro": 0.5,
     "www.penny-del.org": 1.0,
     "www.del-2.org": 1.0,

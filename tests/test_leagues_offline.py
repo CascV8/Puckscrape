@@ -181,6 +181,18 @@ def test_sihf_league_id_by_season_and_toi():
     assert pd.isna(sihf._toi_minutes(""))
 
 
+def test_norway_tournament_selection(monkeypatch):
+    from puckscrape.leagues import hockeyno
+    monkeypatch.setattr(hockeyno, "_tournaments", lambda y: (
+        (1, "U18 Elite"), (2, "U20 Elite Innledende"), (3, "U20 Elite A"), (4, "U18 NM kvartfinaler"),
+        (5, "U18 NM Final 4"), (6, "NM sluttspill U20"), (7, "U18 1.div"), (8, "U18 elite 12/13")))
+    ids = lambda age, phase: [t for t, _ in hockeyno._phase_tournaments({"age": age}, 2025, phase)]
+    assert ids("U18", "regular") == [1, 8]
+    assert ids("U18", "playoffs") == [4, 5]
+    assert ids("U20", "regular") == [2, 3] and ids("U20", "playoffs") == [6]
+    assert hockeyno._SKIP.search("U18 Elite treningskamper") and not hockeyno._SKIP.search("U18 Elite")
+
+
 def test_phase_key():
     assert _common.phase_key("Regular") == "regular"
     assert _common.phase_key("playoffs") == "playoffs"

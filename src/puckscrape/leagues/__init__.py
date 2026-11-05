@@ -21,8 +21,8 @@ from types import ModuleType
 import pandas as pd
 
 from .._util import as_list, start_year
-from . import (ceskyhokej, chn, delhockey, eihl, hockeyallsvenskan, hockeydb, hockeytech, icehl, khl, leijonat,
-               liiga, metalligaen, sihf, sportality, swehockey)
+from . import (ceskyhokej, chn, delhockey, eihl, hockeyallsvenskan, hockeydb, hockeyno, hockeytech, icehl, khl,
+               leijonat, liiga, metalligaen, sihf, sportality, swehockey)
 from ._common import Unsupported
 from .iihf import Tournament
 
@@ -114,6 +114,9 @@ _REGISTRY = [
     League("khl", "Kontinental Hockey League", "Russia", "top", "KHL app feed (khl.api.webcaster.pro)", khl, {"app": "khl_mobile"}),
     League("mhl", "Junior Hockey League (MHL)", "Russia", "junior", "KHL app feed (khl.api.webcaster.pro)", khl, {"app": "mhl_mobile"}),
     League("vhl", "Supreme Hockey League (VHL)", "Russia", "second", "hockeydb.com", hockeydb, {"hockeydb": "vhl"}),
+    # Norway
+    League("norway-u20", "U20 Elite", "Norway", "junior", "live.hockey.no (federation API)", hockeyno, {"age": "U20"}),
+    League("norway-u18", "U18 Elite", "Norway", "U18", "live.hockey.no (federation API)", hockeyno, {"age": "U18"}),
     # Austria and neighbours, UK
     League("icehl", "ICE Hockey League", "Austria", "top", "ice.hockey", icehl),
     League("eihl", "Elite Ice Hockey League", "United Kingdom", "top", "eliteleague.co.uk", eihl),

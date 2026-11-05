@@ -91,7 +91,7 @@ def test_khl_from_the_app_feed():
 
 
 @pytest.mark.parametrize("league,min_rows", [
-    ("u18-nationell", 500), ("u18-elit", 350), ("czech-u18", 800), ("u18-sm-sarja", 300),
+    ("u18-nationell", 500), ("u18-elit", 350), ("czech-u18", 800), ("u18-sm-sarja", 300), ("norway-u18", 250),
 ])
 def test_european_u18_leagues(league, min_rows):
     sk = ps.leagues.skaters(league, "2025-26")
