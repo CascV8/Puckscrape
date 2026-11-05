@@ -36,7 +36,8 @@ RATE_LIMITS: dict[str, float] = {
     "www.collegehockeynews.com": 1.0,
     "www.hockeydb.com": 3.0,   # it challenges clients that go faster
     "www.eliteleague.co.uk": 1.0,
-    "www.hokej.cz": 1.0,
+    "ceskyhokej.cz": 1.0,
+    "khl.api.webcaster.pro": 0.5,
     "www.penny-del.org": 1.0,
     "www.del-2.org": 1.0,
     "lscluster.hockeytech.com": 0.5,
