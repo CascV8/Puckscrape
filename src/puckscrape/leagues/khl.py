@@ -84,9 +84,13 @@ def _players(app: str, stage_id: int, season: str) -> tuple[dict, ...]:
 
 
 def _first_last(name: str) -> str:
-    """The feed writes 'Surname Given' ('Kaprizov Kirill', 'Alexeyev Denis V.')."""
+    """The feed writes 'Surname Given' ('Kaprizov Kirill', 'Da Costa Stephane'), with a
+    patronymic initial after the given name when two players share a name ('Alexeyev Denis V.')."""
     parts = name.split()
-    return " ".join(parts[1:] + parts[:1]) if len(parts) > 1 else name
+    if len(parts) < 2:
+        return name
+    given = 2 if len(parts) > 2 and parts[-1].endswith(".") else 1
+    return " ".join(parts[-given:] + parts[:-given])
 
 
 def _date(ts):
@@ -124,7 +128,10 @@ def standings(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
     st = _stage(app, y, phase)
     table: dict[str, dict] = defaultdict(lambda: dict.fromkeys(
         ("gp", "w", "otw", "sow", "l", "otl", "sol", "gf", "ga"), 0))
+    teams = _stage_teams(app, st["id"])
     for game in _games(app, st["id"]):
+        if teams and not {game["team_a"].get("id"), game["team_b"].get("id")} <= teams:
+            continue   # all-star games (KHL RUS Stars v KHL World Stars...)
         sc = game.get("scores") or {}
         try:
             a, b = (int(x) for x in game["score"].split(":"))

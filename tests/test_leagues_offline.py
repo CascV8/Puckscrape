@@ -109,12 +109,17 @@ def test_czech_stage_name_and_minutes():
 def test_khl_names_and_standings(monkeypatch):
     assert khl._first_last("Kaprizov Kirill") == "Kirill Kaprizov"
     assert khl._first_last("Alexeyev Denis V.") == "Denis V. Alexeyev"
+    assert khl._first_last("Belozyorov Andrei Al.") == "Andrei Al. Belozyorov"
+    assert khl._first_last("Da Costa Stephane") == "Stephane Da Costa"
     monkeypatch.setattr(khl, "_stage", lambda app, y, phase: {"id": 1, "season": "2025/2026"})
+    monkeypatch.setattr(khl, "_stage_teams", lambda app, stage_id: frozenset({1, 2}))
+    ids = {"A": 1, "B": 2, "Stars": 99}
     def game(a, b, score, ot=None, so=None):
-        return {"team_a": {"name": a}, "team_b": {"name": b}, "score": score,
+        return {"team_a": {"name": a, "id": ids[a]}, "team_b": {"name": b, "id": ids[b]}, "score": score,
                 "scores": {"overtime": ot, "bullitt": so}}
     monkeypatch.setattr(khl, "_games", lambda app, stage_id: [
-        game("A", "B", "3:1"), game("A", "B", "2:3", ot="0:1"), game("B", "A", "4:3", so="1:0")])
+        game("A", "B", "3:1"), game("A", "B", "2:3", ot="0:1"), game("B", "A", "4:3", so="1:0"),
+        game("Stars", "A", "9:1")])
     st = khl.standings({"app": "khl_mobile"}, "khl", 2025, "regular").set_index("team")
     assert st.loc["A", ["gp", "w", "otl", "sol", "pts", "gf", "ga"]].tolist() == [3, 1, 1, 1, 4, 8, 8]
     assert st.loc["B", ["w", "otw", "sow", "l", "pts"]].tolist() == [0, 1, 1, 1, 4]
