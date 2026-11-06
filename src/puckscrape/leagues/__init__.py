@@ -82,6 +82,8 @@ _REGISTRY = [
     League("sdhl", "SDHL (women)", "Sweden", "women", "sdhl.se", sportality, {"host": "https://www.sdhl.se", "series": "SDHL"}),
     League("u20-nationell", "U20 Nationell (J20)", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start_id": 20964}),
     League("u18-nationell", "U18 Nationell (J18)", "Sweden", "U18", "stats.swehockey.se", swehockey, {"start_id": 19937}),
+    League("u18-regional", "U18 Regional (autumn elite series: Norr, Syd, Väst, Öst)", "Sweden", "U18", "stats.swehockey.se",
+           swehockey, {"start_ids": (21335, 22182, 22180, 22243)}),
     # Finland
     League("liiga", "Liiga", "Finland", "top", "liiga.fi", liiga),
     League("mestis", "Mestis", "Finland", "second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Mestis"}),

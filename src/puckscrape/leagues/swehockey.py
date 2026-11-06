@@ -54,8 +54,16 @@ def _series(start_id: int, y: int) -> tuple[tuple[int, str], ...]:
 
 
 def _phase_series(opts: dict, y: int, phase: str) -> list[tuple[int, str]]:
+    """Series of one phase. ``start_ids`` lists several league trees read as one league
+    (U18 Regional: one tree per region); a tree without that season is skipped."""
     want = phase_key(phase) == "playoffs"
-    found = [s for s in _series(opts["start_id"], y) if bool(_PLAYOFF.search(s[1])) == want]
+    series = []
+    for start_id in opts.get("start_ids") or (opts["start_id"],):
+        try:
+            series += _series(start_id, y)
+        except ValueError:
+            continue
+    found = [s for s in series if bool(_PLAYOFF.search(s[1])) == want]
     if not found:
         raise ValueError(f"no {phase_key(phase)} series in {y}-{y + 1}")
     return found

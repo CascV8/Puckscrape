@@ -74,6 +74,31 @@ def _stage_name(part_name: str, y: int) -> str:
     return re.sub(rf"\s*{y}/{(y + 1) % 100:02d}\s*", " ", part_name).strip(" -–")
 
 
+@cache
+def _team_names(comp: int, y: int) -> dict[str, str]:
+    """'PCE' -> 'HC DYNAMO PARDUBICE': stats tables name teams by code; the season's teams
+    page pairs each club's logo (alt = its code) with its name, both linking /club/detail/<id>."""
+    try:
+        page = soup(f"{BASE}/competition/teams/{comp}", seasonId=_season_id(comp, y))
+    except Exception:
+        return {}
+    codes, names = {}, {}
+    for a in page.find_all("a", href=re.compile(r"/club/detail/\d+")):
+        club = re.search(r"/club/detail/(\d+)", a["href"]).group(1)
+        img = a.find("img", alt=True)
+        if img and img["alt"].strip():
+            codes.setdefault(club, img["alt"].strip())
+        text = a.get_text(" ", strip=True)
+        if text:
+            names.setdefault(club, text)
+        elif img:   # the name sits beside the logo, before the club's 'Zápasy' / 'Statistiky' links
+            box = a.find_parent(["div", "li", "td"])
+            label = re.sub(r"\s*Zápasy\s*Statistiky\s*$", "", box.get_text(" ", strip=True)) if box else ""
+            if label:
+                names.setdefault(club, label)
+    return {code: names[club] for club, code in codes.items() if club in names}
+
+
 def _stats(comp: int, y: int, phase: str, kind: str) -> pd.DataFrame:
     frames = []
     for part_id, part_name in _phase_parts(comp, y, phase):
@@ -90,7 +115,13 @@ def _stats(comp: int, y: int, phase: str, kind: str) -> pd.DataFrame:
                 break
         if rows:
             frames.append(pd.DataFrame(rows).assign(stage=_stage_name(part_name, y)))
-    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True)
+    names = _team_names(comp, y)
+    df.insert(df.columns.get_loc("TÝM") + 1, "team_code", df["TÝM"])
+    df["TÝM"] = df["TÝM"].map(names).fillna(df["TÝM"])
+    return df
 
 
 def _rows(page) -> list[dict]:
