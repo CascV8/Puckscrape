@@ -5,7 +5,8 @@ SM-slutspel...), each with its own id. A league's season dropdown leads to one
 series of each season, whose series dropdown lists the rest. Every row keeps its
 series in a ``stage`` column; "playoffs" is the SM-slutspel series. Players and
 goalies come from the "Players By Team" page: every player of every team, one
-page per series.
+page per series. Skaters also get their birth date, shot and nationality from
+the series' rosters (Teams/Info/TeamRoster), joined on team and name.
 """
 
 from __future__ import annotations
@@ -93,12 +94,48 @@ def _players_by_team(series_id: int) -> tuple[list[dict], list[dict]]:
     return skaters, goalies
 
 
+def _team_tables(page, first: str) -> list[tuple[str, pd.DataFrame]]:
+    """Each team's table on a by-team page: (team, rows), the rows under the header row starting ``first``."""
+    out = []
+    for table in page.find_all("table"):
+        if table.find("table"):
+            continue
+        rows = [cells(tr) for tr in table.find_all("tr")]
+        if not rows or "[Top]" not in rows[0]:
+            continue
+        head = next((i for i, r in enumerate(rows) if r and r[0] == first and "Name" in r), None)
+        if head is None:
+            continue
+        cols = rows[head]
+        out.append((rows[0][0], pd.DataFrame([r for r in rows[head + 1:] if len(r) == len(cols)], columns=cols)))
+    return out
+
+
+def _roster(series_id: int) -> pd.DataFrame:
+    """Each player's birth date, shot and nationality from the series' rosters (Teams/Info/TeamRoster)."""
+    frames = [df.assign(team=clean_team(team)) for team, df in
+              _team_tables(soup(f"{BASE}/Teams/Info/TeamRoster/{series_id}"), "No")]
+    if not frames:
+        return pd.DataFrame()
+    bio = pd.concat(frames, ignore_index=True)
+    keep = [c for c in ("Name", "team", "Birthdate", "L/R", "Nationality / Club") if c in bio]
+    return bio[keep].drop_duplicates(["Name", "team"])
+
+
 def _frame(opts: dict, y: int, phase: str, goalies: bool) -> pd.DataFrame:
     frames = []
     for series_id, name in _phase_series(opts, y, phase):
         rows = _players_by_team(series_id)[1 if goalies else 0]
         if rows:
-            frames.append(pd.DataFrame(rows).assign(stage=re.sub(r"\s+", " ", name)))
+            df = pd.DataFrame(rows)
+            if not goalies:
+                try:
+                    bio = _roster(series_id)
+                except Exception:   # the stats stand without the bios
+                    bio = pd.DataFrame()
+                if len(bio):
+                    df = df.merge(bio, on=["Name", "team"], how="left")
+            frames.append(df.assign(stage=re.sub(r"\s+", " ", name)))
     if not frames:
         return pd.DataFrame()
     df = pd.concat(frames, ignore_index=True).drop(columns=["Rk"])
@@ -125,7 +162,8 @@ def skaters(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
     return finish(_na_text(df), "skaters", league, y, phase_key(phase), rename={
         "No": "jersey", "Pos": "position", "GP": "gp", "G": "g", "A": "a", "TP": "pts", "PIM": "pim",
         "+": "plus", "-": "minus", "+/-": "plus_minus", "GWG": "gwg", "PPG": "ppg", "SHG": "shg", "SOG": "shots",
-        "SG%": "shooting_pct", "FO+": "faceoffs_won", "FO-": "faceoffs_lost", "FO": "faceoffs", "FO%": "faceoff_pct"})
+        "SG%": "shooting_pct", "FO+": "faceoffs_won", "FO-": "faceoffs_lost", "FO": "faceoffs", "FO%": "faceoff_pct",
+        "Birthdate": "birthdate", "L/R": "shoots", "Nationality / Club": "nationality"})
 
 
 def goalies(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
