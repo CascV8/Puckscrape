@@ -74,8 +74,37 @@ def test_league_skaters(league, min_rows):
 
 
 def test_league_goalies_save_pct_is_a_fraction():
-    df = ps.leagues.goalies(["whl", "del", "mestis"], "2025-26")
+    df = ps.leagues.goalies(["whl", "del", "mestis", "liiga", "czech-u18"], "2025-26")
     assert df["sv_pct"].dropna().between(0, 1).all()
+    assert set(df["league"]) == {"whl", "del", "mestis", "liiga", "czech-u18"}
+
+
+# ---- Russia and Czech youth --------------------------------------------------
+
+def test_khl_from_the_app_feed():
+    sk = ps.leagues.skaters("khl", "2024-25")          # ~60 pages: a few minutes
+    assert len(sk) > 600 and sk["pts"].max() > 60 and sk["team"].notna().mean() > 0.98
+    gk = ps.leagues.goalies("khl", "2024-25")           # same pages, cached
+    assert gk["sv_pct"].dropna().between(0, 1).all() and len(gk) > 40
+    st = ps.leagues.standings("khl", "2024-25")
+    assert len(st) == 23 and (st["gp"] == 68).all()
+
+
+@pytest.mark.parametrize("league,min_rows", [
+    ("u18-nationell", 500), ("u18-elit", 350), ("czech-u18", 800), ("u18-sm-sarja", 300), ("norway-u18", 250),
+])
+def test_european_u18_leagues(league, min_rows):
+    sk = ps.leagues.skaters(league, "2025-26")
+    gk = ps.leagues.goalies(league, "2025-26")
+    assert len(sk) >= min_rows and sk["pts"].max() > 30 and len(gk) > 20
+
+
+def test_czech_youth_stages():
+    df = ps.leagues.skaters("czech-u18", "2025-26")
+    assert df["stage"].nunique() >= 3 and len(df) > 800
+    po = ps.leagues.skaters("czech-u18", "2025-26", phase="playoffs")
+    assert po["stage"].str.contains("Play-off o titul").any()
+    assert not set(df["stage"]) & set(po["stage"])
 
 
 # ---- women's leagues and IIHF tournaments ----------------------------------

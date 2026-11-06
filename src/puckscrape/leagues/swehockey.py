@@ -1,66 +1,97 @@
-"""Sweden's national junior leagues (U20 Nationell, U18 Nationell) from the Swedish Ice Hockey Association's
-stats site, stats.swehockey.se.
+"""Swedish federation leagues from stats.swehockey.se (U18 and U20 Nationell).
 
-A season is split into groups (Norra, Södra, and later series), each a competition with its own id. The
-season picker on a competition's overview page links each season's first group, and that season's group
-picker links the rest. Per group, two pages per team:
-
-    Teams/Info/PlayersByTeam/<id>    every skater's GP, G, A, TP, PIM...
-    Teams/Info/TeamRoster/<id>       his birth date, position, shot and nationality
-
-joined on team and name. Groups whose name says playoffs ("slutspel", "kval") are the playoffs.
+Each season of a league is split into series (U18 Nationell Norra / Södra, U18
+SM-slutspel...), each with its own id. A league's season dropdown leads to one
+series of each season, whose series dropdown lists the rest. Every row keeps its
+series in a ``stage`` column; "playoffs" is the SM-slutspel series. Players and
+goalies come from the "Players By Team" page: every player of every team, one
+page per series. Skaters also get their birth date, shot and nationality from
+the series' rosters (Teams/Info/TeamRoster), joined on team and name.
 """
 
 from __future__ import annotations
 
-import logging
 import re
+from functools import cache
 
 import pandas as pd
 
-from ._common import Unsupported, finish, soup
-
-log = logging.getLogger("puckscrape.leagues")
+from ._common import Unsupported, cells, clean_team, finish, phase_key, soup
 
 BASE = "https://stats.swehockey.se"
-PLAYOFFS = re.compile(r"slutspel|kval|playoff|final", re.I)
-SEASON = re.compile(r"^(\d{4})-\d{2}$")
+_PLAYOFF = re.compile(r"slutspel|SM-final|kvartsfinal|semifinal", re.I)
 
 
-def _overview(cid: int):
-    return soup(f"{BASE}/ScheduleAndResults/Overview/{cid}")
+def _selects(page) -> list[list[tuple[str, str]]]:
+    return [[(o.get("value", ""), o.get_text(strip=True)) for o in sel.find_all("option")] for sel in page.find_all("select")]
 
 
-def _season_ids(start: int) -> dict[int, int]:
-    """Start year -> the competition id of that season's first group, from the season picker."""
-    out = {}
-    for sel in _overview(start).find_all("select"):
-        for o in sel.find_all("option"):
-            m = SEASON.match(o.get_text(strip=True))
-            cid = re.search(r"/Overview/(\d+)", o.get("value") or "")
-            if m and cid:
-                out[int(m.group(1))] = int(cid.group(1))
-        if out:
-            break
-    return out
+@cache
+def _seasons(start_id: int) -> dict[str, int]:
+    """'2025-26' -> the id of one series of that season, from the season dropdown."""
+    for options in _selects(soup(f"{BASE}/ScheduleAndResults/Overview/{start_id}")):
+        found = {label: int(m.group(1)) for value, label in options
+                 if re.fullmatch(r"\d{4}-\d{2}", label) and (m := re.search(r"/(\d+)$", value))}
+        if found:
+            return found
+    return {}
 
 
-def _groups(cid: int, series: str) -> list[tuple[str, int]]:
-    """The season's groups of this series: (name, competition id), from the group picker."""
-    out = []
-    for sel in _overview(cid).find_all("select"):
-        opts = [(o.get_text(" ", strip=True), re.search(r"/Overview/(\d+)$", o.get("value") or "")) for o in sel.find_all("option")]
-        opts = [(name, int(m.group(1))) for name, m in opts if m]
-        if any(series.lower() in name.lower() for name, _ in opts) and not all(SEASON.match(n) for n, _ in opts):
-            out = [(name, i) for name, i in opts if series.lower() in name.lower()]
-            break
-    return out or [(series, cid)]
+@cache
+def _series(start_id: int, y: int) -> tuple[tuple[int, str], ...]:
+    label = f"{y}-{(y + 1) % 100:02d}"
+    sid = _seasons(start_id).get(label)
+    if sid is None:
+        have = sorted(_seasons(start_id))
+        raise ValueError(f"stats.swehockey.se has no {label} season here (it has {have[0]} to {have[-1]})")
+    for options in _selects(soup(f"{BASE}/ScheduleAndResults/Overview/{sid}")):
+        if any(re.fullmatch(r"\d{4}-\d{2}", label) for _, label in options):
+            continue   # the season dropdown
+        series = [(int(m.group(1)), label) for value, label in options
+                  if "/ScheduleAndResults/Overview/" in value and (m := re.search(r"/(\d+)$", value))]
+        if series:
+            return tuple(series)
+    return ((sid, label),)
 
 
-def _first_last(name: str) -> str:
-    """'Höglund, Oliver' -> 'Oliver Höglund'."""
-    last, _, first = name.partition(",")
-    return f"{first.strip()} {last.strip()}".strip()
+def _phase_series(opts: dict, y: int, phase: str) -> list[tuple[int, str]]:
+    """Series of one phase. ``start_ids`` lists several league trees read as one league
+    (U18 Regional: one tree per region); a tree without that season is skipped."""
+    want = phase_key(phase) == "playoffs"
+    series = []
+    for start_id in opts.get("start_ids") or (opts["start_id"],):
+        try:
+            series += _series(start_id, y)
+        except ValueError:
+            continue
+    found = [s for s in series if bool(_PLAYOFF.search(s[1])) == want]
+    if not found:
+        raise ValueError(f"no {phase_key(phase)} series in {y}-{y + 1}")
+    return found
+
+
+def _players_by_team(series_id: int) -> tuple[list[dict], list[dict]]:
+    """(skater rows, goalie rows) of one series, each tagged with its team."""
+    page = soup(f"{BASE}/Teams/Info/PlayersByTeam/{series_id}")
+    skaters, goalies, team = [], [], None
+    for table in page.find_all("table"):
+        if table.find("table"):
+            continue
+        rows = [cells(tr) for tr in table.find_all("tr")]
+        rows = [r for r in rows if any(r)]
+        if not rows:
+            continue
+        if rows[0] and rows[0][-1] == "[Top]":          # team banner: 'AIK', 'AIK', ..., '[Top]'
+            team = clean_team(rows[0][0])
+            rows = rows[1:]
+        for i, r in enumerate(rows):
+            if r[:3] == ["Rk", "No", "Name"]:
+                header, target = r, goalies if "GPI" in r else skaters
+                for data in rows[i + 1:]:
+                    if len(data) == len(header) and data[2]:
+                        target.append({**dict(zip(header, data)), "team": team})
+                break
+    return skaters, goalies
 
 
 def _team_tables(page, first: str) -> list[tuple[str, pd.DataFrame]]:
@@ -69,61 +100,110 @@ def _team_tables(page, first: str) -> list[tuple[str, pd.DataFrame]]:
     for table in page.find_all("table"):
         if table.find("table"):
             continue
-        rows = [[c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])] for tr in table.find_all("tr")]
+        rows = [cells(tr) for tr in table.find_all("tr")]
         if not rows or "[Top]" not in rows[0]:
             continue
-        team = rows[0][0]
         head = next((i for i, r in enumerate(rows) if r and r[0] == first and "Name" in r), None)
         if head is None:
             continue
         cols = rows[head]
-        body = [r for r in rows[head + 1:] if len(r) == len(cols)]
-        out.append((team, pd.DataFrame(body, columns=cols)))
+        out.append((rows[0][0], pd.DataFrame([r for r in rows[head + 1:] if len(r) == len(cols)], columns=cols)))
     return out
 
 
-def _group_skaters(cid: int) -> pd.DataFrame:
-    stats = _team_tables(soup(f"{BASE}/Teams/Info/PlayersByTeam/{cid}"), "Rk")
-    roster = _team_tables(soup(f"{BASE}/Teams/Info/TeamRoster/{cid}"), "No")
-    frames = []
-    bio = pd.concat([df.assign(team=t) for t, df in roster], ignore_index=True) if roster else pd.DataFrame()
-    for team, df in stats:
-        if "GP" not in df or "Pos" not in df:   # the goalkeeping table
-            continue
-        df = df.assign(team=team)
-        if len(bio):
-            b = bio[bio.team == team][[c for c in ("Name", "Birthdate", "L/R", "Nationality / Club") if c in bio]]
-            df = df.merge(b.drop_duplicates("Name"), on="Name", how="left")
-        frames.append(df)
+def _roster(series_id: int) -> pd.DataFrame:
+    """Each player's birth date, shot and nationality from the series' rosters (Teams/Info/TeamRoster)."""
+    frames = [df.assign(team=clean_team(team)) for team, df in
+              _team_tables(soup(f"{BASE}/Teams/Info/TeamRoster/{series_id}"), "No")]
     if not frames:
         return pd.DataFrame()
-    df = pd.concat(frames, ignore_index=True)
+    bio = pd.concat(frames, ignore_index=True)
+    keep = [c for c in ("Name", "team", "Birthdate", "L/R", "Nationality / Club") if c in bio]
+    return bio[keep].drop_duplicates(["Name", "team"])
+
+
+def _frame(opts: dict, y: int, phase: str, goalies: bool) -> pd.DataFrame:
+    frames = []
+    for series_id, name in _phase_series(opts, y, phase):
+        rows = _players_by_team(series_id)[1 if goalies else 0]
+        if rows:
+            df = pd.DataFrame(rows)
+            if not goalies:
+                try:
+                    bio = _roster(series_id)
+                except Exception:   # the stats stand without the bios
+                    bio = pd.DataFrame()
+                if len(bio):
+                    df = df.merge(bio, on=["Name", "team"], how="left")
+            frames.append(df.assign(stage=re.sub(r"\s+", " ", name)))
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True).drop(columns=["Rk"])
+    df = df.drop_duplicates()
     df.insert(0, "player", df.pop("Name").map(_first_last))
     return df
 
 
+def _first_last(name: str) -> str:
+    """'Forssell, Mio' -> 'Mio Forssell'."""
+    last, _, first = str(name).partition(",")
+    return f"{first.strip()} {last.strip()}".strip()
+
+
+def _na_text(df: pd.DataFrame) -> pd.DataFrame:
+    return df.replace({"N/A": pd.NA, "": pd.NA})
+
+
 def skaters(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
-    seasons = _season_ids(opts["start"])
-    if y not in seasons:
-        raise Unsupported(f"stats.swehockey.se has no {opts['series']} {y}-{y + 1}")
-    playoffs = phase.lower().startswith("play")
-    groups = [(n, i) for n, i in _groups(seasons[y], opts["series"]) if bool(PLAYOFFS.search(n)) == playoffs]
-    frames = []
-    for name, cid in groups:
-        df = _group_skaters(cid)
-        if len(df):
-            frames.append(df.assign(group=name))
-        log.info("%s %s %s: %d skaters", league, y, name, len(df))
-    df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
-    return finish(df, "skaters", league, y, "playoffs" if playoffs else "regular", rename={
-        "Pos": "position", "GP": "gp", "G": "g", "A": "a", "TP": "pts", "PIM": "pim", "+/-": "plus_minus",
-        "Birthdate": "birthdate", "L/R": "shoots", "Nationality / Club": "nationality", "No": "number"},
-        drop=("Rk", "+", "-"))
+    df = _frame(opts, y, phase, goalies=False)
+    if df.empty:
+        return df
+    df = df[df["Pos"] != "GK"]   # goalies are listed with empty skater lines; see goalies()
+    return finish(_na_text(df), "skaters", league, y, phase_key(phase), rename={
+        "No": "jersey", "Pos": "position", "GP": "gp", "G": "g", "A": "a", "TP": "pts", "PIM": "pim",
+        "+": "plus", "-": "minus", "+/-": "plus_minus", "GWG": "gwg", "PPG": "ppg", "SHG": "shg", "SOG": "shots",
+        "SG%": "shooting_pct", "FO+": "faceoffs_won", "FO-": "faceoffs_lost", "FO": "faceoffs", "FO%": "faceoff_pct",
+        "Birthdate": "birthdate", "L/R": "shoots", "Nationality / Club": "nationality"})
 
 
 def goalies(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
-    raise Unsupported("stats.swehockey.se goalies aren't read yet")
+    df = _frame(opts, y, phase, goalies=True)
+    if df.empty:
+        return df
+    df = _na_text(df)
+    df = df[pd.to_numeric(df["GPI"], errors="coerce").fillna(0) > 0].copy()   # dressed but never played
+    df["MIP"] = df["MIP"].map(_minutes)
+    return finish(df, "goalies", league, y, phase_key(phase), rename={
+        "No": "jersey", "GPT": "team_gp", "GKD": "games_dressed", "GPI": "gp", "MIP": "toi", "GA": "ga",
+        "SVS": "saves", "SOG": "shots_against", "SVS%": "sv_pct", "GAA": "gaa", "SO": "so", "W": "w", "L": "l"})
+
+
+def _minutes(clock):
+    m = re.fullmatch(r"\s*(\d+):(\d{2})\s*", str(clock))
+    return round(int(m.group(1)) + int(m.group(2)) / 60, 2) if m else pd.NA
 
 
 def standings(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
-    raise Unsupported("stats.swehockey.se standings aren't read yet")
+    if phase_key(phase) != "regular":
+        raise Unsupported("standings are regular season only (the SM-slutspel is series)")
+    frames = []
+    for series_id, name in _phase_series(opts, y, phase):
+        page = soup(f"{BASE}/ScheduleAndResults/Standings/{series_id}")
+        for table in page.find_all("table"):
+            if table.find("table"):
+                continue
+            rows = [r for r in (cells(tr) for tr in table.find_all("tr")) if any(r)]
+            # The first table is the full standings (later ones: home, away, last 5...).
+            if len(rows) > 2 and rows[1][:2] == ["RK", "Team"]:
+                body = [r for r in rows[2:] if len(r) == len(rows[1])]
+                frames.append(pd.DataFrame(body, columns=rows[1]).assign(stage=re.sub(r"\s+", " ", name)))
+                break
+    if not frames:
+        return pd.DataFrame()
+    df = pd.concat(frames, ignore_index=True)
+    score = df.pop("GF:GA (GD)").str.extract(r"(\d+)\s*:\s*(\d+)")
+    df["gf"], df["ga"] = score[0], score[1]
+    df["Team"] = df["Team"].map(clean_team)
+    return finish(df, "standings", league, y, "regular", drop=("GD",), rename={
+        "RK": "rank", "Team": "team", "GP": "gp", "W": "w", "T": "t", "L": "l", "TP": "pts", "OTW": "otw",
+        "OTL": "otl", "GWSW": "sow", "GWSL": "sol"})

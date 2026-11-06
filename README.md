@@ -1,7 +1,7 @@
 # puckscrape
 
 Hockey stats from the NHL API, NHL Edge, Elite Prospects, MoneyPuck, ESPN, HockeyDB and league/federation websites
-(NCAA men and women, the PWHL, the CHL, the AHL/ECHL, junior A leagues, and leagues across Europe), IIHF
+(NCAA men and women, the PWHL, the CHL, the AHL/ECHL, junior A leagues, the KHL, MHL and VHL, and leagues across Europe including Czech youth), IIHF
 tournaments (men's and women's, every division), plus NHL draft rankings from Elite Prospects and TSN,
 as pandas DataFrames.
 
@@ -15,6 +15,7 @@ ps.moneypuck.skaters(2024)                              # xG, Corsi, game score
 ps.espn.standings(2024)                                 # ESPN standings, box scores, injuries
 ps.leagues.skaters(["ohl", "shl", "ncaa"], "2025-26")    # straight from league websites
 ps.leagues.skaters(["pwhl", "ncaa-w", "sdhl"], 2025)    # women's leagues too
+ps.leagues.goalies(["khl", "czech-u18"], 2025)          # KHL, MHL, Czech youth
 ps.iihf.skaters("ww", 2025)                             # IIHF tournaments, men's and women's
 ps.hockeydb.skaters("khl", "2024-25")                   # HockeyDB rosters, any league
 ps.eliteprospects.draft_rankings("all")                 # NHL draft rankings: EP's and other outlets'
@@ -95,26 +96,37 @@ ps.leagues.standings("mestis", 2025)
 | `gohl`, `csshl` | GOHL (Ontario junior B), CSSHL U18 Prep | HockeyTech | CSSHL from 2021-22 (earlier seasons mix every age division) |
 | `shl`, `sdhl` | SHL, SDHL (women) | shl.se, sdhl.se | SHL back to 1975-76 |
 | `hockeyallsvenskan` | HockeyAllsvenskan | hockeyallsvenskan.se | regular season only |
-| `u20-nationell` | U20 Nationell | stats.swehockey.se | skaters; birth dates and nationality from the rosters |
-| `u18-nationell` | U18 Nationell | stats.swehockey.se | skaters; birth dates and nationality from the rosters |
-| `liiga` | Liiga | liiga.fi | no goalie stats in the public API |
+| `liiga` | Liiga | liiga.fi | goalies from 2009-10 (`gp` is games played; `games_dressed` counts backups too) |
 | `mestis`, `suomi-sarja`, `u20-sm-sarja`, `u18-sm-sarja`, `auroraliiga`, `naisten-mestis` | Finland | tulospalvelu.leijonat.fi | multi-stage seasons keep a `stage` column; Auroraliiga and Naisten Mestis are the women's top two |
+| `u18-nationell`, `u20-nationell` | Sweden U18 and U20 Nationell (J18, J20) | stats.swehockey.se (the federation) | from 2011-12 (no 2020-21); skaters get birth dates, shot and nationality from the rosters; one request per series; every row keeps its series in `stage` (Norra, Södra, kvalserie...); playoffs = SM-slutspel. Before 2021-22 the U18 tree holds J18 Allsvenskan (the season's second half), not the autumn J18 Elit |
+| `u18-regional` | Sweden U18 Regional: the autumn elite series (Norr, Syd, Väst, Öst; U18 Nationell starts in January) | stats.swehockey.se | the four regions read as one league; series (Topp 6, fortsättning...) in `stage` |
+| `u18-elit`, `u21-elit` | Switzerland U18-Elit (U17-Elit until 2024-25), U21-Elit (U20-Elit) | data.sihf.ch | U18-Elit from 2016-17; goalies without saves, SV% or W-L (SIHF doesn't publish them for youth leagues); no standings |
+| `norway-u18`, `norway-u20` | Norway U18 Elite, U20 Elite | the federation's results API (behind live.hockey.no) | from 2012-13; rows keep their tournament in `stage` (U20: opening round, Elite A/B); playoffs = the NM tournaments (quarterfinals, Final 4...); standings in Norway's 3-2-1 points |
 | `nl`, `sl`, `myhl`, `swhl` | Switzerland | data.sihf.ch | `swhl` is the PostFinance Women's League (goalies without SV% or W-L: SIHF doesn't publish them); no standings (the API's table is incomplete for recent seasons) |
 | `del`, `del2` | Germany | penny-del.org, del-2.org | |
-| `extraliga`, `maxa-liga` | Czechia | hokej.cz | no standings yet |
+| `extraliga`, `maxa-liga`, `czech-2-liga` | Czechia | ceskyhokej.cz (the federation) | from 2020-21; 2022-23 has standings but no player stats on the site; every row keeps its season part in `stage` (base round, groups, placement/relegation rounds; playoffs = preliminary round + title series); teams get their full names (the site's 3-letter code is kept in `team_code`) |
+| `czech-u20`, `czech-u18`, `czech-u16`, `extraliga-zen` | Czech juniors (Extraliga juniorů), older dorost U18 (Extraliga staršího dorostu), younger dorost U16, women | ceskyhokej.cz | same as above; `czech-u16` from 2026-27 (the competition is new) |
+| `khl`, `mhl` | KHL, MHL (Russian juniors) | the KHL's app feed (khl.api.webcaster.pro) | KHL from 2008-09, MHL from 2016-17; ~60 requests (a few minutes) a season, shared by skaters and goalies; skaters get TOI, shifts, faceoffs, top speed and distance; standings rebuilt from game results (W/OTW/SOW/L/OTL/SOL) |
+| `vhl` | VHL | hockeydb.com | skaters only (goalies appear with `position` G and skater lines); one request per team, 3 s apart |
 | `icehl` | ICE Hockey League | ice.hockey data files | skaters back to 2012-13; goalies and standings from 2025-26 (earlier files are partial) |
 | `metal-ligaen` | Denmark | statistik.metalligaen.dk | standings verified; the stats host stopped responding mid-testing, so skaters/goalies are checked by hand only |
 | `eihl` | UK Elite League | eliteleague.co.uk | |
 | `iihf-wm`, `iihf-ww`, `iihf-wm20`, `iihf-wm18`, `iihf-ww18` | IIHF World Championships: men, women, U20, U18 men, U18 women | stats.iihf.com | top division only (`ps.iihf` has every division); season 2024-25 is the 2025 tournament; phase `tournament` |
 
-Women's leagues: `pwhl`, `ncaa-w`, `sdhl`, `auroraliiga`, `naisten-mestis`, `swhl`, plus `iihf-ww` and `iihf-ww18`.
+European U18 leagues: `u18-nationell` and `u18-regional` (Sweden), `u18-sm-sarja` (Finland), `czech-u18`, `u18-elit` (Switzerland), `norway-u18`. Not wired: Slovakia (Cloudflare challenge), Germany's U17 DNL (deb-online.live loads its stats from a third-party API with the site's key, so it isn't wired), Denmark (the federation's hosts don't answer).
 
-Not covered: the KHL, VHL and MHL (khl.ru answers every request with 403), Slovakia (behind a
-Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
-Hungary, Italy, J20 Nationell, the GTHL (no public stats pages) and the PJHL (an old Ramp
+Women's leagues: `pwhl`, `ncaa-w`, `sdhl`, `auroraliiga`, `naisten-mestis`, `swhl`, `extraliga-zen`, plus `iihf-ww` and `iihf-ww18`.
+
+khl.ru, mhl.khl.ru and vhlru.ru drop connections from many networks (from here, every Russian
+site did), so the KHL and MHL come from the KHL's own app feed, which is served from a different
+host, and the VHL from HockeyDB. The women's ZhHL has no app feed any more. hokej.cz now sits behind
+a Cloudflare challenge, so the Czech leagues come from the federation's site, which also has the
+youth and women's leagues.
+
+Not covered: Slovakia (behind a Cloudflare challenge), France (stats host unreachable), and the Alps League, Norway, Poland,
+Hungary, Italy, the GTHL (no public stats pages) and the PJHL (an old Ramp
 frameset site), which aren't wired yet. The NAHL's stats widget needs a
-CSRF session cookie, so it isn't wired either. The Czech women's Extraliga (hokej.cz answers 403)
-and Germany's DFEL aren't wired either. `ps.eliteprospects` covers most of these.
+CSRF session cookie, so it isn't wired either. Germany's DFEL isn't wired either. `ps.eliteprospects` covers most of these.
 
 ## IIHF tournaments (`ps.iihf`)
 

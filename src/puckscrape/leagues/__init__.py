@@ -21,8 +21,8 @@ from types import ModuleType
 import pandas as pd
 
 from .._util import as_list, start_year
-from . import (chn, delhockey, eihl, hockeyallsvenskan, hockeytech, hokejcz, icehl, leijonat, liiga,
-               metalligaen, sihf, sportality, swehockey)
+from . import (ceskyhokej, chn, delhockey, eihl, hockeyallsvenskan, hockeydb, hockeyno, hockeytech, icehl, khl,
+               leijonat, liiga, metalligaen, sihf, sportality, swehockey)
 from ._common import Unsupported
 from .iihf import Tournament
 
@@ -80,8 +80,10 @@ _REGISTRY = [
     League("shl", "SHL", "Sweden", "top", "shl.se", sportality, {"host": "https://www.shl.se", "series": "SHL"}),
     League("hockeyallsvenskan", "HockeyAllsvenskan", "Sweden", "second", "hockeyallsvenskan.se", hockeyallsvenskan),
     League("sdhl", "SDHL (women)", "Sweden", "women", "sdhl.se", sportality, {"host": "https://www.sdhl.se", "series": "SDHL"}),
-    League("u20-nationell", "U20 Nationell", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start": 20964, "series": "U20"}),
-    League("u18-nationell", "U18 Nationell", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start": 19937, "series": "U18"}),
+    League("u20-nationell", "U20 Nationell (J20)", "Sweden", "junior", "stats.swehockey.se", swehockey, {"start_id": 20964}),
+    League("u18-nationell", "U18 Nationell (J18)", "Sweden", "U18", "stats.swehockey.se", swehockey, {"start_id": 19937}),
+    League("u18-regional", "U18 Regional (autumn elite series: Norr, Syd, Väst, Öst)", "Sweden", "U18", "stats.swehockey.se",
+           swehockey, {"start_ids": (21335, 22182, 22180, 22243)}),
     # Finland
     League("liiga", "Liiga", "Finland", "top", "liiga.fi", liiga),
     League("mestis", "Mestis", "Finland", "second", "tulospalvelu.leijonat.fi", leijonat, {"level": "Mestis"}),
@@ -95,12 +97,28 @@ _REGISTRY = [
     League("sl", "Swiss League", "Switzerland", "second", "data.sihf.ch", sihf, {"league_id": 2}),
     League("myhl", "MyHockey League", "Switzerland", "third", "data.sihf.ch", sihf, {"league_id": 3}),
     League("swhl", "PostFinance Women's League", "Switzerland", "women", "data.sihf.ch", sihf, {"league_id": 42}),
+    League("u21-elit", "U21-Elit (formerly U20-Elit)", "Switzerland", "junior", "data.sihf.ch", sihf,
+           {"league_ids": ((0, 4), (2025, 113))}),
+    League("u18-elit", "U18-Elit (formerly U17-Elit)", "Switzerland", "U18", "data.sihf.ch", sihf,
+           {"league_ids": ((0, 23), (2025, 116))}),
     # Germany
     League("del", "PENNY DEL", "Germany", "top", "penny-del.org", _DEL),
     League("del2", "DEL2", "Germany", "second", "del-2.org", _DEL2),
-    # Czechia
-    League("extraliga", "Tipsport Extraliga", "Czechia", "top", "hokej.cz", hokejcz, {"slug": "tipsport-extraliga"}),
-    League("maxa-liga", "Maxa liga", "Czechia", "second", "hokej.cz", hokejcz, {"slug": "maxa-liga"}),
+    # Czechia (the federation's site; hokej.cz sits behind a Cloudflare challenge)
+    League("extraliga", "Tipsport Extraliga", "Czechia", "top", "ceskyhokej.cz", ceskyhokej, {"comp": 14}),
+    League("maxa-liga", "Maxa liga", "Czechia", "second", "ceskyhokej.cz", ceskyhokej, {"comp": 2}),
+    League("czech-2-liga", "2. liga", "Czechia", "third", "ceskyhokej.cz", ceskyhokej, {"comp": 18}),
+    League("extraliga-zen", "Extraliga žen (women)", "Czechia", "women", "ceskyhokej.cz", ceskyhokej, {"comp": 28}),
+    League("czech-u20", "Extraliga juniorů (U20)", "Czechia", "junior", "ceskyhokej.cz", ceskyhokej, {"comp": 1}),
+    League("czech-u18", "Extraliga staršího dorostu (older dorost, U18)", "Czechia", "U18", "ceskyhokej.cz", ceskyhokej, {"comp": 21}),
+    League("czech-u16", "Extraliga mladšího dorostu (younger dorost, U16)", "Czechia", "U16", "ceskyhokej.cz", ceskyhokej, {"comp": 84}),
+    # Russia and neighbours
+    League("khl", "Kontinental Hockey League", "Russia", "top", "KHL app feed (khl.api.webcaster.pro)", khl, {"app": "khl_mobile"}),
+    League("mhl", "Junior Hockey League (MHL)", "Russia", "junior", "KHL app feed (khl.api.webcaster.pro)", khl, {"app": "mhl_mobile"}),
+    League("vhl", "Supreme Hockey League (VHL)", "Russia", "second", "hockeydb.com", hockeydb, {"hockeydb": "vhl"}),
+    # Norway
+    League("norway-u20", "U20 Elite", "Norway", "junior", "live.hockey.no (federation API)", hockeyno, {"age": "U20"}),
+    League("norway-u18", "U18 Elite", "Norway", "U18", "live.hockey.no (federation API)", hockeyno, {"age": "U18"}),
     # Austria and neighbours, UK
     League("icehl", "ICE Hockey League", "Austria", "top", "ice.hockey", icehl),
     League("eihl", "Elite Ice Hockey League", "United Kingdom", "top", "eliteleague.co.uk", eihl),

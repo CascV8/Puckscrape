@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 import puckscrape as ps
-from puckscrape.leagues import _common, chn, delhockey, hockeytech
+from puckscrape.leagues import _common, ceskyhokej, chn, delhockey, hockeytech, khl
 
 
 def test_registry_is_consistent():
@@ -80,6 +80,117 @@ def test_hockeytech_league_regular_pattern(monkeypatch):
     assert hockeytech.season_id("csshl", 2025, "regular", r"^\d{4}-\d{2} u18 prep$") == "4"
     with pytest.raises(ValueError):   # without its pattern, a league's own name isn't a regular season
         hockeytech.season_id("gojhl", 2025, "regular")
+
+
+@pytest.mark.parametrize("part,playoff", [
+    ("Extraliga dorostu - Play-off o titul Mistr České republiky 2025/26", True),
+    ("Extraliga dorostu - Předkolo play-off 2025/26", True),
+    ("Extraliga žen - O titul Mistr České republiky 2025/26", True),
+    ("Extraliga žen - finále 2019/20", True),
+    ("2. liga - Play-off 2025/26", True),
+    ('Tipsport extraliga - Generali play-off o titul "Mistr České republiky" 2019/20', True),
+    ("Extraliga dorostu - O pořadí v play-off 2025/26", False),
+    ("Extraliga dorostu - O účast v play-off 2025/26", False),
+    ("CHANCE LIGA - o účast v předkole play-off 2019/20", False),
+    ("Extraliga dorostu - Play-down 2022/23", False),
+    ("Tipsport extraliga - o udržení, resp. o postup do Tipsport ELH 2025/26", False),
+    ("Extraliga dorostu - sk. A 2024/25", False),
+])
+def test_czech_playoff_parts(part, playoff):
+    assert ceskyhokej._is_playoff(part) is playoff
+
+
+def test_czech_stage_name_and_minutes():
+    assert ceskyhokej._stage_name("Extraliga dorostu - sk. A 2024/25", 2024) == "Extraliga dorostu - sk. A"
+    assert ceskyhokej._stage_name("DHL extraliga juniorů 2024/25 - O udržení", 2024) == "DHL extraliga juniorů - O udržení"
+    assert ceskyhokej._minutes("240:00") == 240.0 and ceskyhokej._minutes("01:48") == 1.8
+
+
+def test_khl_names_and_standings(monkeypatch):
+    assert khl._first_last("Kaprizov Kirill") == "Kirill Kaprizov"
+    assert khl._first_last("Alexeyev Denis V.") == "Denis V. Alexeyev"
+    assert khl._first_last("Belozyorov Andrei Al.") == "Andrei Al. Belozyorov"
+    assert khl._first_last("Da Costa Stephane") == "Stephane Da Costa"
+    monkeypatch.setattr(khl, "_stage", lambda app, y, phase: {"id": 1, "season": "2025/2026"})
+    monkeypatch.setattr(khl, "_stage_teams", lambda app, stage_id: frozenset({1, 2}))
+    ids = {"A": 1, "B": 2, "Stars": 99}
+    def game(a, b, score, ot=None, so=None):
+        return {"team_a": {"name": a, "id": ids[a]}, "team_b": {"name": b, "id": ids[b]}, "score": score,
+                "scores": {"overtime": ot, "bullitt": so}}
+    monkeypatch.setattr(khl, "_games", lambda app, stage_id: [
+        game("A", "B", "3:1"), game("A", "B", "2:3", ot="0:1"), game("B", "A", "4:3", so="1:0"),
+        game("Stars", "A", "9:1")])
+    st = khl.standings({"app": "khl_mobile"}, "khl", 2025, "regular").set_index("team")
+    assert st.loc["A", ["gp", "w", "otl", "sol", "pts", "gf", "ga"]].tolist() == [3, 1, 1, 1, 4, 8, 8]
+    assert st.loc["B", ["w", "otw", "sow", "l", "pts"]].tolist() == [0, 1, 1, 1, 4]
+
+
+def test_vhl_from_hockeydb_splits_phases_with_one_scrape(monkeypatch):
+    from puckscrape.leagues import hockeydb as hdb
+    calls = []
+    def fake(league, y):
+        calls.append((league, y))
+        return pd.DataFrame({"league": ["vhl"] * 2, "season": ["2024-25"] * 2, "pid": [1, 2], "player": ["A", "B"],
+                             "team": ["T", "T"], "pos": ["F", "G"], "gp": [10, 5], "g": [3, 0], "a": [4, 0],
+                             "pts": [7, 0], "pim": [2, 0], "plus_minus": [1, 0], "po_gp": [2, 0], "po_g": [1, 0],
+                             "po_a": [0, 0], "po_pts": [1, 0], "po_pim": [0, 0], "birthplace": ["", ""], "age": [20, 25]})
+    monkeypatch.setattr(hdb.hockeydb, "skaters", fake)
+    hdb._rosters.cache_clear()
+    reg = hdb.skaters({"hockeydb": "vhl"}, "vhl", 2024, "regular")
+    po = hdb.skaters({"hockeydb": "vhl"}, "vhl", 2024, "playoffs")
+    assert reg["pts"].tolist() == [7, 0] and reg["player_id"].tolist() == [1, 2]
+    assert po["player"].tolist() == ["A"] and po["pts"].tolist() == [1] and "plus_minus" not in po
+    assert calls == [("vhl", 2024)]
+    hdb._rosters.cache_clear()
+
+
+_SWE_PLAYERS_BY_TEAM = """<html><body>
+<table><tr><td>AIK</td><td>AIK</td><td>[Top]</td></tr></table>
+<table><tr><th>Playing Statistics</th></tr>
+<tr><th>Rk</th><th>No</th><th>Name</th><th>Pos</th><th>GP</th><th>G</th><th>A</th><th>TP</th><th>PIM</th><th>+</th><th>-</th><th>+/-</th></tr>
+<tr><td>1</td><td>34</td><td>Furuvik, Christian</td><td>LW</td><td>22</td><td>15</td><td>8</td><td>23</td><td>12</td><td>21</td><td>25</td><td>-4</td></tr>
+<tr><td>2</td><td>35</td><td>Wadströmer, Frode</td><td>GK</td><td>19</td><td>0</td><td>0</td><td>0</td><td>2</td><td></td><td></td><td></td></tr></table>
+<table><tr><th>Goalkeeping Statistics</th></tr>
+<tr><th>Rk</th><th>No</th><th>Name</th><th>GPT</th><th>GKD</th><th>GPI</th><th>MIP</th><th>GA</th><th>SVS</th><th>SOG</th><th>SVS%</th><th>GAA</th><th>SO</th><th>W</th><th>L</th></tr>
+<tr><td>1</td><td>35</td><td>Wadströmer, Frode</td><td>22</td><td>19</td><td>18</td><td>1063:28</td><td>45</td><td>505</td><td>550</td><td>91.82</td><td>2.54</td><td>2</td><td>9</td><td>9</td></tr>
+<tr><td></td><td>30</td><td>Michel, Alex</td><td>22</td><td>3</td><td>0</td><td>00:00</td><td>0</td><td>0</td><td>0</td><td>N/A</td><td>N/A</td><td>0</td><td>0</td><td>0</td></tr></table>
+</body></html>"""
+
+
+def test_swehockey_players_by_team(monkeypatch):
+    from bs4 import BeautifulSoup
+    from puckscrape.leagues import swehockey
+    monkeypatch.setattr(swehockey, "soup", lambda url, **p: BeautifulSoup(_SWE_PLAYERS_BY_TEAM, "html.parser"))
+    monkeypatch.setattr(swehockey, "_phase_series", lambda opts, y, phase: [(1, "U18 Nationell Norra")])
+    sk = swehockey.skaters({}, "u18-nationell", 2025, "regular")
+    assert sk["player"].tolist() == ["Christian Furuvik"]          # the goalie's empty skater line is dropped
+    assert (sk["team"].iloc[0], sk["pts"].iloc[0], sk["plus_minus"].iloc[0]) == ("AIK", 23, -4)
+    gk = swehockey.goalies({}, "u18-nationell", 2025, "regular")
+    assert gk["player"].tolist() == ["Frode Wadströmer"]           # dressed-only backups are dropped
+    row = gk.iloc[0]
+    assert (row["gp"], row["w"], row["toi"], row["sv_pct"]) == (18, 9, 1063.47, pytest.approx(0.9182))
+    assert row["stage"] == "U18 Nationell Norra"
+
+
+def test_sihf_league_id_by_season_and_toi():
+    from puckscrape.leagues import sihf
+    opts = {"league_ids": ((0, 23), (2025, 116))}
+    assert sihf._league_id(opts, 2024) == 23 and sihf._league_id(opts, 2025) == 116
+    assert sihf._league_id({"league_id": 1}, 2025) == 1
+    assert sihf._toi_minutes("1075:20") == 1075.33 and sihf._toi_minutes(3600) == 60.0
+    assert pd.isna(sihf._toi_minutes(""))
+
+
+def test_norway_tournament_selection(monkeypatch):
+    from puckscrape.leagues import hockeyno
+    monkeypatch.setattr(hockeyno, "_tournaments", lambda y: (
+        (1, "U18 Elite"), (2, "U20 Elite Innledende"), (3, "U20 Elite A"), (4, "U18 NM kvartfinaler"),
+        (5, "U18 NM Final 4"), (6, "NM sluttspill U20"), (7, "U18 1.div"), (8, "U18 elite 12/13")))
+    ids = lambda age, phase: [t for t, _ in hockeyno._phase_tournaments({"age": age}, 2025, phase)]
+    assert ids("U18", "regular") == [1, 8]
+    assert ids("U18", "playoffs") == [4, 5]
+    assert ids("U20", "regular") == [2, 3] and ids("U20", "playoffs") == [6]
+    assert hockeyno._SKIP.search("U18 Elite treningskamper") and not hockeyno._SKIP.search("U18 Elite")
 
 
 def test_phase_key():

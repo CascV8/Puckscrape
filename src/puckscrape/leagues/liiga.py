@@ -26,7 +26,22 @@ def skaters(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
 
 
 def goalies(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
-    raise Unsupported("liiga.fi's public API doesn't expose goalie stats")
+    """liiga.fi's goalie table (the same endpoint as skaters, dataType=basicStatsGk).
+    ``games`` there counts games dressed; ``gp`` is games played."""
+    p = phase_key(phase)
+    rows = get_json(f"{API}/players/stats/summed/{y + 1}/{y + 1}/{_TOURNAMENT[p]}/false", dataType="basicStatsGk")
+    df = pd.DataFrame([r for r in rows if r.get("playedGames", 0) > 0 or r.get("timeOnIce", 0) > 0])
+    if df.empty:
+        return df
+    df.insert(0, "player", df["firstName"].str.strip() + " " + df["lastName"].str.strip().str.title())
+    df["timeOnIce"] = (df["timeOnIce"] / 60).round(2)   # seconds -> minutes, like every other league
+    return finish(df, "goalies", league, y, p, drop=(
+        "pictureUrl", "previousTeamsForTournament", "firstName", "lastName", "tournament", "removed",
+        "current", "lastSeason", "goalkeeper", "role", "reserveGoalie"), rename={
+        "playerId": "player_id", "teamName": "team", "playedGames": "gp", "games": "games_dressed",
+        "gkWins": "w", "gkLosses": "l", "gkTies": "t", "goalsAgainst": "ga", "blockedOrSavedShots": "saves",
+        "savePercentage": "sv_pct", "goalsAgainstAvg": "gaa", "shutOut": "so", "timeOnIce": "toi",
+        "expectedGoalsAgainst": "xga", "penaltyMinutes": "pim", "goals": "g", "assists": "a", "points": "pts"})
 
 
 def standings(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:

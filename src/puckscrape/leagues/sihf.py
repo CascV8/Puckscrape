@@ -42,12 +42,24 @@ def _phase_ids(league_id: int, y: int, phase: str) -> tuple[tuple[str, str], ...
 def _table(alias: str, opts: dict, y: int, phase: str) -> pd.DataFrame:
     p = phase_key(phase)
     flat = []
-    for phase_id, phase_name in _phase_ids(opts["league_id"], y, p):
-        for rec in _phase_rows(alias, opts["league_id"], f"{y + 1}/{phase_id}"):
+    league_id = _league_id(opts, y)
+    for phase_id, phase_name in _phase_ids(league_id, y, p):
+        for rec in _phase_rows(alias, league_id, f"{y + 1}/{phase_id}"):
             if phase_name != _PHASE_NAME[p]:
                 rec["group"] = phase_name
             flat.append(rec)
     return pd.DataFrame(flat)
+
+
+def _league_id(opts: dict, y: int) -> int:
+    """A league's id that season. Renamed leagues got new ids (U17-Elit, id 23, became
+    U18-Elit, id 116, in 2025-26); ``league_ids`` lists (first season, id) pairs."""
+    pairs = sorted(opts.get("league_ids") or ((0, opts["league_id"]),))
+    current = pairs[0][1]
+    for first, lid in pairs:
+        if first <= y:
+            current = lid
+    return current
 
 
 def _phase_rows(alias: str, league_id: int, fq: str) -> list[dict]:
@@ -85,10 +97,20 @@ def goalies(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
         pct = pd.to_numeric(df["savesPercentage"], errors="coerce")
         df["savesPercentage"] = pct / 100 if pct.max() > 1 else pct
     if "secondsPlayed" in df:
-        df["toi"] = pd.to_numeric(df["secondsPlayed"], errors="coerce") / 60
+        # Seconds in the top leagues; 'minutes:seconds' ('1075:20') in the youth leagues.
+        df["toi"] = df.pop("secondsPlayed").map(_toi_minutes)
     return finish(df, "goalies", league, y, phase_key(phase), rename={
         "gamesPlayed": "gp", "goalsAgainst": "ga", "saves": "saves", "savesPercentage": "sv_pct",
         "goalsAgainstAverage": "gaa"})
+
+
+def _toi_minutes(value):
+    text = str(value).strip()
+    if ":" in text:
+        mins, _, secs = text.partition(":")
+        return round(int(mins) + int(secs) / 60, 2) if mins.isdigit() and secs.isdigit() else pd.NA
+    seconds = pd.to_numeric(text, errors="coerce")
+    return pd.NA if pd.isna(seconds) else round(seconds / 60, 2)
 
 
 def standings(opts: dict, league: str, y: int, phase: str) -> pd.DataFrame:
