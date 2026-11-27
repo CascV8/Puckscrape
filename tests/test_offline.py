@@ -303,6 +303,7 @@ def test_stats_report_pages_past_the_api_cap(monkeypatch):
     rows = [{"playerId": i} for i in range(250)]
 
     def fake(url, params=None, **kw):
+        assert params.get("sort"), "unsorted pages overlap on the live API"
         s = params["start"]
         return {"data": rows[s:s + 100], "total": len(rows)}
 

@@ -235,10 +235,12 @@ def _stats_report(entity: str, report: str, seasons, game_type: int) -> pd.DataF
     frames = []
     for season in as_list(seasons):
         exp = f"seasonId={nhl_season(season)} and gameTypeId={game_type}"
+        # a fixed sort, or pages overlap (repeating some rows, dropping others)
+        sort = "teamId" if entity == "team" else "playerId"
         rows, start = [], 0
         while True:   # the API caps every response at 100 rows whatever `limit` says (limit=-1 used to mean all)
             data = _http.get_json(f"{STATS}/{entity}/{report}",
-                                  params={"limit": STATS_PAGE, "start": start, "cayenneExp": exp})
+                                  params={"limit": STATS_PAGE, "start": start, "sort": sort, "cayenneExp": exp})
             page = data.get("data", [])
             rows += page
             start += len(page)
