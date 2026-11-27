@@ -228,12 +228,23 @@ def standings(date=None) -> pd.DataFrame:
 # stats.nhl.com reports
 # --------------------------------------------------------------------------
 
+STATS_PAGE = 100   # rows the stats API returns per request
+
+
 def _stats_report(entity: str, report: str, seasons, game_type: int) -> pd.DataFrame:
     frames = []
     for season in as_list(seasons):
         exp = f"seasonId={nhl_season(season)} and gameTypeId={game_type}"
-        data = _http.get_json(f"{STATS}/{entity}/{report}", params={"limit": -1, "cayenneExp": exp})
-        frames.append(pd.DataFrame(data.get("data", [])))
+        rows, start = [], 0
+        while True:   # the API caps every response at 100 rows whatever `limit` says (limit=-1 used to mean all)
+            data = _http.get_json(f"{STATS}/{entity}/{report}",
+                                  params={"limit": STATS_PAGE, "start": start, "cayenneExp": exp})
+            page = data.get("data", [])
+            rows += page
+            start += len(page)
+            if len(page) < STATS_PAGE or start >= data.get("total", start + 1):
+                break
+        frames.append(pd.DataFrame(rows))
     df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
     return df.rename(columns=snake)
 

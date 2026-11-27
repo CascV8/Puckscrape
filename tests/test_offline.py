@@ -295,3 +295,16 @@ def test_hockeydb_team_table():
         (56745, "Ilya Kovalchuk", "L", 53, 63, 10, 34)
     assert rows[-2]["po_gp"] is pd.NA        # "--" (no playoffs) is missing, not 0
     assert rows[-1]["pos"] == "G"
+
+
+def test_stats_report_pages_past_the_api_cap(monkeypatch):
+    """The stats API returns at most 100 rows per request, so every report must be paged."""
+    from puckscrape import nhl
+    rows = [{"playerId": i} for i in range(250)]
+
+    def fake(url, params=None, **kw):
+        s = params["start"]
+        return {"data": rows[s:s + 100], "total": len(rows)}
+
+    monkeypatch.setattr(nhl._http, "get_json", fake)
+    assert len(nhl.skater_stats(2026, report="bios")) == 250
